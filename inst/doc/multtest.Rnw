@@ -155,32 +155,48 @@ teststat<-mt.teststat(golub,golub.cl)
 @
 
 The following produces a normal Quantile--Quantile (Q--Q) plot of the
-test statistics (Figure \ref{fig:mtQQ}). In our application, we are
+test statistics (Figure \ref{fig:mtQQ})
+. In our application, we are
 not so much interested in testing whether the test statistics follow a
 particular distribution, but in using the Q--Q plot as a visual aid
 for identifying genes with ``unusual'' test statistics. Q--Q plots
 informally correct for the large number of comparisons and the points
 which deviate markedly from an otherwise linear relationship are
 likely to correspond to those genes whose expression levels differ
-between the control and treatment groups. 
+between the control and treatment groups.
 
 %%<<mtQQ,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-\begin{verbatim}
+%%\begin{verbatim}
+<<>>=
+postscript("mtQQ.eps")
 qqnorm(teststat)
 qqline(teststat)
-\end{verbatim}
+dev.off()
+pdf("mtQQ.pdf")
+qqnorm(teststat)
+qqline(teststat)
+dev.off()
+@
+%%\end{verbatim}
 %%@
 
 We may also wish to look at plots of the numerators and denominators
 of the test statistics (Figure \ref{fig:mtNumDen}) 
 
 %%<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-\begin{verbatim}
+%%\begin{verbatim}
+<<>>=
 tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
 num<-tmp$teststat.num
 denum<-tmp$teststat.denum
+postscript("mtNumDen.eps")
 plot(sqrt(denum),num)
-\end{verbatim}
+dev.off()
+pdf("mtNumDen.pdf")
+plot(sqrt(denum),num)
+dev.off()
+@
+%%\end{verbatim}
 %%@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -300,20 +316,36 @@ ltypes<-c(1,2,2,3,3)
 For plotting sorted adjusted $p$--values set the argument {\tt plottype="pvsr"}
 
 %%<<mtpvsr,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-\begin{verbatim}
+%%\begin{verbatim}
+<<>>=
+postscript("mtpvsr.eps")
 mt.plot(allp[,procs],teststat,plottype="pvsr",
         proc=procs,leg=c(2000,0.4),lty=ltypes,col=cols,lwd=2) 
-\end{verbatim}
+dev.off()
+pdf("mtpvsr.pdf")
+mt.plot(allp[,procs],teststat,plottype="pvsr",
+        proc=procs,leg=c(2000,0.4),lty=ltypes,col=cols,lwd=2) 
+dev.off()
+@
+%%\end{verbatim}
 %%@
 
 and for plotting adjusted $p$--values vs. the test statistics use {\tt
   plottype="pvst"} 
 
 %%<<mtpvst,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-\begin{verbatim}
+%%\begin{verbatim}
+<<>>=
+postscript("mtpvst.eps")
 mt.plot(allp[,procs],teststat,plottype="pvst",
         logscale=TRUE,proc=procs,leg=c(-0.5,2),pch=ltypes,col=cols)
-\end{verbatim}
+dev.off()
+pdf("mtpvst.pdf")
+mt.plot(allp[,procs],teststat,plottype="pvst",
+        logscale=TRUE,proc=procs,leg=c(-0.5,2),pch=ltypes,col=cols)
+dev.off()
+@
+%%\end{verbatim}
 %%@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -323,7 +355,7 @@ mt.plot(allp[,procs],teststat,plottype="pvst",
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[hhh]
-%%\centerline{\epsfig{figure=mtQQ.eps,width=4in,height=4in,angle=0}}
+%\centerline{\epsfig{figure=mtQQ.eps,width=4in,height=4in,angle=0}}
 \begin{center}
 \includegraphics[width=4in,height=4in,angle=0]{mtQQ}
 \end{center}
