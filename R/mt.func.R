@@ -271,7 +271,7 @@ mt.transformV<-function(V,classlabel,test,na,nonpara)
     newV<-rank(newV)
     }
   newL<-mt.transformL(classlabel,test)
-  list(V=mt.na2number(newV,na),n=newL$L,classlabel=newL$classlabel)
+  list(V=mt.na2number(newV,na),n=newL$n,classlabel=newL$classlabel)
 }
 mt.transformL<-function(classlabel,test)
 {
