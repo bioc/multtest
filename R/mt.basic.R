@@ -59,6 +59,7 @@ mt.rawp2adjp<-function(rawp,
   {
     tmp<-spval
     a<-sum(1/(1:m))
+    tmp[m]<-min(a*spval[m], 1) #noting we need to set tmp[m]
     for(i in (m-1):1)
       tmp[i]<-min(tmp[i+1],min((m*a/i)*spval[i],1))
     adjp[,"BY"]<-tmp

@@ -3,7 +3,7 @@
     library.dynam("multtest",packname,libname)
 }
 .mt.BLIM<-2^30
-.mt.naNUM<- -93074815.62
+.mt.naNUM<- -93074815
 .mt.RandSeed<-3455660
 #the maxim number of setting of the permutation, it's not resettable
 #in the current version. the numer comes from the largest
@@ -237,11 +237,6 @@ mt.transformX<-function(X,classlabel,test,na,nonpara)
     evendata<-X[,c(1:halfn)*2]
     odddata<-X[,c(1:halfn)*2-1]
     vecX<-(evendata-odddata)
-    n<-halfn
-    for(i in c(1:n)){
-      if(classlabel[i*2]==0)
-        vecX[,i]<- -vecX[,i]
-    }
     vecX<-data.matrix(vecX)
   }else{
     vecX<-data.matrix(X)
@@ -253,7 +248,7 @@ mt.transformX<-function(X,classlabel,test,na,nonpara)
   }
   vecX<-mt.na2number(c(vecX),na)
   newL<-mt.transformL(classlabel,test)
-  list(X=vecX,m=nrow(X),n=n,classlabel=newL$classlabel)
+  list(X=vecX,m=nrow(X),n=newL$n,classlabel=newL$classlabel)
 }
 mt.transformV<-function(V,classlabel,test,na,nonpara)
 {
@@ -268,11 +263,6 @@ mt.transformV<-function(V,classlabel,test,na,nonpara)
     evendata<-V[c(1:halfn)*2]
     odddata<-V[c(1:halfn)*2-1]
     newV<-c(evendata-odddata)
-    n<-halfn
-    for(i in c(1:n)){
-      if(classlabel[i*2]==0)
-        newV[i]<- -newV[i]
-    }
   }
   else{
     newV<-V
@@ -281,7 +271,7 @@ mt.transformV<-function(V,classlabel,test,na,nonpara)
     newV<-rank(newV)
     }
   newL<-mt.transformL(classlabel,test)
-  list(V=mt.na2number(newV,na),n=n,classlabel=newL$classlabel)
+  list(V=mt.na2number(newV,na),n=newL$L,classlabel=newL$classlabel)
 }
 mt.transformL<-function(classlabel,test)
 {

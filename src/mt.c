@@ -19,13 +19,13 @@
 */
 int myDEBUG=0;
 long int g_random_seed=3455660;
-void print_b(int b,int B){
+void print_b(int b,int B,char* prompt){
   static int p=0;
   if(b==0) p=0;
   if(!PROMPT_LEN){
     if((B<=100) ||(b%(B/100)==0))
       {
-	fprintf(stderr,"b=%d\t",b);
+	fprintf(stderr,"%s%d\t",prompt,b);
 	p++;
 	if(PRINT_VAR_NUM && (p%PRINT_VAR_NUM==0))
 	  fprintf(stderr,"\n");
@@ -33,7 +33,7 @@ void print_b(int b,int B){
       }
   }else if((b%PROMPT_LEN)==0){
     p++;
-    fprintf(stderr,"b=%d",b);
+    fprintf(stderr,"%s%d",prompt,b);
     if(PRINT_VAR_NUM && (p%PRINT_VAR_NUM==0))
       fprintf(stderr,"\n");
 
@@ -169,7 +169,7 @@ void  get1pvalue(GENE_DATA* pdata,int* L,float* T,float* P,
       total[i]++;
      }
     b++;
-    print_b(b,B);
+    print_b(b,B,"b=");
     is_next=(*func_next_sample)(bL);
   }
 
@@ -419,9 +419,7 @@ void adj_pvalue_quick(GENE_DATA* pdata,float*T, float* P,
       Adj_Lower[i]=NA_FLOAT; 
     }
     /*************************** */
-    fprintf(stderr,"r=%4d ",(nrow-i)); 
-    if((PRINT_VAR_NUM)&&((nrow-i)%PRINT_VAR_NUM==0))
-      fprintf(stderr,"\n");
+    print_b((nrow-i),nrow,"r="); 
   }
 
   /* to make monotone of Adj_P and Adj_Lower*/
@@ -544,7 +542,7 @@ void  adj_by_T(GENE_DATA* pdata,float* T,float* P,float*Adj_P,
       if(qT!=NA_FLOAT) total1[i]++;
     }
     b++;
-    print_b(b,B);
+    print_b(b,B,"b=");
     is_next=(*func_next_sample)(bL);
   }
 
