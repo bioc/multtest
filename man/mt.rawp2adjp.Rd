@@ -80,8 +80,7 @@ rate in multiple hypothesis testing under dependency. \emph{Annals of
 S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple
 hypothesis testing in microarray experiments.\cr 
 
-Y. Ge, S. Dudoit, and T. P. Speed (In preparation). Fast algorithm for 
-resampling-based \eqn{p}-value adjustment in multiple testing. \cr
+Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkelley.edu/~gyc}\cr
 
 Y. Hochberg (1988). A sharper Bonferroni procedure for multiple tests of
 significance, \emph{Biometrika}. Vol. 75: 800-802.\cr 

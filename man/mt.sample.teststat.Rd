@@ -57,7 +57,8 @@ A vector of integers corresponding to observation (column)
   }
   \item{na}{Code for missing values (the default is \code{.mt.naNUM=--93074815.62}).
     Entries with missing values will be ignored in the computation,
-    i.e., test statistics will be based on a smaller sample size.
+    i.e., test statistics will be based on a smaller sample size. This
+    feature has not yet fully implemented.
   }
   \item{nonpara}{If \code{nonpara}="y", nonparametric test statistics are computed based on ranked data. \cr
     If  \code{nonpara}="n", the original data are used.

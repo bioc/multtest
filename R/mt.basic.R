@@ -30,8 +30,10 @@ mt.rawp2adjp<-function(rawp,
   if(is.element("Hochberg",proc))
   {
     tmp<-spval
-    for(i in (m-1):1)
-      tmp[i]<-min(tmp[i+1],min((m-i+1)*spval[i],1))
+    for(i in (m-1):1){
+      tmp[i]<-min(tmp[i+1],min((m-i+1)*spval[i],1,na.rm=T),na.rm=T)
+      if(is.na(spval[i])) tmp[i]<-NA
+    }
     adjp[,"Hochberg"]<-tmp
   }
 
@@ -50,8 +52,10 @@ mt.rawp2adjp<-function(rawp,
   if(is.element("BH",proc))
   {
     tmp<-spval
-    for(i in (m-1):1)
-      tmp[i]<-min(tmp[i+1],min((m/i)*spval[i],1))
+    for(i in (m-1):1){
+      tmp[i]<-min(tmp[i+1],min((m/i)*spval[i],1,na.rm=T),na.rm=T)
+      if(is.na(spval[i])) tmp[i]<-NA
+    }
     adjp[,"BH"]<-tmp
   }
 
@@ -60,8 +64,10 @@ mt.rawp2adjp<-function(rawp,
     tmp<-spval
     a<-sum(1/(1:m))
     tmp[m]<-min(a*spval[m], 1) #noting we need to set tmp[m]
-    for(i in (m-1):1)
-      tmp[i]<-min(tmp[i+1],min((m*a/i)*spval[i],1))
+    for(i in (m-1):1){
+      tmp[i]<-min(tmp[i+1],min((m*a/i)*spval[i],1,na.rm=T),na.rm=T)
+      if(is.na(spval[i])) tmp[i]<-NA
+    }
     adjp[,"BY"]<-tmp
   }
 

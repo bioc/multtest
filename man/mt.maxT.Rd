@@ -59,8 +59,9 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
     the total number of permutations.
   }
   \item{na}{Code for missing values (the default is \code{.mt.naNUM=--93074815.62}).
-    Entries with missing values will be ignored in the computation,
-    i.e., test statistics will be based on a smaller sample size.
+    Entries with missing values will be ignored in the computation, 
+    i.e., test statistics will be based on a smaller sample size. This
+    feature has not yet fully implemented.
   }
   \item{nonpara}{If \code{nonpara}="y", nonparametric test statistics are computed based on ranked data. \cr
     If  \code{nonpara}="n", the original data are used.
@@ -85,8 +86,7 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
 \references{
 S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
 
-Y. Ge, S. Dudoit, and T. P. Speed (In preparation). Fast algorithm for
-resampling-based \eqn{p}-value adjustment in multiple testing. \cr
+Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkelley.edu/~gyc} \cr
 
 P. H. Westfall and S. S. Young (1993). \emph{Resampling-based
 multiple testing: Examples and methods for \eqn{p}-value adjustment}. John Wiley \& Sons.
