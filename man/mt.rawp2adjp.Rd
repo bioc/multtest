@@ -96,8 +96,6 @@ procedure. \emph{Scand. J. Statist.}. Vol. 6: 65-70.
   \code{\link{mt.plot}}, \code{\link{mt.reject}}, \code{\link{golub}}.}
 
 \examples{
-library(multtest)
-
 # Gene expression data from Golub et al. (1999)
 # To reduce computation time and for illustrative purposes, we condider only
 # the first 100 genes and use the default of B=10,000 permutations.

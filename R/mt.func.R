@@ -1,7 +1,3 @@
-.First.lib<-function(libname,packname)
-{
-    library.dynam("multtest",packname,libname)
-}
 .mt.BLIM<-2^30
 .mt.naNUM<- -93074815
 .mt.RandSeed<-3455660
@@ -39,7 +35,7 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 
     data.frame(teststat.num=teststat$t.num,teststat.denum=teststat$t.denum)
 }
-mt.maxT<-function(X,classlabel,test="t",side="abs",
+  qmt.maxT<-function(X,classlabel,test="t",side="abs",
                   fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
 {
     extra<-max(classlabel)+1

@@ -196,3 +196,6 @@ int next_two_permu(int* V, int n, int k);
 int next_permu(int*V,int n);
 void data2vec(double** data,double*d,  int nrow, int ncol);
 void set_seed_sampling(long int seed);
+
+void get_maxT(double*, int*, int*, int*, double*, float*, float*,
+	      float*, int*, int*, char**, int*);

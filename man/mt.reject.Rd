@@ -29,8 +29,6 @@ mt.reject(adjp, alpha)
 \seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{mt.rawp2adjp}}, \code{\link{golub}}.}
 
 \examples{
-library(multtest)
-
 # Gene expression data from Golub et al. (1999)
 # To reduce computation time and for illustrative purposes, we condider only
 # the first 100 genes and use the default of B=10,000 permutations.

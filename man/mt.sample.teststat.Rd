@@ -74,8 +74,6 @@ A vector of integers corresponding to observation (column)
 
 \examples{
 
-library(multtest)
-
 # Gene expression data from Golub et al. (1999)
 data(golub)
 

@@ -70,8 +70,6 @@ Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine}.}
 \seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{golub}}.}
 
 \examples{
-library(multtest)
-
 # Gene expression data from Golub et al. (1999)
 data(golub)
 
