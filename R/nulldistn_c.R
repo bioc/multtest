@@ -57,7 +57,7 @@ attempts.")
 		}
 		nas<-is.na(muboot)
 	}
-	(muboot-apply(muboot,1,mean)+theta0)*min(1,tau0/apply(muboot,1,var))
+	(muboot-apply(muboot,1,mean)+theta0)*pmin(1,tau0/apply(muboot,1,var))
 }
 
 
