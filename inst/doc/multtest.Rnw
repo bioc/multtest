@@ -6,7 +6,7 @@
 
 \parindent 0in
 
-\bibliographystyle{plainnat} 
+\bibliographystyle{abbrvnat}
 
 \begin{document}
 
@@ -25,7 +25,7 @@
 \tableofcontents
 
 % library(tools)
-% Rnwfile<- file.path("/home/sandrine/CVS_stuff/Code/multtest/inst/doc","multtest.Rnw")
+% Rnwfile<- file.path("/home/sandrine/CVS_stuff/madman/Rpacks/multtest/inst/doc","multtest.Rnw")
 % Sweave(Rnwfile,pdf=TRUE,eps=TRUE,stylepath=TRUE,driver=RweaveLatex())
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,7 +48,7 @@ The {\tt multtest} package implements multiple testing procedures for controllin
  We demonstrate the functionality of this package using gene expression data from the leukemia ALL/AML study of \cite{Golubetal}. To load the leukemia dataset, use {\tt data(golub)}, and to view a description of the experiments and data, type {\tt ? golub}. 
 
 <<eval=TRUE, echo=TRUE>>=
-library(multtest)
+library(multtest, verbose=FALSE)
 data(golub)
 @
 

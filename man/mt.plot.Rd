@@ -3,8 +3,6 @@
 \title{Plotting results from multiple testing procedures}
 \description{
 This function produces a number of graphical summaries for the results of multiple testing procedures and their corresponding adjusted \emph{p}-values.}
-
-}
 \usage{
 mt.plot(adjp, teststat, plottype="rvsa", logscale=FALSE, alpha=seq(0, 1, length = 100), proc="", leg=c(0, 0), ...)
 }
