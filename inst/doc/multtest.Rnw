@@ -163,22 +163,24 @@ which deviate markedly from an otherwise linear relationship are
 likely to correspond to those genes whose expression levels differ
 between the control and treatment groups. 
 
-%<<mtQQ,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-<<>>=
+%%<<mtQQ,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+\begin{verbatim}
 qqnorm(teststat)
 qqline(teststat)
-@
+\end{verbatim}
+%%@
 
 We may also wish to look at plots of the numerators and denominators
 of the test statistics (Figure \ref{fig:mtNumDen}) 
 
-%<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-<<>>=
+%%<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+\begin{verbatim}
 tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
 num<-tmp$teststat.num
 denum<-tmp$teststat.denum
 plot(sqrt(denum),num)
-@
+\end{verbatim}
+%%@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The {\tt mt.rawp2adjp} function}
@@ -222,7 +224,7 @@ provide strong control of the FWER and also incorporate the joint
 dependence structure between the test statistics. There are thus in
 general less conservative than the standard Bonferroni procedure. The
 permutation algorithm for the maxT and minP procedures is described in
-\cite{Ge&Dudoit}.\\ 
+\cite{Ge&Dudoit}.\\
 
 Permutation unadjusted $p$--values and adjusted $p$--values for the
 maxT procedure with Welch $t$--statistics are computed as
@@ -230,7 +232,7 @@ follows. {\tt mt.maxT} returns $p$--values sorted in decreasing order
 of the absolute $t$--statistics and {\tt order(resT\$index)} is used
 to obtain $p$--values and test statistics in the original gene
 order. In practice, the number of permutations $B$ should be several
-thousands, we set $B=1,000$ here for illustration purposes. 
+thousands, we set $B=1,000$ here for illustration purposes.
 
 %%<<eval=TRUE, echo=TRUE>>=
 <<>>=
@@ -242,11 +244,11 @@ teststat<-resT$teststat[ord]
 @
 
 
-Three functions related to the {\tt mt.maxT} and {\tt mt.minP} functions are 
-{\tt mt.sample.teststat}, {\tt mt.sample.rawp}, and {\tt
-  mt.sample.label}. These functions provide tools to investigate the
+Three functions related to the {\tt mt.maxT} and {\tt mt.minP}
+functions are {\tt mt.sample.teststat}, {\tt mt.sample.rawp}, and {\tt
+mt.sample.label}. These functions provide tools to investigate the
 permutation distribution of test statistics, raw (unadjusted)
-$p$--values, and class labels, respectively. 
+$p$--values, and class labels, respectively.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -297,20 +299,21 @@ ltypes<-c(1,2,2,3,3)
 For plotting sorted adjusted $p$--values set the argument {\tt plottype="pvsr"}
 
 %%<<mtpvsr,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-<<>>=
+\begin{verbatim}
 mt.plot(allp[,procs],teststat,plottype="pvsr",
         proc=procs,leg=c(2000,0.4),lty=ltypes,col=cols,lwd=2) 
-@
+\end{verbatim}
+%%@
 
 and for plotting adjusted $p$--values vs. the test statistics use {\tt
   plottype="pvst"} 
 
 %%<<mtpvst,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-<<>>=
+\begin{verbatim}
 mt.plot(allp[,procs],teststat,plottype="pvst",
         logscale=TRUE,proc=procs,leg=c(-0.5,2),pch=ltypes,col=cols)
-@
-
+\end{verbatim}
+%%@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
