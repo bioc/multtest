@@ -41,14 +41,16 @@ void create_sampling_pairt(int n,int*L,int B)
     l_is_random=0;
     l_B=maxB;
     /*when exceeding the maximum numbers, we'll use the complete permutaions*/
-    fprintf(stderr,"\nWe're doing %d complete permutations\n",l_B);
+    /*fprintf(stderr,"\nWe're doing %d complete permutations\n",l_B);*/
+    Rprintf("\nWe're doing %d complete permutations\n",l_B);
   }
   else{
     int* myL;
     assert(myL=(int*)malloc(sizeof(int)*n));
     l_B=B;
     l_is_random=1;
-    fprintf(stderr,"\nWe're doing %d random permutations\n",l_B);
+    /*fprintf(stderr,"\nWe're doing %d random permutations\n",l_B);*/
+    Rprintf("\nWe're doing %d random permutations\n",l_B);
     set_seed(g_random_seed);
 
     assert(l_all_samples=(unsigned int*)malloc(sizeof(unsigned int)*(l_B)*l_sz)); 

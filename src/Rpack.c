@@ -126,7 +126,7 @@ void get_minP(double*d, int*pnrow, int* pncol, int*L,double *pna, float* T, floa
   if(type2sample(options,&sd)==0)
     return;
   create_gene_data(d,pnrow,pncol,L,pna,&data,1);
-  fprintf(stderr,"B=%d\n",*pB);
+  Rprintf("B=%d\n",*pB);
   sd.fn_create(data.ncol,data.L,*pB);
   adj_pvalue_quick(&data,T,P,adjP,adj_lower,sd.fn_minP,sd.fn_maxT,sd.fn_first,sd.fn_next,sd.fn_cmp,extra);
   get_gene_indexes(&data,index);

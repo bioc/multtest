@@ -68,12 +68,14 @@ void create_sampling(int n,int*L,int B)
     }
     /*when exceeding the maximum numbers, we'll use the complete permutaions*/
     l_B=maxB;
-    fprintf(stderr,"\nWe're doing %d complete permutations\n",l_B);
+/*    fprintf(stderr,"\nWe're doing %d complete permutations\n",l_B);*/
+    Rprintf("\nWe're doing %d complete permutations\n",l_B);
   }else{
     /*doing random permutation*/
     int * ordern,* permun,*myL;
     l_B=B;
-    fprintf(stderr,"\nWe're doing %d random permutations\n",l_B);
+    /*fprintf(stderr,"\nWe're doing %d random permutations\n",l_B);*/
+    Rprintf("\nWe're doing %d random permutations\n",l_B);
     /*reintiailize the permu_array*/
     delete_permu_array(&l_pa);
     init_permu_array(&l_pa,L,n,B);

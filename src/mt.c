@@ -25,17 +25,21 @@ void print_b(int b,int B,char* prompt){
   if(!PROMPT_LEN){
     if((B<=100) ||(b%(B/100)==0))
       {
-	fprintf(stderr,"%s%d\t",prompt,b);
+	   /*fprintf(stderr,"%s%d\t",prompt,b);*/
+	Rprintf("%s%d\t",prompt,b);
 	p++;
 	if(PRINT_VAR_NUM && (p%PRINT_VAR_NUM==0))
-	  fprintf(stderr,"\n");
+	     /*fprintf(stderr,"\n");*/
+	     Rprintf("\n");
 
       }
   }else if((b%PROMPT_LEN)==0){
     p++;
-    fprintf(stderr,"%s%d",prompt,b);
+    /*fprintf(stderr,"%s%d",prompt,b);*/
+    Rprintf("%s%d",prompt,b);
     if(PRINT_VAR_NUM && (p%PRINT_VAR_NUM==0))
-      fprintf(stderr,"\n");
+	 /*fprintf(stderr,"\n");*/
+	 Rprintf("\n");
 
   }
 }
