@@ -13,13 +13,13 @@ mt.plot(adjp, teststat, plottype="rvsa", logscale=FALSE, alpha=seq(0, 1, length 
     procedures. This matrix could be obtained from the functions
     \code{\link{mt.maxT}}, \code{\link{mt.minP}}, or \code{\link{mt.rawp2adjp}}.}
   \item{teststat}{A vector of test statistics for each of the hypotheses. This vector could be obtained from the functions \code{\link{mt.teststat}}, \code{\link{mt.maxT}}, or \code{\link{mt.minP}}.}
-  \item{plottype}{A character string specifying the type of graphical summary for the results of the multiple testing procedures. \cr
+  \item{plottype}{A character string specifying the type of graphical
+    summary for the results of the multiple testing procedures. \cr
     If \code{plottype="rvsa"}, the number of rejected hypotheses is plotted against the nominal Type I error rate for each of the procedures given in \code{proc}.\cr
     If \code{plottype="pvsr"}, the ordered adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc}. This can be viewed as a plot of the Type I error rate against the number of rejected hypotheses. \cr
     If \code{plottype="pvst"}, the adjusted \emph{p}-values are plotted against the test statistics for each of the procedures given in \code{proc}.
     \cr
-    If \code{plottype="pvsi"}, the adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc} using the original data order.  \cr
-  }
+    If \code{plottype="pvsi"}, the adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc} using the original data order.  }
   \item{logscale}{A logical variable for the \code{pvst} and \code{pvsi} plots. If \code{logscale} is \code{TRUE}, the negative decimal logarithms of the adjusted \emph{p}-values are plotted against the test statistics or gene indices. If \code{logscale} is \code{FALSE}, the adjusted \emph{p}-values are plotted against the test statistics or gene indices.}
   \item{alpha}{A vector of nominal Type I error rates for the \code{rvsa} plot.}
   \item{proc}{A vector of character strings containing the names of the

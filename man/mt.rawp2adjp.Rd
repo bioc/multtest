@@ -20,7 +20,7 @@ mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD"
     \eqn{p}-values as given in \code{mt.maxT} and \code{mt.minP}. If the
     \code{mt.maxT} or \code{mt.minP} functions are used, raw
     \eqn{p}-values should be given in the original data order,
-    \code{rawp[order(index)]}.} 
+    \code{rawp[order(index)]}.}
   \item{proc}{A vector of character strings containing the names of the
     multiple testing procedures for which adjusted \eqn{p}-values are to
     be computed. This vector should include any of the following:
@@ -31,9 +31,8 @@ mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD"
 \details{
   Adjusted \eqn{p}-values are computed for simple FWER and FDR
   controlling procedures based on a vector of raw (unadjusted)
-  \eqn{p}-values.\cr 
-
-\item{Bonferroni} {Bonferroni single-step adjusted \eqn{p}-values
+  \eqn{p}-values.
+\item{Bonferroni}{Bonferroni single-step adjusted \eqn{p}-values
 for strong control of the FWER.} 
 \item{Holm}{Holm (1979) step-down adjusted \eqn{p}-values for
 strong control of the FWER.}
@@ -52,7 +51,7 @@ statistics).}
 regression dependent test statistics).}
 \item{BY}{adjusted \eqn{p}-values for the Benjamini & Yekutieli
 (2001) step-up FDR controlling procedure (general dependency
-structures).} 
+structures).}
 }
 
 \value{
