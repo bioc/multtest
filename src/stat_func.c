@@ -59,7 +59,7 @@ float two_sample_tstat_num_denum(const float *Y, const int* L,const int n, const
   /* if(ss_na[0]==0) return NA_FLOAT;
   if(ss_na[1]==0) return NA_FLOAT;
   */
-  if(ss_na[0]+ss_na[1]==0) return NA_FLOAT;
+  if(ss_na[0]+ss_na[1]<EPSILON) return NA_FLOAT;
   c0=(count[0]*(count[0]-1));
   c1=(count[1]*(count[1]-1));
   *num=mean_na[1]-mean_na[0];
@@ -122,7 +122,7 @@ float two_sample_t1stat_num_denum(const float *Y, const int* L,const int n, cons
   /*  if(ss_na[0]==0) return NA_FLOAT;
   if(ss_na[1]==0) return NA_FLOAT;
   */
-  if(ss_na[0]+ss_na[1]==0) return NA_FLOAT;
+  if(ss_na[0]+ss_na[1]<EPSILON) return NA_FLOAT;
   c0=1/(count[0]*1.0)+1/(count[1]*1.0);
   c1=count[0]+count[1]-2.0;
   *num=mean_na[1]-mean_na[0];
