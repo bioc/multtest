@@ -19,7 +19,7 @@ mt.teststat<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     res<-.C("get_stat",as.double(tmp$X),as.integer(tmp$m),
                as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
                teststat=double(tmp$m),as.character(options),
-               as.integer(extra))$teststat
+               as.integer(extra), PACKAGE="multtest")$teststat
     res[abs(res)>=0.9*1e20]<-NA
     res
 }
@@ -32,7 +32,7 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     teststat<-.C("get_stat_num_denum",as.double(tmp$X),as.integer(tmp$m),
 	       as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
 	       t.num=double(tmp$m),t.denum=double(tmp$m),as.character(options),
-               as.integer(extra))
+               as.integer(extra), PACKAGE="multtest")
 
     res<-cbind(teststat.num=teststat$t.num,teststat.denum=teststat$t.denum)
     mt.niceres(res,X)
@@ -51,7 +51,7 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 	    as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
 	    t=double(tmp$m),p=double(tmp$m),adjP=double(tmp$m),
 	    as.integer(newB),index=integer(tmp$m),as.character(options),
-               as.integer(extra))
+               as.integer(extra), PACKAGE="multtest")
 
     res<-cbind(index=res$index,teststat=res$t,rawp=res$p,adjp=res$adjP)
     mt.niceres(res,X,res[,1])
@@ -70,7 +70,7 @@ mt.minP<-function(X,classlabel,test="t",side="abs",
 	    as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
 	    t=double(tmp$m),p=double(tmp$m),adjP=double(tmp$m),
             plower=double(tmp$m),as.integer(newB),index=integer(tmp$m),
-            as.character(options),as.integer(extra))
+            as.character(options),as.integer(extra), PACKAGE="multtest")
 
     res<-cbind(index=res$index,teststat=res$t,rawp=res$p,adjp=res$adjP,plower=res$plower)
     mt.niceres(res,X,res[,1])
@@ -87,7 +87,8 @@ mt.sample.teststat<-function(V,classlabel,test="t",fixed.seed.sampling="y",
   options<-c(test,"abs",fixed.seed.sampling);#the "abs" has no meaing here.
   res<-t(.C("get_samples_T",as.double(tmp$V),as.integer(tmp$n),
           as.integer(tmp$classlabel),T=double(newB),as.double(na),
-          as.integer(newB),as.character(options),as.integer(extra))$T)
+          as.integer(newB),as.character(options),as.integer(extra),
+            PACKAGE="multtest")$T)
   res[abs(res)>=0.9*1e20]<-NA
   res
 }
@@ -102,8 +103,9 @@ mt.sample.rawp<-function(V,classlabel,test="t",side="abs",
     fixed.seed.sampling<-"n" #as we're doing complete premutation
   options<-c(test,side,fixed.seed.sampling);
   res<-.C("get_samples_P",as.double(tmp$V),as.integer(tmp$n),
-          as.integer(tmp$classlabel), P=double(newB),as.double(na), as.integer(newB),
-          as.character(options),as.integer(extra))$P
+          as.integer(tmp$classlabel), P=double(newB),as.double(na),
+          as.integer(newB),
+          as.character(options),as.integer(extra), PACKAGE="multtest")$P
   res[abs(res)>=0.9*1e20]<-NA
   res
 }
@@ -119,7 +121,7 @@ mt.sample.label<-function(classlabel,test="t",
   options<-c(test,"abs",fixed.seed.sampling); #the "abs" has no meaing here
   res<-.C("get_sample_labels",as.integer(tmp$n),as.integer(tmp$classlabel),
           as.integer(newB), S=integer(tmp$n*newB),as.character(options),
-          as.integer(extra))$S
+          as.integer(extra), PACKAGE="multtest")$S
   resl<-matrix(res,nrow=tmp$n)
   if(test=="pairt"){
     #restore the original classlabelling
