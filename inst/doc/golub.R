@@ -40,5 +40,9 @@ golub<-log(golub,10)
 golub.expr<-scale(golub,T,T)
 dimnames(golub.expr)<-list(NULL,NULL)
 
+#export to multtest
+golub<-golub.expr
+golub.cl<-c(rep(0,27),rep(1,11))
+golub.gnames<-golub.gnames[golub.sub,]
 ###########################################################################
 
