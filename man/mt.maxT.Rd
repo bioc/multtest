@@ -86,7 +86,7 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
 \references{
 S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
 
-Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkelley.edu/~gyc} \cr
+Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkeley.edu/~gyc} \cr
 
 P. H. Westfall and S. S. Young (1993). \emph{Resampling-based
 multiple testing: Examples and methods for \eqn{p}-value adjustment}. John Wiley \& Sons.

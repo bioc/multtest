@@ -30,7 +30,7 @@ If \code{plottype="pvsi"}, the adjusted \emph{p}-values are plotted for each of 
 
 S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
 
-Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkelley.edu/~gyc}  \cr
+Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkeley.edu/~gyc}  \cr
 
 }
 \author{
