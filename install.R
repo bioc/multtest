@@ -1,0 +1,5 @@
+require("methods") || stop("requires methods package")
+require("Biobase") || stop("requires Biobase")
+require("genefilter") || stop("Requires genefilter")
+require("survival") || stop("Requires survival")
+require("reposTools") || stop("Requires reposTools")
