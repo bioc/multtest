@@ -166,13 +166,15 @@ The function {\tt mt.reject} returns the identity and number of rejected
      hypotheses for several multiple testing procedures and different
      nominal Type I error rates. The number of hypotheses rejected using unadjusted $p$--values and maxT $p$--values for different Type I error rates ($\alpha=0, 0.1, 0.2, \ldots, 1$) can be obtained by
 
-<<eval=TRUE, echo=TRUE>>=
+%%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 mt.reject(cbind(rawp,maxT),seq(0,1,0.1))$r
 @
 
 The genes with maxT $p$--values less than or equal to 0.01 are 
 
-<<eval=TRUE, echo=TRUE>>=
+%%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 which<-mt.reject(cbind(rawp,maxT),0.01)$which[,2]
 golub.gnames[which,2]
 @
@@ -182,7 +184,8 @@ golub.gnames[which,2]
 
 The {\tt mt.plot} function produces a number of graphical summaries for the results of multiple testing procedures and their corresponding adjusted $p$--values. To produce plots of sorted permutation unadjusted $p$--values and adjusted $p$--values for the Bonferroni, maxT, \cite{Benjamini&Hochberg95}, and \cite{Benjamini&Yekutieli01} procedures use
 
-<<eval=TRUE, echo=TRUE>>=
+%%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 res<-mt.rawp2adjp(rawp,c("Bonferroni","BH","BY"))
 adjp<-res$adjp[order(res$index),]
 allp<-cbind(adjp,maxT)
