@@ -153,13 +153,15 @@ mt.checkclasslabel<-function(classlabel,test)
                  "The folllowing is your setting of classlabel",classlabel,"\n"))
   }
   if(test=="f"){
-    K<-max(classlabel)
-    if(K<1)
-      stop(paste("in F test, we need at least two groups\n","Your setting of classlabel is",classlabel,"\n"))
-    for(i in c(0:K))
-      if(sum(classlabel==i)<2)
-        stop(paste("in F test, as the number of the groups is",K+1,"However, we found the number of objects in set with index",i,"has less than two objects\n",
-                   "the settings are",classlabel,"\n"))
+      tab <- table(classlabel)
+      tab <- tab[tab>0]
+      if(length(tab)<2)
+          stop(paste("in F test, we need at least two groups\n",
+                     "Your setting of classlabel is", classlabel,
+                   "\n"))
+      if(sum(tab)-length(tab)<2)
+          stop(paste("Insufficient df for denominator of F",
+                     "the settings are", classlabel, "\n"))
   }
   if(test=="pairt"){
     K<-max(classlabel)
