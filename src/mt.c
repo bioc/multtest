@@ -58,9 +58,9 @@ void malloc_gene_data(GENE_DATA* pdata)
   int nrow=pdata->nrow;
   int ncol=pdata->ncol;
 
-  assert(pdata->id=(char**)malloc(sizeof(char*)*nrow));
-  assert(pdata->d=(float**)malloc(sizeof(float*)*nrow));
-  assert(pdata->L=(int*)malloc(sizeof(int)*ncol));
+  assert(pdata->id=(char**)Calloc(nrow,char*));
+  assert(pdata->d=(float**)Calloc(nrow,float*));
+  assert(pdata->L=(int*)Calloc(ncol,int));
 
   /*initialization*/
   memset(pdata->L,0,sizeof(int)*ncol);
@@ -68,8 +68,8 @@ void malloc_gene_data(GENE_DATA* pdata)
     pdata->L[i]=0;
 
   for (i=0; i<nrow; i++) {
-    assert(pdata->id[i] = (char *) malloc(sizeof(char)*MAX_ID));
-    assert(pdata->d[i]=(float *) malloc(sizeof(float)*ncol));
+    assert(pdata->id[i] = (char *) Calloc(MAX_ID,char));
+    assert(pdata->d[i]=(float *) Calloc(ncol,float));
  }
 }
 
@@ -81,12 +81,12 @@ void free_gene_data(GENE_DATA* pdata)
 {
   int i;
   for (i=0; i<pdata->nrow; i++) {
-    free(pdata->d[i]);
-    free(pdata->id[i]);
+    Free(pdata->d[i]);
+    Free(pdata->id[i]);
   }
-  free(pdata->L);
-  free(pdata->d);
-  free(pdata->id);
+  Free(pdata->L);
+  Free(pdata->d);
+  Free(pdata->id);
 }
 
 /********************************************************************************/
@@ -143,11 +143,11 @@ void  get1pvalue(GENE_DATA* pdata,int* L,float* T,float* P,
   int nrow=pdata->nrow;
   int B=(*func_first_sample)(NULL);
   /*allocate the space and initialziation*/
-  assert(bT=(float*)malloc(sizeof(float)*nrow));
-  assert(bL=(int*)malloc(sizeof(int)*ncol));
-  assert(count=(float*)malloc(sizeof(float)*nrow));
+  assert(bT=(float*)Calloc(nrow,float));
+  assert(bL=(int*)Calloc(ncol,int));
+  assert(count=(float*)Calloc(nrow,float));
   memset(count,0,sizeof(float)*nrow); 
-  assert(total=(int*)malloc(sizeof(int)*nrow));
+  assert(total=(int*)Calloc(nrow,int));
   memset(total,0,sizeof(int)*nrow);
 
   /*comuter the original one first*/
@@ -185,10 +185,10 @@ void  get1pvalue(GENE_DATA* pdata,int* L,float* T,float* P,
   }
 
   /*free the spaces*/
-  free(bT);
-  free(count);
-  free(total);
-  free(bL);
+  Free(bT);
+  Free(count);
+  Free(total);
+  Free(bL);
 }
 
 /********************************************************************************/
@@ -204,8 +204,8 @@ void sort_gene_data(GENE_DATA* pdata,int*R)
   int i,nrow=pdata->nrow;
   char** old_id; /*the old addresses of the gene id*/
   float** old_d;  /*th old addresses of the gene data*/
-  assert(old_d=(float**)malloc(sizeof(float*)*nrow));
-  assert(old_id=(char**)malloc(sizeof(char*)*nrow));
+  assert(old_d=(float**)Calloc(nrow,float*));
+  assert(old_id=(char**)Calloc(nrow,char*));
   /*store the original pointers from pdata*/ 
   for(i=0;i<nrow;i++)
     {
@@ -218,8 +218,8 @@ void sort_gene_data(GENE_DATA* pdata,int*R)
       pdata->d[i]=old_d[R[i]];
       pdata->id[i]=old_id[R[i]];
     }
-  free(old_id);
-  free(old_d);
+  Free(old_id);
+  Free(old_d);
 }
 /********************************************************************************/
 /*                    sort_vector                                               */
@@ -232,12 +232,12 @@ void sort_vector(float* V,int*R,int n)
 {
   float* old_V;
   int i;
-  assert(old_V=(float*)malloc(sizeof(float)*n));
+  assert(old_V=(float*)Calloc(n,float));
   for(i=0;i<n;i++)
     old_V[i]=V[i];
   for(i=0;i<n;i++)
     V[i]=old_V[R[i]];
-  free(old_V);
+  Free(old_V);
 }
 /********************************************************************************/
 /*                    get_all_samples_P                                         */
@@ -262,8 +262,8 @@ void get_all_samples_P(float* V, int n,float* P,float na,
  
   B=(*func_first_sample)(NULL);
   /*allocate the spaces*/
-  assert(L=(int*)malloc(sizeof(int)*n));
-  assert(R=(int*)malloc(sizeof(int)*B));
+  assert(L=(int*)Calloc(n,int));
+  assert(R=(int*)Calloc(B,int));
 
   /*compute all the test_stat*/
   (*func_first_sample)(L);
@@ -307,8 +307,8 @@ void get_all_samples_P(float* V, int n,float* P,float na,
     P[R[b]]=NA_FLOAT;
 
   /*free the space*/
-  free(L);
-  free(R);
+  Free(L);
+  Free(R);
 } 
 
 /*get all the samples of T and they're also ordered.It's used only for diagonsis*/
@@ -320,8 +320,8 @@ void get_all_samples_T(float* V, int n,float* T,float na,
  
   B=(*func_first_sample)(NULL);
   /*allocate the spaces*/
-  assert(L=(int*)malloc(sizeof(int)*n));
-  assert(R=(int*)malloc(sizeof(int)*B));
+  assert(L=(int*)Calloc(n,int));
+  assert(R=(int*)Calloc(B,int));
 
   /*compute all the test_stat*/
   (*func_first_sample)(L);
@@ -337,8 +337,8 @@ void get_all_samples_T(float* V, int n,float* T,float na,
   }
   if(myDEBUG)
     print_farray(stderr,T,B);
-  free(L);
-  free(R);
+  Free(L);
+  Free(R);
 } 
 
 void adj_pvalue_quick(GENE_DATA* pdata,float*T, float* P, 
@@ -354,10 +354,10 @@ void adj_pvalue_quick(GENE_DATA* pdata,float*T, float* P,
    
   /*allocate the space*/
   B=(*func_first_sample)(NULL);
-  assert(L=(int*)malloc(sizeof(int)*ncol)); 
-  assert(R=(int*)malloc(sizeof(int)*nrow));
-  assert(all_P=(float*)malloc(sizeof(float)*B));
-  assert(all_Q=(float*)malloc(sizeof(float)*B));
+  assert(L=(int*)Calloc(ncol,int)); 
+  assert(R=(int*)Calloc(nrow,int));
+  assert(all_P=(float*)Calloc(B,float));
+  assert(all_Q=(float*)Calloc(B,float));
 
   /*get the original unadjusted p-values first
    we'll use the normalized t-statistics*/
@@ -393,7 +393,7 @@ void adj_pvalue_quick(GENE_DATA* pdata,float*T, float* P,
     neq=0;
 
     for(b=0;b<B;b++){
-      if (all_P[i]==NA_FLOAT) break;/*we don't need care about NA pvlaues*/
+      if (all_P[b]==NA_FLOAT) break;/*we don't need care about NA pvlaues*/
       if(all_Q[b]>all_P[b])
 	all_Q[b]=all_P[b];/*update q* by the value p*/
       if(all_Q[b]==NA_FLOAT) continue;/*skip NA q*/
@@ -436,10 +436,10 @@ void adj_pvalue_quick(GENE_DATA* pdata,float*T, float* P,
       Adj_Lower[i]=Adj_Lower[i-1];
 
   /*free the spaces*/
-  free(L);
-  free(R);
-  free(all_P);
-  free(all_Q);
+  Free(L);
+  Free(R);
+  Free(all_P);
+  Free(all_Q);
 }
 	
 /********************************************************************************/
@@ -479,18 +479,18 @@ void  adj_by_T(GENE_DATA* pdata,float* T,float* P,float*Adj_P,
   int nrow=pdata->nrow;
   int B=(*func_first_sample)(NULL);
   /*allocate the space and initialziation*/
-  assert(bT=(float*)malloc(sizeof(float)*nrow));
-  assert(bL=(int*)malloc(sizeof(int)*ncol));
-  assert(count1=(float*)malloc(sizeof(float)*nrow));
+  assert(bT=(float*)Calloc(nrow,float));
+  assert(bL=(int*)Calloc(ncol,int));
+  assert(count1=(float*)Calloc(nrow,float));
   memset(count1,0,sizeof(float)*nrow); 
-  assert(total1=(int*)malloc(sizeof(int)*nrow));
+  assert(total1=(int*)Calloc(nrow,int));
   memset(total1,0,sizeof(int)*nrow);
-  assert(count2=(float*)malloc(sizeof(float)*nrow));
+  assert(count2=(float*)Calloc(nrow,float));
   memset(count2,0,sizeof(float)*nrow); 
-  assert(total2=(int*)malloc(sizeof(int)*nrow));
+  assert(total2=(int*)Calloc(nrow,int));
   memset(total2,0,sizeof(int)*nrow);
 
-  assert(R=(int*)malloc(sizeof(int)*nrow));
+  assert(R=(int*)Calloc(nrow,int));
    /*comuter the original t-statfirst*/
 
   compute_test_stat(pdata,pdata->L,T,func_stat,extra);
@@ -568,13 +568,13 @@ void  adj_by_T(GENE_DATA* pdata,float* T,float* P,float*Adj_P,
     if(Adj_P[i]<Adj_P[i-1])
       Adj_P[i]=Adj_P[i-1];
   /*free the spaces*/
-  free(bT);
-  free(count1);
-  free(total1);
-  free(count2);
-  free(total2);
-  free(bL);
-  free(R);
+  Free(bT);
+  Free(count1);
+  Free(total1);
+  Free(count2);
+  Free(total2);
+  Free(bL);
+  Free(R);
 }      
 void set_seed_sampling(long int seed){
   g_random_seed=seed;

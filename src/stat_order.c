@@ -52,7 +52,7 @@ void order_mult_data(int* R,int n,int k,...)
   CMP_DATA *cmp_data;
   va_list ap;
   int i;
-  assert(cmp_data=(CMP_DATA*)malloc(sizeof(CMP_DATA)*k));
+  assert(cmp_data=(CMP_DATA*)Calloc(k,CMP_DATA));
   va_start(ap,k);
   for(i=0;i<k;i++) {
     cmp_data[i].V=va_arg(ap,float*);
@@ -64,7 +64,7 @@ void order_mult_data(int* R,int n,int k,...)
   for(i=0;i<n;i++)
     R[i]=i;
   qsort(R,n,sizeof(R[0]),cmp_mult);
-  free(cmp_data);
+  Free(cmp_data);
 }  
 
 void order_data(float* V,int*R,int n,FUNC_CMP func_cmp)

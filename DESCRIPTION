@@ -2,8 +2,8 @@ Package: multtest
 Version: 1.3.6
 Date: 2002-04-16
 Title: Multiple Testing Procedures
-Author: Yongchao Ge<gyc@stat.berkeley.edu>, Sandrine Dudoit<sandrine@stat.berkeley.edu>
-Maintainer: Yongchao Ge<gyc@stat.berkeley.edu>
+Author: Yongchao Ge<yongchao.ge@mssm.edu>, Sandrine Dudoit<sandrine@stat.berkeley.edu>
+Maintainer: Yongchao Ge<yongchao.ge@mssm.edu>
 Depends: R (>= 1.5.1)
 Description: Multiple testing procedures.
 	Includes resampling-based multiple testing procedures for 

@@ -46,14 +46,14 @@ void create_sampling_pairt(int n,int*L,int B)
   }
   else{
     int* myL;
-    assert(myL=(int*)malloc(sizeof(int)*n));
+    assert(myL=(int*)Calloc(n,int));
     l_B=B;
     l_is_random=1;
     /*fprintf(stderr,"\nWe're doing %d random permutations\n",l_B);*/
     Rprintf("\nWe're doing %d random permutations\n",l_B);
     set_seed(g_random_seed);
 
-    assert(l_all_samples=(unsigned int*)malloc(sizeof(unsigned int)*(l_B)*l_sz)); 
+    assert(l_all_samples=(unsigned int*)Calloc(l_B*l_sz,int)); 
     /*setting the first sample as the original data*/
     set_binpermu(L,0,n,l_sz,l_len,l_B,l_all_samples);
     /*the extra as a buffer*/
@@ -69,7 +69,7 @@ void create_sampling_pairt(int n,int*L,int B)
       }
       set_binpermu(myL,i,n,l_sz,l_len,l_B,l_all_samples);
     }
-    free(myL);
+    Free(myL);
     if(myDEBUG)
     {
       fprintf(stderr,"the samples are\n");
@@ -83,7 +83,7 @@ void delete_sampling_pairt()
 {
   if(l_is_random){
     if(l_B!=0){
-      free(l_all_samples);
+      Free(l_all_samples);
       l_all_samples=NULL;
     }
   }

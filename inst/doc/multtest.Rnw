@@ -22,8 +22,8 @@
 \begin{center}
 1. Division of Biostatistics, University of California, Berkeley,
    \url{http://www.stat.berkeley.edu/~sandrine}\\
-2. Department of Statistics, University of California, Berkeley,
-   {\tt gyc@stat.berkeley.edu}
+2. Department of Biomathematical Sciences, Mount Sinai School of Medicine, New York,
+   {\tt yongchao.ge@mssm.edu}\\
 \end{center}
 
 \tableofcontents

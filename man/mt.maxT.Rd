@@ -92,7 +92,7 @@ P. H. Westfall and S. S. Young (1993). \emph{Resampling-based
 multiple testing: Examples and methods for \eqn{p}-value adjustment}. John Wiley \& Sons.
 }	
   
-\author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
+\author{Yongchao Ge, \email{yongchao.ge@mssm.edu}, \cr
 Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine}.}
 
 \seealso{\code{\link{mt.plot}}, \code{\link{mt.rawp2adjp}}, \code{\link{mt.reject}}, \code{\link{mt.sample.teststat}}, \code{\link{mt.teststat}}, \code{\link{golub}}.}

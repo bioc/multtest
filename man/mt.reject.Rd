@@ -22,7 +22,7 @@ mt.reject(adjp, alpha)
 
 \author{
   Sandrine Dudoit,  \url{http://www.stat.berkeley.edu/~sandrine}, \cr
-  Yongchao Ge, \email{gyc@stat.berkeley.edu}.
+  Yongchao Ge, \email{yongchao.ge@mssm.edu}.
 }
 
 

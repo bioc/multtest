@@ -90,7 +90,7 @@ procedure. \emph{Scand. J. Statist.}. Vol. 6: 65-70.
  
 \author{
   Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine},\cr
-  Yongchao Ge, \email{gyc@stat.berkeley.edu}. 
+  Yongchao Ge, \email{yongchao.ge@mssm.edu}. 
 }
 \seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}},
   \code{\link{mt.plot}}, \code{\link{mt.reject}}, \code{\link{golub}}.}

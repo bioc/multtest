@@ -24,7 +24,7 @@ void create_sampling_fixed(int n,int*L,int B)
     fprintf(stderr,"B needs to be positive\n");
     return;/*exit(0)*/;
   }
-  assert(l_L=(int*)malloc(sizeof(int)*n));
+  assert(l_L=(int*)Calloc(n,int));
   memcpy(l_L,L,sizeof(int)*n);
   
   k=0;
@@ -33,26 +33,26 @@ void create_sampling_fixed(int n,int*L,int B)
       k=L[i];
   k++;
   l_k=k;
-  assert(l_nk=(int*)malloc(sizeof(int)*k));
+  assert(l_nk=(int*)Calloc(k,int));
   memset(l_nk,0,sizeof(int)*k);
   for(i=0;i<n;i++)
     l_nk[L[i]]++;
 
-  assert(l_permun=(int*)malloc(sizeof(int)*n));
-  assert(l_ordern=(int*)malloc(sizeof(int)*n));
+  assert(l_permun=(int*)Calloc(n,int));
+  assert(l_ordern=(int*)Calloc(n,int));
   for(i=0;i<n;i++){
       l_ordern[i]=i;
     }
 }
 void delete_sampling_fixed()
 {
-  free(l_L);
+  Free(l_L);
   l_L=NULL;
-  free(l_nk);
+  Free(l_nk);
   l_nk=NULL;
-  free(l_permun);
+  Free(l_permun);
   l_permun=NULL;
-  free(l_ordern);
+  Free(l_ordern);
   l_ordern=NULL;
 }
 

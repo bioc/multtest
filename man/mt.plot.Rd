@@ -39,7 +39,7 @@ mt.plot(adjp, teststat, plottype="rvsa", logscale=FALSE, alpha=seq(0, 1, length 
 }
 \author{
   Sandrine Dudoit,  \url{http://www.stat.berkeley.edu/~sandrine}, \cr
-  Yongchao Ge, \email{gyc@stat.berkeley.edu}.
+  Yongchao Ge, \email{yongchao.ge@mssm.edu}.
 }
 \seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{mt.rawp2adjp}},  \code{\link{mt.reject}}, \code{\link{mt.teststat}}, \code{\link{golub}}.}
 

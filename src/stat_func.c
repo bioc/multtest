@@ -256,9 +256,9 @@ float Fstat_num_denum(const float *Y, const int* L,const int n, const float na,f
 		   k is the number of groups,
 		   N is the total number of validate objects*/
   k=*(int*)extra;
-  meani=(float *)malloc(sizeof(float)*k);
-  ssi=(float *)malloc(sizeof(float)*k);
-  ni=(int *)malloc(sizeof(int)*k);
+  meani=(float *)Calloc(k,float);
+  ssi=(float *)Calloc(k,float);
+  ni=(int *)Calloc(k,int);
   for(i=0;i<k;i++){
     meani[i]=0;/*intialize to be zero*/
     ssi[i]=0;
@@ -298,9 +298,9 @@ float Fstat_num_denum(const float *Y, const int* L,const int n, const float na,f
   /*summarize the num and denum*/
   *num=bss/(k-1.0);
   *denum=wss/(N-k-0.0);
-  free(meani);
-  free(ni);
-  free(ssi);
+  Free(meani);
+  Free(ni);
+  Free(ssi);
   return 1;
 } 
 /*compute the Block F-stat for k samples, where L[i] is the labelling of object i,
@@ -329,8 +329,8 @@ float Block_Fstat_num_denum(const float *Y, const int* L,const int n, const floa
     fprintf(stderr,"The design is not balanced as B(%d)xm(%d)!=n(%d)\n",B,m,n);
     return NA_FLOAT;
   }
-  meani=(float *)malloc(sizeof(float)*B);
-  meanj=(float *)malloc(sizeof(float)*m);
+  meani=(float *)Calloc(B,float);
+  meanj=(float *)Calloc(m,float);
   for(i=0;i<B;i++){
     meani[i]=0;/*intialize to be zero*/
     for(j=0;j<m;j++){
@@ -370,8 +370,8 @@ float Block_Fstat_num_denum(const float *Y, const int* L,const int n, const floa
   /*summarize the num and denum*/
   *num=bss/(m-1.0);
   *denum=wss/((m-1.0)*(B-1.0));
-  free(meani);
-  free(meanj);
+  Free(meani);
+  Free(meanj);
   return 1;
 } 
 void int2bin(int r,int*V,int n)
@@ -502,7 +502,7 @@ void label2sample(int n, int k, int* nk,int*L,int *permun)
   int *s;/*s is for starting*/
 
   /*initialize the beginning*/
-  assert(s=(int*)malloc(sizeof(int)*k));
+  assert(s=(int*)Calloc(k,int));
   s[0]=0;
   for(l=1;l<k;l++){
     s[l]=s[l-1]+nk[l-1];
@@ -512,17 +512,17 @@ void label2sample(int n, int k, int* nk,int*L,int *permun)
     permun[s[l]]=j;
     s[l]++;
   }
-  free(s);
+  Free(s);
 }
   
 int next_label(int n, int k, int* nk, int*L)
 {
   int *permun,ret;
-  assert(permun=(int*)malloc(sizeof(int)*n));
+  assert(permun=(int*)Calloc(n,int));
   label2sample(n,k,nk,L,permun);
   ret=next_mult_permu(permun,n,k,nk);
   sample2label(n,k,nk,permun,L);
-  free(permun);
+  Free(permun);
   return ret;
 }
 
@@ -539,7 +539,7 @@ int next_two_permu(int* V, int n, int k)
   int* A=V;
   int* B=V+k;
   int* tempV,*cpyV;
-  assert(tempV=(int*)malloc(sizeof(int)*n));
+  assert(tempV=(int*)Calloc(n,int));
 
   i=k-1;
   while(i>=0&& A[i]>maxb){
@@ -555,7 +555,7 @@ int next_two_permu(int* V, int n, int k)
     /*using the tempV to swap the array A and array B*/
     memcpy(V,tempV,sizeof(int)*n);
     /*coppying back to V*/
-    free(tempV);
+    Free(tempV);
     return 0;
   }
   /*else to find the next permutation*/
@@ -575,7 +575,7 @@ int next_two_permu(int* V, int n, int k)
   /*copy the ((n-k)-(j+1)) elements from array 
     B[j+1],...B[n-k-1],..,A[i+1],..A[k-1]*/
   /*construct the array B[j+1],...B[n-k-1],A[i+1],..A[k-1]*/
-  assert(cpyV=(int*)malloc(sizeof(int)*n));
+  assert(cpyV=(int*)Calloc(n,int));
   memcpy(cpyV,B+j+1,sizeof(int)*((n-k)-(j+1)));
   if(k>(i+1))
     memcpy(cpyV+(n-k)-(j+1),A+i+1,sizeof(int)*(k-(i+1)));
@@ -585,8 +585,8 @@ int next_two_permu(int* V, int n, int k)
     memcpy(tempV+k+j+2,cpyV+(k-i),sizeof(int)*((n-k)-(j+2)));
   /*copy back to V*/
   memcpy(V,tempV,sizeof(int)*n);
-  free(cpyV);
-  free(tempV);
+  Free(cpyV);
+  Free(tempV);
   return 1;
 }
 
@@ -643,14 +643,14 @@ int next_permu(int*V,int n) /* n has to be at least 2*/
     if(V[j]>old) break;
     j--;
   }
-  assert(cpyV=(int*)malloc(sizeof(int)*n));
+  assert(cpyV=(int*)Calloc(n,int));
   memcpy(cpyV,V,sizeof(int)*n);
   V[i]=cpyV[j];
   cpyV[j]=old;
   for(l=i+1;l<n;l++){
     V[l]=cpyV[n+i-l];
   }
-  free(cpyV);
+  Free(cpyV);
   return 1;
 }
 

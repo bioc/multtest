@@ -64,7 +64,7 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
   }
 
 
-\author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
+\author{Yongchao Ge, \email{yongchao.ge@mssm.edu}, \cr
 Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine}.}
 
 \seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{golub}}.}
