@@ -1,5 +1,5 @@
 Package: multtest
-Version: 1.4.1
+Version: 1.4.2
 Date: 2002-04-16
 Title: Multiple Testing Procedures
 Author: Yongchao Ge<yongchao.ge@mssm.edu>, Sandrine Dudoit<sandrine@stat.berkeley.edu>
@@ -18,7 +18,7 @@ Description: Multiple testing procedures.
 	are directly applicable to identify differentially expressed genes in 
 	DNA microarray experiments.
 License: LGPL
-     http://www.mssm.edu/faculty/yongchao-ge/
+URL: http://www.mssm.edu/faculty/yongchao-ge/
      http://www.stat.berkeley.edu/~sandrine,
      http://www.stat.berkeley.edu/users/terry/zarray/Html/index.html
 
