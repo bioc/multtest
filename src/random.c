@@ -101,7 +101,7 @@ void sample(int *V, int n, int m)
   float f;
   for(i=0;i<m;i++){
     /* no need to worry yet    
-       if(i==(n-1)) continue;/*no need to swap with the last elements*/
+       if(i==(n-1)) continue; */ /*no need to swap with the last elements*/
     j=n;
     while (j==n){/*skip the border, we only want random
 		    numbers from i,i+1,i+2,...,n-1*/
