@@ -72,7 +72,8 @@ A vector of integers corresponding to observation (column)
 }
 
 \examples{
-library(multtest)
+
+\dontrun{library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
@@ -89,7 +90,7 @@ qqline(permt)
 
 permp<-mt.sample.rawp(golub[1,],golub.cl,B=1000)
 hist(permp)
-
+}
 }
 
 \author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
