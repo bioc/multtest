@@ -7,6 +7,7 @@
 \documentclass[11pt]{article}
 
 \usepackage{amsmath,epsfig,psfig,pstricks,fullpage}
+\usepackage{graphicx}
 \usepackage[authoryear,round]{natbib}
 \usepackage{hyperref}
 
@@ -322,27 +323,39 @@ mt.plot(allp[,procs],teststat,plottype="pvst",
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[hhh]
-\centerline{\epsfig{figure=mtQQ.eps,width=4in,height=4in,angle=0}}
+%%\centerline{\epsfig{figure=mtQQ.eps,width=4in,height=4in,angle=0}}
+\begin{center}
+\includegraphics[width=4in,height=4in,angle=0]{mtQQ}
+\end{center}
 \caption{Normal Q--Q plot of $t$--statistics for leukemia data.}
 \protect\label{fig:mtQQ}
 \end{figure}
 
 
 \begin{figure}[hhh]
-\centerline{\epsfig{figure=mtNumDen.eps,width=4in,height=4in,angle=0}}
+%%\centerline{\epsfig{figure=mtNumDen.eps,width=4in,height=4in,angle=0}}
+\begin{center}
+\includegraphics[width=4in,height=4in,angle=0]{mtNumDen}
+\end{center}
 \caption{Numerator vs. square root of denominator of the
   $t$--statistics for the leukemia data.} 
 \protect\label{fig:mtNumDen}
 \end{figure}
 
 \begin{figure}[hhh]
-\centerline{\epsfig{figure=mtpvsr.eps,width=4in,height=4in,angle=0}}
+%%\centerline{\epsfig{figure=mtpvsr.eps,width=4in,height=4in,angle=0}}
+\begin{center}
+\includegraphics[width=4in,height=4in,angle=0]{mtpvsr}
+\end{center}
 \caption{Sorted adjusted $p$--values for the leukemia data.}
 \protect\label{fig:mtpvsr}
 \end{figure}
 
 \begin{figure}[hhh]
-\centerline{\epsfig{figure=mtpvst.eps,width=4in,height=4in,angle=0}}
+%\centerline{\epsfig{figure=mtpvst.eps,width=4in,height=4in,angle=0}}
+\begin{center}
+\includegraphics[width=4in,height=4in,angle=0]{mtpvst}
+\end{center}
 \caption{Adjusted $p$--values (log scale) vs. $t$--statistics for the leukemia data.}
 \protect\label{fig:mtpvst}
 \end{figure}
