@@ -19,7 +19,7 @@
       Y: the vector of one gene across experiments
       n: the number of experiments
       L: the class labelling of each experiments
-      na: the NA representationof gene values.
+      na: the NA representation of gene values.
       extra: the additional information, not used here
     */
 float two_sample_tstat(const float *Y, const int* L,const int n, const float na,const void *extra) 
@@ -195,8 +195,8 @@ float sign_sum(const float *Y, const int* L,const int n, const float na,const vo
   }
   return ret;
 }
-/*the function is cmpute the one sample t-statistics,
-used to compute the paired t-stat for 2xB block design, wherewhile Y[i]
+/*the function is compute the one sample t-statistics,
+used to compute the paired t-stat for 2xB block design, where while Y[i]
 is already the difference within one block,*/ 
 float sign_tstat_num_denum(const float *Y, const int* L,const int n, const float na,float *num, float*denum,const void *extra)
 {
@@ -238,7 +238,7 @@ float sign_tstat(const float *Y, const int* L,const int n, const float na, const
 }  
 
 /*compute the F-stat for k samples, where L[i] is the labelling of object i,
-note for F-test, (int*)*extra has the information of the lnumber of groups*/
+note for F-test, (int*)*extra has the information of the number of groups*/
 float Fstat(const float *Y, const int* L,const int n, const float na,const void* extra)
 {
   float num,denum,res;
@@ -254,7 +254,7 @@ float Fstat_num_denum(const float *Y, const int* L,const int n, const float na,f
   float dev;
   int i,class,k,*ni,N=0;/* ni the number of objects group i, 
 		   k is the number of groups,
-		   N is the total number of validate objectds*/
+		   N is the total number of validate objects*/
   k=*(int*)extra;
   meani=(float *)malloc(sizeof(float)*k);
   ssi=(float *)malloc(sizeof(float)*k);
@@ -290,7 +290,7 @@ float Fstat_num_denum(const float *Y, const int* L,const int n, const float na,f
     /*    if(ssi[i]==0) {
 	     ret=NA_FLOAT;
 	     break;
-	     }; /*each group needs to have non zero variance*/
+	     }; */ /*each group needs to have non zero variance*/
     wss+=ssi[i];
     dev=meani[i]-mean;
     bss+=dev*dev*ni[i];
@@ -378,14 +378,14 @@ void int2bin(int r,int*V,int n)
 { int i;
   for(i=n-1;i>=0;i--){
     V[i]=r&1;
-    r>>=1; /*divide by 2 so that we can lookat the next digit*/
+    r>>=1; /*divide by 2 so that we can look-at the next digit*/
   }
 }
 int bin2int(int*V,int n)
 { int i,ret=0;
   for(i=0;i<n-1;i++){
     ret+=V[i];
-    ret<<=1; /*multiply by 2 so that we can lookat the next digit*/
+    ret<<=1; /*multiply by 2 so that we can look at the next digit*/
   }
   ret+=V[n-1];
   return ret;
@@ -393,7 +393,7 @@ int bin2int(int*V,int n)
 /********************************************************************************/
 /*                      bincoeff                                                */
 /********************************************************************************/
-/*Descriptions: return the binomial coefficeint of n choosing k*/
+/*Descriptions: return the binomial coefficient of n choosing k*/
 int bincoeff(int n, int k)
 {
   float f=n;
@@ -402,7 +402,7 @@ int bincoeff(int n, int k)
     f*=(n-i)/(i+1.0);
   return (int)(f+0.5);
 }
-/*compute the log of the coefficeint*/
+/*compute the log of the coefficient*/
 double logbincoeff(int n, int k)
 {
   double f=log(n);
@@ -422,7 +422,7 @@ double logfactorial(int n, int k)
 /********************************************************************************/
 /*                 A2L                                                      */
 /********************************************************************************/
-/*Descitpions:
+/*Descriptions:
     Assume we have n objects, of which k of them are labeled with 0, the rest of them
     are labeling with 1. A is the subset of the objects which have label 0, L is the 
     labelling of each object. This function transforms A to Label
@@ -452,7 +452,7 @@ int next_lex(int* A, int n, int k)
 {
   int l=k-1, s=n-1,i,old;/*l is for the location of A to increase*/
 
-  /*fook for a location to increase*/  
+  /*look for a location to increase*/  
   while (A[l]==s &&l>=0) {
     l--;
     s--;
@@ -460,11 +460,11 @@ int next_lex(int* A, int n, int k)
   if(l<0) {
     if (myDEBUG)
       {
-	fprintf(stderr,"%s%s","We've achieved the maximum permuation already\n",
-		"We can not find the next onein next_lex\n");
+	fprintf(stderr,"%s%s","We've achieved the maximum permutation already\n",
+		"We can not find the next one in next_lex\n");
       }
 
-    return 0;/*note we can not geneate the next permutations*/
+    return 0;/*note we can not generate the next permutations*/
   }
   /*we increase every number by 1*/
   old=A[l];
@@ -501,7 +501,7 @@ void label2sample(int n, int k, int* nk,int*L,int *permun)
   int l,j;
   int *s;/*s is for starting*/
 
-  /*initialize the begining*/
+  /*initialize the beginning*/
   assert(s=(int*)malloc(sizeof(int)*k));
   s[0]=0;
   for(l=1;l<k;l++){
@@ -526,8 +526,8 @@ int next_label(int n, int k, int* nk, int*L)
   return ret;
 }
 
-/*V has n elemnets, the first k elements(referred as array A) are ordered, 
-  and the rest n-k elemtens (reffered as aray B)are ordered increasing order, 
+/*V has n elements, the first k elements(referred as array A) are ordered, 
+  and the rest n-k elements (referred as array B)are ordered increasing order, 
   this is the problem to list all binomial permutation from n choosing k.
   after the next_permu, if it's the last one, return false, and the whole array
   V will be ordered, just swap the array A and B. otherwise, V will be next permutation and keep the same order, the algorithm has computation O(N)*/
@@ -565,9 +565,9 @@ int next_two_permu(int* V, int n, int k)
   while(j>=0&&(B[j]>old)){
     j--;
   }
-  /*keep the orignial A[0..(i-1)] elements to tempV*/
+  /*keep the original A[0..(i-1)] elements to tempV*/
   memcpy(tempV,A,sizeof(int)*i);
-  /*keep the origanl B[0..j] elemtens to tempV+k*/
+  /*keep the original B[0..j] elements to tempV+k*/
   if(j+1>0)
     memcpy(tempV+k,B,sizeof(int)*(j+1));
   /*copy the (k-i) elements from array 
@@ -603,7 +603,7 @@ int next_mult_permu(int* V, int n, int k, int* nk)
     next=next_two_permu(V,s,olds);
     if(next) return 1;
   }
-  return 0;/*we could't find the next permutation*/
+  return 0;/*we couldn't find the next permutation*/
 }
 FUNC_CMP side2cmp(int side)
 {
@@ -630,10 +630,10 @@ int next_permu(int*V,int n) /* n has to be at least 2*/
   }
   if(i<0){
     if (myDEBUG){
-   	fprintf(stderr,"%s%s","We've achieved the maximum permuation already\n",
-		"We can not find the next onein next_permu\n");
+   	fprintf(stderr,"%s%s","We've achieved the maximum permutation already\n",
+		"We can not find the next one-in next_permu\n");
     }
-    return 0;/*note we can not geneate the next permutations*/
+    return 0;/*note we can not generate the next permutations*/
   }
   /*find the location of j, V[i]<V[i+1]>...>V[n-1]*/
   /*i.e. V[n-1]<V[n-2]<...V[j+1]<V[i]=old<V[j]<...V[i+1]*/
@@ -658,7 +658,7 @@ int next_permu(int*V,int n) /* n has to be at least 2*/
 /*                      print_farray                                             */
 /********************************************************************************/
 /*Description:
-      used to print an array with n elemnets.
+      used to print an array with n elements.
       we can specify*/
 
 void print_narray(FILE* fh,int* p_arr,int n)
@@ -709,7 +709,7 @@ void read_infile(char *filename,GENE_DATA *pdata) {
     assert(fscanf(fh, "%s", pdata->id[i]));
     /*read the rest of it*/
     for (j=0; j<pdata->ncol; j++) {
-      /*dealwith the double data*/
+      /*deal with the double data*/
       assert(fscanf(fh, "%lg",&ftemp));
       pdata->d[i][j]=ftemp;
     }
@@ -735,12 +735,12 @@ void print_gene_data(GENE_DATA* pdata)
 /*                     write_outfile                                            */
 /********************************************************************************/
 /*Descriptions:
-       write the test-statisitcs, unadjusted p-values, adjusted pvalues and Adjusted
+       write the test-statistics, unadjusted p-values, adjusted pvalues and Adjusted
        p-values lower to the file.
   input parameters:
-      filename: the file to wite
+      filename: the file to write
       pdata:    the pointer of the whole data
-      T,P,Adj_P,Adj_Lower: the array stores the test-testistics,
+      T,P,Adj_P,Adj_Lower: the array stores the test-statistics,
       unadjusted p-values, adjusted pvalues and adjusted p-values lower, respectively
       if Adj_Lower==NULL, it will not print this item
 */
@@ -810,7 +810,7 @@ int next_label_block(int* L, int n, int m)
     }
     s+=m;
   }
-  return 0;/*we could't find the next permutation*/
+  return 0;/*we couldn't find the next permutation*/
 }
 void init_label_block(int *L, int n,int m)
 {
@@ -845,7 +845,7 @@ void sample_block(int *L, int n,int m)
   data.nrow=ROW;  
   data.ncol=38;
   malloc_gene_data(&data);
-  read_infile("data",&data);
+  read_infile("data",&data); */
   /*print_gene_data(&data);
     compute_test_stat(&data,data.L,T,two_sample_tstat,NULL); checked
     compute_test_stat(&data,data.L,T,Fstat,(const void *)&k);
