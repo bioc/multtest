@@ -12,6 +12,7 @@
 \alias{mt.checkX}
 \alias{mt.checkV}
 \alias{mt.checkclasslabel}
+\alias{mt.niceres}
 \title{Internal multtest functions and variables}
 \description{
   Internal multtest functions and variables
@@ -31,6 +32,7 @@ na=.mt.naNUM, nonpara="n")
 mt.checkX(X,classlabel,test)
 mt.checkV(V,classlabel,test)
 mt.checkclasslabel(classlabel,test)
+mt.niceres<-function(res,X,index)
 }
 \details{
   These are not to be called directly by the user.

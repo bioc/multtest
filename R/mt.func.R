@@ -16,11 +16,12 @@ mt.teststat<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     mt.checkothers(na=na,nonpara=nonpara)
     tmp<-mt.transformX(X,classlabel,test,na,nonpara)
     options<-c(test,"abs","y"); #"abs"  and "y" has no meaning here
-    teststat<-.C("get_stat",as.double(tmp$X),as.integer(tmp$m),
+    res<-.C("get_stat",as.double(tmp$X),as.integer(tmp$m),
                as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
                teststat=double(tmp$m),as.character(options),
                as.integer(extra))$teststat
-    teststat
+    res[abs(res)>=0.9*1e20]<-NA
+    res
 }
 mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 {
@@ -33,7 +34,8 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 	       t.num=double(tmp$m),t.denum=double(tmp$m),as.character(options),
                as.integer(extra))
 
-    data.frame(teststat.num=teststat$t.num,teststat.denum=teststat$t.denum)
+    res<-cbind(teststat.num=teststat$t.num,teststat.denum=teststat$t.denum)
+    mt.niceres(res,X)
 }
   mt.maxT<-function(X,classlabel,test="t",side="abs",
                   fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
@@ -51,7 +53,8 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 	    as.integer(newB),index=integer(tmp$m),as.character(options),
                as.integer(extra))
 
-    data.frame(index=res$index,teststat=res$t,rawp=res$p,adjp=res$adjP)
+    res<-cbind(index=res$index,teststat=res$t,rawp=res$p,adjp=res$adjP)
+    mt.niceres(res,X,res[,1])
 }
 mt.minP<-function(X,classlabel,test="t",side="abs",
                   fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
@@ -69,7 +72,8 @@ mt.minP<-function(X,classlabel,test="t",side="abs",
             plower=double(tmp$m),as.integer(newB),index=integer(tmp$m),
             as.character(options),as.integer(extra))
 
-    data.frame(index=res$index,teststat=res$t,rawp=res$p,adjp=res$adjP,plower=res$plower)
+    res<-cbind(index=res$index,teststat=res$t,rawp=res$p,adjp=res$adjP,plower=res$plower)
+    mt.niceres(res,X,res[,1])
 }
 mt.sample.teststat<-function(V,classlabel,test="t",fixed.seed.sampling="y",
                        B=10000,na=.mt.naNUM,nonpara="n")
@@ -81,10 +85,11 @@ mt.sample.teststat<-function(V,classlabel,test="t",fixed.seed.sampling="y",
   if(B==0||newB<B)
     fixed.seed.sampling<-"n" #as we're doing complete premutation
   options<-c(test,"abs",fixed.seed.sampling);#the "abs" has no meaing here.
-  res<-.C("get_samples_T",as.double(tmp$V),as.integer(tmp$n),
+  res<-t(.C("get_samples_T",as.double(tmp$V),as.integer(tmp$n),
           as.integer(tmp$classlabel),T=double(newB),as.double(na),
-          as.integer(newB),as.character(options),as.integer(extra))
-  res$T
+          as.integer(newB),as.character(options),as.integer(extra))$T)
+  res[abs(res)>=0.9*1e20]<-NA
+  res
 }
 mt.sample.rawp<-function(V,classlabel,test="t",side="abs",
                        fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
@@ -96,9 +101,11 @@ mt.sample.rawp<-function(V,classlabel,test="t",side="abs",
   if(B==0||newB<B)
     fixed.seed.sampling<-"n" #as we're doing complete premutation
   options<-c(test,side,fixed.seed.sampling);
-  .C("get_samples_P",as.double(tmp$V),as.integer(tmp$n),
-     as.integer(tmp$classlabel), P=double(newB),as.double(na), as.integer(newB),
-     as.character(options),as.integer(extra))$P
+  res<-.C("get_samples_P",as.double(tmp$V),as.integer(tmp$n),
+          as.integer(tmp$classlabel), P=double(newB),as.double(na), as.integer(newB),
+          as.character(options),as.integer(extra))$P
+  res[abs(res)>=0.9*1e20]<-NA
+  res
 }
 mt.sample.label<-function(classlabel,test="t",
                             fixed.seed.sampling="y",B=10000)
@@ -340,6 +347,19 @@ mt.number2na<-function(x,na){
   y[y==na]<-NA
   y
 }
+#patched from the new version
+mt.niceres<-function(res,X,index){
+  newres<-res
+  name<-rownames(X,do.NULL=FALSE,prefix="")
+  if(missing(index)) {
+    rownames(newres)<-name
+  }else {
+    rownames(newres)<-name[index]
+  }
+  newres[abs(newres)>=0.9*1e20]<-NA
+  data.frame(newres)
+}
+
 
 
 
