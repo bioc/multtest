@@ -34,8 +34,8 @@ library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
-smallgd<-golub[2:101,-1] # Skip the row labels, consider only the first 100 genes.
-classlabel<-golub[1,-1]
+smallgd<-golub[1:100,] #consider only the first 100 genes.
+classlabel<-golub.cl
 
 # Permutation unadjusted p-values and adjusted p-values for maxT procedure
 res<-mt.maxT(smallgd,classlabel)

@@ -73,19 +73,17 @@ library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
-gd<-golub[-1,-1] # Skip the row labels
-classlabel<-golub[1,-1]
 
-teststat<-mt.teststat(gd,classlabel)
+teststat<-mt.teststat(golub,golub.cl)
 qqnorm(teststat)
 qqline(teststat)
 
-tmp<-mt.teststat.num.denum(gd,classlabel,test="t")
+tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
 num<-tmp$teststat.num
 denum<-tmp$teststat.denum
 plot(sqrt(denum),num)
 
-tmp<-mt.teststat.num.denum(gd,classlabel,test="f")
+tmp<-mt.teststat.num.denum(golub,golub.cl,test="f")
 
 }
 		

@@ -46,8 +46,8 @@ mt.maxT<-function(X,classlabel,test="t",side="abs",
     mt.checkothers(side=side,fixed.seed.sampling=fixed.seed.sampling,B=B,na=na,nonpara=nonpara)
     tmp<-mt.transformX(X,classlabel,test,na,nonpara)
     newB<-mt.getmaxB(classlabel,test,B)
-  #  if(B==0||newB<B)
-  #    fixed.seed.sampling<-"n" #as we're doing complete premutation
+    if(B==0||newB<B)
+      fixed.seed.sampling<-"n" #as we're doing complete premutation
     options<-c(test,side,fixed.seed.sampling);
     res<-.C("get_maxT",as.double(tmp$X),as.integer(tmp$m),
 	    as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),

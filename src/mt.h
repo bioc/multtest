@@ -1,7 +1,15 @@
 /*****************************************************************/
 /*          some options                                         */
 /*****************************************************************/
-
+/*#define USEDOUBLE*/
+/*to transport to R, fix it to be a double*/
+/*for windows'R*/
+/*#define WINDOWS is used to build R package for windows system*/
+#ifdef WINDOWS
+#include "R_ext\print.h"
+#define fprintf win_print
+void win_print(FILE*, char*,...);
+#endif
 /* these options can be incorporated in the command argments if you like*/  
 extern int myDEBUG;  /*this variable needs to be declared in the main file*/
 extern long int g_random_seed;

@@ -104,8 +104,8 @@ library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
-smallgd<-golub[2:101,-1] # Skip the row labels, consider only the first 100 genes.
-classlabel<-golub[1,-1]
+smallgd<-golub[1:100,] # consider only the first 100 genes.
+classlabel<-golub.cl
 
 # Permutation unadjusted p-values and adjusted p-values for maxT and minP procedures with Welch t-statistics
 resT<-mt.maxT(smallgd,classlabel)
@@ -122,8 +122,6 @@ mt.plot(allp, teststat, plottype="pvsr", proc=c("rawp","Bonferroni","maxT","minP
 mt.plot(allp, teststat, plottype="pvst", proc=c("rawp","Bonferroni","maxT","minP"),leg=c(-6,0.6),pch=16,col=1:4)
 
 # Permutation adjusted p-values for minP procedure with F-statistics (like equal variance t-statistics)
-smallgd<-golub[2:101,-1] # Skip the row labels
-classlabel<-golub[1,-1]
 mt.minP(smallgd,classlabel,test="f",fixed.seed.sampling="n")
 
 # Note that the test statistics used in the examples below are not appropriate 

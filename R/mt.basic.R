@@ -71,12 +71,14 @@ mt.rawp2adjp<-function(rawp,proc=c("Bonferroni","Holm","Hochberg","SidakSS","Sid
 mt.reject<-function(adjp,alpha)
 {
   which<-adjp<=alpha[1]
+  dimnames(which)<-dimnames(adjp)
 
   if(is.matrix(adjp))
   {
     r<-matrix(0,length(alpha),ncol(adjp))
     for(i in 1:length(alpha))
       r[i,]<-apply(adjp<=alpha[i],2,sum)
+    dimnames(r)<-list(alpha,dimnames(adjp)[[2]])
   }
 
   if(!is.matrix(adjp))

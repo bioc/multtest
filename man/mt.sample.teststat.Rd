@@ -76,20 +76,18 @@ library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
-gd<-golub[-1,-1]
-classlabel<-golub[1,-1]
 
-mt.sample.label(classlabel,B=10)
+mt.sample.label(golub.cl,B=10)
 
-permt<-mt.sample.teststat(gd[1,],classlabel,B=1000)
+permt<-mt.sample.teststat(golub[1,],golub.cl,B=1000)
 qqnorm(permt)
 qqline(permt)
 
-permt<-mt.sample.teststat(gd[50,],classlabel,B=1000)
+permt<-mt.sample.teststat(golub[50,],golub.cl,B=1000)
 qqnorm(permt)
 qqline(permt)
 
-permp<-mt.sample.rawp(gd[1,],classlabel,B=1000)
+permp<-mt.sample.rawp(golub[1,],golub.cl,B=1000)
 hist(permp)
 
 }

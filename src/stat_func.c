@@ -166,7 +166,7 @@ float Wilcoxon_num_denum(const float *Y, const int* L,const int n,
     count++;
   }
   *num=s-(1+count)*n1/2.0;
-  *denum=n1*(count-n1)*(count+1)/12.0;
+  *denum=sqrt(n1*(count-n1)*(count+1)/12.0);
   if((*denum)<EPSILON) return NA_FLOAT;
   return 1; 
 }

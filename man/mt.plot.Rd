@@ -41,7 +41,7 @@ report ***  NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley.
   Sandrine Dudoit, \email{sandrine@stat.berkeley.edu}, \cr
   Yongchao Ge, \email{gyc@stat.berkeley.edu}.
 }
-\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{mt.rawp2adjp}},  \code{\link{mt.reject}}, \code{\link{mt.stat}}.
+\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{mt.rawp2adjp}},  \code{\link{mt.reject}}, \code{\link{mt.teststat}}.
 }
 
 \examples{
@@ -50,8 +50,8 @@ library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
-smallgd<-golub[2:101,-1] # Skip the row labels, consider only the first 100 genes.
-classlabel<-golub[1,-1]
+smallgd<-golub[1:100,] #consider only the first 100 genes.
+classlabel<-golub.cl
 
 # Permutation unadjusted p-values and adjusted p-values for maxT procedure
 res1<-mt.maxT(smallgd,classlabel)

@@ -97,9 +97,9 @@ int cmp_abs(const void *v1, const void *v2) {
   float f1=fabs(*(gp_arr+*(int *)v1));
   float f2=fabs(*(gp_arr+*(int *)v2));
   if(f1==NA_FLOAT)
-    return -1;
-  if(f2==NA_FLOAT)
     return 1;
+  if(f2==NA_FLOAT)
+    return -1;
   if (f1<f2)
     return 1;
   if (f1>f2)
@@ -109,9 +109,9 @@ int cmp_abs(const void *v1, const void *v2) {
 }
 int cmp_low(const void *v1, const void *v2) {
   if((*(gp_arr+*(int *)v1))==NA_FLOAT)
-    return -1;
-  if((*(gp_arr+*(int *)v2))==NA_FLOAT)
     return 1;
+  if((*(gp_arr+*(int *)v2))==NA_FLOAT)
+    return -1;
   if ((*(gp_arr+*(int *)v1))<(*(gp_arr+*(int *)v2)))
     return -1;
   if ((*(gp_arr+*(int *)v1))>(*(gp_arr+*(int *)v2)))

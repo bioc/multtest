@@ -9,7 +9,7 @@
 mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD", "BH"))
 }
 \arguments{
-  \item{rawp}{A vector of raw (unadjusted) \eqn{p}-values for each hypothesis under consideration. These could be nominal \eqn{p}-values, for example, from t-tables, or permutation \eqn{p}-values as in given in \code{mt.maxT} and \code{mt.minP}. If the \code{mt.maxT} or \code{mt.minP} functions are used, raw \eqn{p}-values should given in the original data order, \code{rawp[order(index)]}.}
+  \item{rawp}{A vector of raw (unadjusted) \eqn{p}-values for each hypothesis under consideration. These could be nominal \eqn{p}-values, for example, from t-tables, or permutation \eqn{p}-values as given in \code{mt.maxT} and \code{mt.minP}. If the \code{mt.maxT} or \code{mt.minP} functions are used, raw \eqn{p}-values should be given in the original data order, \code{rawp[order(index)]}.}
   \item{proc}{A vector of character strings containing the names of the multiple testing procedures for which adjusted \eqn{p}-values are to be computed. This vector should include any of the following: \code{"Bonferroni"}, \code{"Holm"}, \code{"Hochberg"}, \code{"SidakSS"}, \code{"SidakSD"}, \code{"BH"}, \code{"BY"}.
 }
 }
@@ -65,8 +65,8 @@ library(multtest)
 
 # Gene expression data from Golub et al. (1999)
 data(golub)
-smallgd<-golub[2:101,-1] # Skip the row labels, consider only the first 100 genes.
-classlabel<-golub[1,-1]
+smallgd<-golub[1:100,] #consider only the first 100 genes.
+classlabel<-golub.cl
 
 # Permutation unadjusted p-values and adjusted p-values for maxT procedure
 res1<-mt.maxT(smallgd,classlabel)

@@ -9,7 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
-
+#include <stdarg.h>
 #include "mt.h"
 /************************************************************************************/
 /*                      malloc_gene_data                                            */
@@ -19,7 +19,35 @@
 */
 int myDEBUG=0;
 long int g_random_seed=3455660;
+void print_b(int b,int B){
+  static int p=0;
+  if(b==0) p=0;
+  if(!PROMPT_LEN){
+    if((B<=100) ||(b%(B/100)==0))
+      {
+	fprintf(stderr,"b=%d\t",b);
+	p++;
+	if(PRINT_VAR_NUM && (p%PRINT_VAR_NUM==0))
+	  fprintf(stderr,"\n");
 
+      }
+  }else if((b%PROMPT_LEN)==0){
+    p++;
+    fprintf(stderr,"b=%d",b);
+    if(PRINT_VAR_NUM && (p%PRINT_VAR_NUM==0))
+      fprintf(stderr,"\n");
+
+  }
+}
+#ifdef WINDOWS
+void win_print(FILE* fp, char* format,...)
+{
+  va_list ap;
+  va_start(ap, format);
+  REvprintf(format, ap);
+  va_end(ap);
+}
+#endif
 void malloc_gene_data(GENE_DATA* pdata)
 {
   int i;
@@ -141,12 +169,7 @@ void  get1pvalue(GENE_DATA* pdata,int* L,float* T,float* P,
       total[i]++;
      }
     b++;
-    if(!PROMPT_LEN){
-      if((B<=100) ||(b%(B/100)==0))
-	fprintf(stderr,"b=%d\t",b);
-    }else if((b%PROMPT_LEN)==0)
-      fprintf(stderr,"b=%d\t",b);
-
+    print_b(b,B);
     is_next=(*func_next_sample)(bL);
   }
 
@@ -521,11 +544,7 @@ void  adj_by_T(GENE_DATA* pdata,float* T,float* P,float*Adj_P,
       if(qT!=NA_FLOAT) total1[i]++;
     }
     b++;
-    if(!PROMPT_LEN){
-      if((B<=100) ||(b%(B/100)==0))
-	fprintf(stderr,"b=%d\t",b);
-    }else if((b%PROMPT_LEN)==0)
-      fprintf(stderr,"b=%d\t",b);
+    print_b(b,B);
     is_next=(*func_next_sample)(bL);
   }
 
