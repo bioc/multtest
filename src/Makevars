@@ -1,5 +1,2 @@
 PKG_CFLAGS=-O -Wall -DUSEDOUBLE
 PKG_LIBS=-lm
-
-
-
