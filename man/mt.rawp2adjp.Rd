@@ -9,8 +9,9 @@
 mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD", "BH"))
 }
 \arguments{
-  \item{rawp}{A vector of raw (unadjusted) \eqn{p}-values for each hypothesis under consideration. These could be nominal \eqn{p}-values, for example, from t-tables, or permutation \eqn{p}-values as in given in \code{mt.maxT} and \code{mt.minP}.}
-  \item{proc}{A vector of character strings containing the names of the multiple testing procedures for which adjusted \eqn{p}-values are to be computed. This vector should include any of the following: \code{"Bonferroni"}, \code{"Holm"}, \code{"Hochberg"}, \code{"SidakSS"}, \code{"SidakSD"}, \code{"BH"}, \code{"BY"}.}
+  \item{rawp}{A vector of raw (unadjusted) \eqn{p}-values for each hypothesis under consideration. These could be nominal \eqn{p}-values, for example, from t-tables, or permutation \eqn{p}-values as in given in \code{mt.maxT} and \code{mt.minP}. If the \code{mt.maxT} or \code{mt.minP} functions are used, raw \eqn{p}-values should given in the original data order, \code{rawp[order(index)]}.}
+  \item{proc}{A vector of character strings containing the names of the multiple testing procedures for which adjusted \eqn{p}-values are to be computed. This vector should include any of the following: \code{"Bonferroni"}, \code{"Holm"}, \code{"Hochberg"}, \code{"SidakSS"}, \code{"SidakSD"}, \code{"BH"}, \code{"BY"}.
+}
 }
 \details{
   Adjusted \eqn{p}-values are computed for simple FWER and FDR
@@ -31,10 +32,10 @@ A list with components
   \item{adjp}{A matrix of adjusted \eqn{p}-values, with rows
     corresponding to hypotheses and columns to multiple testing
     procedures. Hypotheses are sorted in increasing order of their raw (unadjusted) \eqn{p}-values.}
-  \item{ord}{A vector of integers, ordering of raw (unadjusted) \eqn{p}-values.To obtain the adjusted  \eqn{p}-values in the original data order, use \code{adjp[order(ord),]}.
+  \item{index}{A vector of row indices, between 1 and \code{length(rawp)}, where rows are sorted according to
+    their raw (unadjusted) \eqn{p}-values. To obtain the adjusted \eqn{p}-values in the original data order, use \code{adjp[order(index),]}.
 }
 }
-
 \references{
 Y. Benjamini and Y. Hochberg (1995). Controlling the false discovery rate: a practical and powerful approach to multiple testing. \emph{J. R. Statist. Soc. B}. Vol. 57: 289-300.\cr
 

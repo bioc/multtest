@@ -63,7 +63,7 @@ procs<-c("Bonferroni","Holm","Hochberg","SidakSS","SidakSD","BH","BY")
 res2<-mt.rawp2adjp(rawp,procs)
 
 # Plot results from all multiple testing procedures
-allp<-cbind(res2$adjp[order(res2$ord),],res1$adjp[order(res1$index)])
+allp<-cbind(res2$adjp[order(res2$index),],res1$adjp[order(res1$index)])
 dimnames(allp)[[2]][9]<-"maxT"
 procs<-dimnames(allp)[[2]]
 procs[7:9]<-c("maxT","BH","BY")

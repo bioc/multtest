@@ -3,8 +3,8 @@ mt.rawp2adjp<-function(rawp,proc=c("Bonferroni","Holm","Hochberg","SidakSS","Sid
 
   m<-length(rawp)
   n<-length(proc)
-  ord<-order(rawp)
-  spval<-rawp[ord]
+  index<-order(rawp)
+  spval<-rawp[index]
 
   adjp<-matrix(0,m,n+1)
   dimnames(adjp)<-list(NULL,c("rawp",proc))
@@ -63,7 +63,7 @@ mt.rawp2adjp<-function(rawp,proc=c("Bonferroni","Holm","Hochberg","SidakSS","Sid
     adjp[,"BY"]<-tmp
   }
 
-  list(adjp=adjp,ord=ord)
+  list(adjp=adjp,index=index)
 }
 
 ###########################################################################

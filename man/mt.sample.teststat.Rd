@@ -10,11 +10,12 @@ mt.sample.label(classlabel,test="t",fixed.seed.sampling="y",B=10000)
 }
 \description{
   These functions provide tools to investigate the permutation distribution
-  of the test statistics, raw (unadjusted) \eqn{p}-values, and class labels.
+  of test statistics, raw (unadjusted) \eqn{p}-values, and class labels.
 }
 \arguments{
   \item{V}{A numeric vector containing the data for one of the variables (genes).}
-\item{classlabel}{
+
+ \item{classlabel}{
     A vector of integers corresponding to observation (column)
     class labels. For \eqn{k} classes, the labels must be integers
     between 0 and \eqn{k-1}. For the \code{blockf} test option,
@@ -31,9 +32,10 @@ mt.sample.label(classlabel,test="t",fixed.seed.sampling="y",B=10000)
     If \code{test="t.equalvar"}, the tests are based on two-sample
     t-statistics assuming equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
-    If \code{test="wilcoxon"}, the tests are based on centered rank sum Wilcoxon statistics.\cr
+    If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
-    If \code{test="pairt"}, the tests are based on paired t-statistics. The \code{pairt} test options is a special case of the \code{blockf} option when \eqn{k=2}.\cr    
+    If \code{test="pairt"}, the tests are based on paired t-statistics. The
+    square of the paired t-statistic is equal to a block F-statistic for \eqn{k=2}. \cr
     If \code{test="blockf"}, the tests are based on F-statistics which
     adjust for block differences
     (cf. two-way analysis of variance).
@@ -53,13 +55,14 @@ mt.sample.label(classlabel,test="t",fixed.seed.sampling="y",B=10000)
     enumeration, \code{B} should be 0 (zero) or any number not less than
     the total number of permutations.
   }
-  \item{na}{Code for missing values (the default is .mt.naNUM=--93074815.62).
+  \item{na}{Code for missing values (the default is \code{.mt.naNUM=--93074815.62}).
     Entries with missing values will be ignored in the computation,
     i.e., test statistics will be based on a smaller sample size.
   }
   \item{nonpara}{If \code{nonpara}="y", nonparametric test statistics are computed based on ranked data. \cr
     If  \code{nonpara}="n", the original data are used.
   }
+
 }
 \value{
   For \code{\link{mt.sample.teststat}},  a vector containing \code{B} permutation test statistics. \cr

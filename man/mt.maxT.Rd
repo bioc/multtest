@@ -4,7 +4,7 @@
 \title{
   Step-down maxT and minP multiple testing procedures
 }
-\description{These functions compute permutation adjusted \eqn{p}-values for step-down multiple testing procedures of Westfall & Young (1993).
+\description{These functions compute permutation adjusted \eqn{p}-values for step-down multiple testing procedures described in Westfall & Young (1993).
 }
 \usage{
 mt.maxT(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
@@ -35,9 +35,10 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
     If \code{test="t.equalvar"}, the tests are based on two-sample
     t-statistics assuming equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
-    If \code{test="wilcoxon"}, the tests are based on centered rank sum Wilcoxon statistics.\cr
+    If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
-    If \code{test="pairt"}, the tests are based on paired t-statistics. The \code{pairt} test options is a special case of the \code{blockf} option when \eqn{k=2}.\cr    
+    If \code{test="pairt"}, the tests are based on paired t-statistics. The
+    square of the paired t-statistic is equal to a block F-statistic for \eqn{k=2}. \cr
     If \code{test="blockf"}, the tests are based on F-statistics which
     adjust for block differences
     (cf. two-way analysis of variance).
@@ -57,7 +58,7 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
     enumeration, \code{B} should be 0 (zero) or any number not less than
     the total number of permutations.
   }
-  \item{na}{Code for missing values (the default is .mt.naNUM=--93074815.62).
+  \item{na}{Code for missing values (the default is \code{.mt.naNUM=--93074815.62}).
     Entries with missing values will be ignored in the computation,
     i.e., test statistics will be based on a smaller sample size.
   }
@@ -66,19 +67,18 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
   }
 }
 
-\details{These functions compute permutation adjusted \eqn{p}-values for step-down multiple testing procedures of Westfall & Young (1993). The adjusted \eqn{p}-values for the minP procedure are given in equation (2.10) p. 66, and the maxT procedure is discussed p. 50 and 114. The procedures are for the simultaneous test of \eqn{m} null hypotheses, namely, the null hypotheses of no association between the \eqn{m} variables corresponding to the rows of the data frame \code{X} and the class labels \code{classlabel}. For gene expression data, the null hypotheses correspond to no differential gene expression across mRNA samples.
+\details{These functions compute permutation adjusted \eqn{p}-values for the step-down maxT and minP multiple testing procedures, which provide strong control of the family-wise Type I error rate (FWER). The adjusted \eqn{p}-values for the minP procedure are defined in equation (2.10) p. 66 of Westfall & Young (1993), and the maxT procedure is discussed p. 50 and 114. The permutation algorithms for estimating the adjusted \eqn{p}-values are given in Ge et al. (2001). The procedures are for the simultaneous test of \eqn{m} null hypotheses, namely, the null hypotheses of no association between the \eqn{m} variables corresponding to the rows of the data frame \code{X} and the class labels \code{classlabel}. For gene expression data, the null hypotheses correspond to no differential gene expression across mRNA samples.
 }
 
 
 \value{
-  A list with components
-  \item{index}{Vector of row indices sorted first according to
+  A data frame with components
+  \item{index}{Vector of row indices, between 1 and \code{nrow(X)}, where rows are sorted first according to
     their adjusted \eqn{p}-values, next their unadjusted \eqn{p}-values, and finally their test statistics. }
-  \item{teststat}{Vector of test statistics, ordered according to \code{index}. To get the test statistics in the original data order, use \code{t[order(index)]}.}
+  \item{teststat}{Vector of test statistics, ordered according to \code{index}. To get the test statistics in the original data order, use \code{teststat[order(index)]}.}
   \item{rawp}{Vector of raw (unadjusted) \eqn{p}-values, ordered according to \code{index}.}
   \item{adjp}{Vector of adjusted \eqn{p}-values, ordered according to \code{index}.}
-  \item{plower}{*** Vector of adjusted \eqn{p}-values when we count multiple "=" as 1 during the comparison for minP formula,
-    only existing for \code{\link{mt.minP}}, ordered according to \code{index}.}
+  \item{plower}{For \code{\link{mt.minP}} function only, vector of "adjusted \eqn{p}-values", where ties in the permutation distribution of the successive minima of raw \eqn{p}-values with the observed \eqn{p}-values are counted only once. Note that procedures based on \code{plower} do not control the FWER. Comparison of \code{plower} and \code{adjp} gives an idea of the discreteness of the permutation distribution. Values in \code{plower} are ordered according to \code{index}.}
 }
 }
 
@@ -115,7 +115,7 @@ teststat<-resT$teststat[order(resT$index)]
 
 # Plot results and compare to Bonferroni procedure
 bonf<-mt.rawp2adjp(rawp, proc=c("Bonferroni"))
-allp<-cbind(rawp, bonf$adjp[order(bonf$ord),2], resT$adjp[order(resT$index)],resP$adjp[order(resP$index)])
+allp<-cbind(rawp, bonf$adjp[order(bonf$index),2], resT$adjp[order(resT$index)],resP$adjp[order(resP$index)])
 
 mt.plot(allp, teststat, plottype="rvsa", proc=c("rawp","Bonferroni","maxT","minP"),leg=c(0.7,50),lty=1,col=1:4,lwd=2)
 mt.plot(allp, teststat, plottype="pvsr", proc=c("rawp","Bonferroni","maxT","minP"),leg=c(60,0.2),lty=1,col=1:4,lwd=2)

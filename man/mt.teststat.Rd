@@ -36,15 +36,15 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     If \code{test="t.equalvar"}, the tests are based on two-sample
     t-statistics assuming equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
-    If \code{test="wilcoxon"}, the tests are based on centered rank sum Wilcoxon statistics.\cr
+    If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
-    If \code{test="pairt"}, the tests are based on paired t-statistics. The \code{pairt} test options is a special case of the \code{blockf} option when \eqn{k=2}.\cr    
+    If \code{test="pairt"}, the tests are based on paired t-statistics. The
+    square of the paired t-statistic is equal to a block F-statistic for \eqn{k=2}. \cr
     If \code{test="blockf"}, the tests are based on F-statistics which
     adjust for block differences
     (cf. two-way analysis of variance).
   }
-  
-  \item{na}{Code for missing values (the default is .mt.naNUM=--93074815.62).
+  \item{na}{Code for missing values (the default is \code{.mt.naNUM=--93074815.62}).
     Entries with missing values will be ignored in the computation,
     i.e., test statistics will be based on a smaller sample size.
   }
@@ -55,7 +55,7 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 
 \value{
   For \code{\link{mt.teststat}}, a vector of test statistics for each row (gene). \cr
-  For \code{\link{mt.teststat.num.denum}}, a list with \cr
+  For \code{\link{mt.teststat.num.denum}}, a data frame with \cr
   \item{teststat.num}{the numerator of the test statistics for each row, depending on the
     specific \code{test} option.}
   \item{teststat.denum}{the denominator of the test statistics for each row, depending on the
