@@ -53,7 +53,8 @@ The {\tt multtest} package implements multiple testing procedures for controllin
 
  We demonstrate the functionality of this package using gene expression data from the leukemia ALL/AML study of \cite{Golubetal}. To load the leukemia dataset, use {\tt data(golub)}, and to view a description of the experiments and data, type {\tt ? golub}. 
 
-<<eval=TRUE, echo=TRUE>>=
+%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 library(multtest, verbose=FALSE)
 data(golub)
 @
@@ -75,7 +76,8 @@ The dataset {\tt golub} contains the gene expression data for the 38 training se
 {{\tt golub.cl}:} a vector of tumor class labels (0 for ALL, 1 for AML). 
 \end{itemize}
 
-<<eval=TRUE, echo=TRUE>>=
+%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 dim(golub)
 golub[1:4,1:4]
 dim(golub.gnames)
@@ -90,20 +92,23 @@ golub.cl
 
 The {\tt mt.teststat} and {\tt mt.teststat.num.denum} functions provide a convenient way to compute test statistics for each row of a data frame, e.g., two--sample Welch $t$--statistics, Wilcoxon statistics, $F$--statistics, paired $t$--statistics, block $F$--statistics. To compute two--sample $t$--statistics comparing, for each gene, expression in the ALL cases to expression in the AML cases
 
-<<eval=TRUE, echo=TRUE>>=
+%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 teststat<-mt.teststat(golub,golub.cl)
 @
 
 The following produces a normal Quantile--Quantile (Q--Q) plot of the test statistics (Figure \ref{fig:mtQQ}). In our application, we are not so much interested in testing whether the test statistics follow a particular distribution, but in using the Q--Q plot as a visual aid for identifying genes with ``unusual'' test statistics. Q--Q plots informally correct for the large number of comparisons and the points which deviate markedly from an otherwise linear relationship are likely to correspond to those genes whose expression levels differ between the control and treatment groups.
 
-<<mtQQ,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+%<<mtQQ,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+<<>>=
 qqnorm(teststat)
 qqline(teststat)
 @
 
 We may also wish to look at plots of the numerators and denominators of the test statistics (Figure \ref{fig:mtNumDen})
 
-<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+%<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+
 tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
 num<-tmp$teststat.num
 denum<-tmp$teststat.denum
