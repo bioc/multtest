@@ -17,10 +17,8 @@ Description: Multiple testing procedures.
 	Results are reported in terms of adjusted p-values. The procedures 
 	are directly applicable to identify differentially expressed genes in 
 	DNA microarray experiments.
-License: GPL2
-URL: http://www.bioconductor.org,  
-     http://www.r-project.org,  
+License: LGPL
+     http://www.mssm.edu/faculty/yongchao-ge/
      http://www.stat.berkeley.edu/~sandrine,
-     http://www.stat.berkeley.edu/~gyc,
      http://www.stat.berkeley.edu/users/terry/zarray/Html/index.html
 
