@@ -1,0 +1,46 @@
+\name{mt.reject}
+\alias{mt.reject}
+\title{Identity and number of rejected hypotheses }
+\description{This function returns the identity and number of rejected hypotheses for several multiple testing procedures and different nominal Type I error rates.
+}
+\usage{
+mt.reject(adjp, alpha)
+}
+\arguments{
+  \item{adjp}{A matrix of adjusted \emph{p}-values, with rows
+    corresponding to hypotheses and columns to multiple testing
+    procedures. This matrix could be obtained from the function
+    \code{\link{mt.rawp2adjp}}
+    .}
+  \item{alpha}{A vector of nominal Type I error rates.}
+}
+\value{
+  A list with components
+  \item{r}{A matrix containing the number of rejected hypotheses for several multiple testing procedures and different nominal Type I error rates. Rows correspond to Type I error rates and columns to multiple testing procedures.}
+  \item{which}{A matrix of indicators for the rejection of individual hypotheses by different multiple testing procedures for a nominal Type I error rate \code{alpha[1]}. Rows correspond to hypotheses and columns to multiple testing procedures.}
+}
+
+\author{
+  Sandrine Dudoit, \email{sandrine@stat.berkeley.edu}, \cr
+  Yongchao Ge, \email{gyc@stat.berkeley.edu}.
+}
+
+
+\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{mt.rawp2adjp}}.
+}
+
+\examples{
+library(multtest)
+
+# Gene expression data from Golub et al. (1999)
+data(golub)
+smallgd<-golub[2:101,-1] # Skip the row labels, consider only the first 100 genes.
+classlabel<-golub[1,-1]
+
+# Permutation unadjusted p-values and adjusted p-values for maxT procedure
+res<-mt.maxT(smallgd,classlabel)
+mt.reject(cbind(res$rawp,res$adjp),seq(0,1,0.1))$r
+
+}
+
+\keyword{htest}

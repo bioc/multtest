@@ -1,0 +1,142 @@
+\name{mt.maxT}
+\alias{mt.maxT}
+\alias{mt.minP}
+\title{
+  Step-down maxT and minP multiple testing procedures
+}
+\description{These functions compute permutation adjusted \eqn{p}-values for step-down multiple testing procedures of Westfall & Young (1993).
+}
+\usage{
+mt.maxT(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
+mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
+}
+
+\arguments{
+  \item{X}{A data frame, with \eqn{m} rows corresponding to variables
+    (hypotheses) and
+    \eqn{n} columns to observations. In the case of gene expression data, rows
+    correspond to genes and columns to mRNA samples. The data can
+    be read using \code{\link{read.table}}.
+  }
+  \item{classlabel}{
+    A vector of integers corresponding to observation (column)
+    class labels. For \eqn{k} classes, the labels must be integers
+    between 0 and \eqn{k-1}. For the \code{blockf} test option,
+    observations may be divided into
+    \eqn{n/k} blocks of \eqn{k} observations each. The observations are
+    ordered by block, and within each block, they are labeled using the
+    integers 0 to \eqn{k-1}.
+  }	
+  \item{test}{A character string specifying the statistic to be
+    used to test the null hypothesis of no association between the
+    variables and the class labels.\cr
+    If \code{test="t"}, the tests are based on two-sample Welch t-statistics
+    (unequal variances).  \cr
+    If \code{test="t.equalvar"}, the tests are based on two-sample
+    t-statistics assuming equal variance for the two samples. The
+    square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
+    If \code{test="wilcoxon"}, the tests are based on centered rank sum Wilcoxon statistics.\cr
+    If \code{test="f"}, the tests are based on F-statistics.\cr
+    If \code{test="pairt"}, the tests are based on paired t-statistics. The \code{pairt} test options is a special case of the \code{blockf} option when \eqn{k=2}.\cr    
+    If \code{test="blockf"}, the tests are based on F-statistics which
+    adjust for block differences
+    (cf. two-way analysis of variance).
+  }
+  \item{side}{A character string specifying the type of rejection region.\cr
+    If \code{side="abs"}, two-tailed tests, the null hypothesis is rejected for large absolute values of the test statistic.\cr
+    If \code{side="upper"}, one-tailed tests, the null hypothesis is rejected for large values of the test statistic.\cr
+    If \code{side="lower"}, one-tailed tests,  the null hypothesis is rejected for small values of the test statistic.
+  }
+  \item{fixed.seed.sampling}{If \code{fixed.seed.sampling="y"}, a
+    fixed seed sampling procedure is used, which may double the
+    computing time, but will not use extra memory to store the
+    permutations. If \code{fixed.seed.sampling="n"}, permutations will
+    be stored in memory.  For the \code{blockf} test, the option \code{n} was not implemented as it requires too much memory.
+  }
+  \item{B}{The number of permutations. For a complete
+    enumeration, \code{B} should be 0 (zero) or any number not less than
+    the total number of permutations.
+  }
+  \item{na}{Code for missing values (the default is .mt.naNUM=--93074815.62).
+    Entries with missing values will be ignored in the computation,
+    i.e., test statistics will be based on a smaller sample size.
+  }
+  \item{nonpara}{If \code{nonpara}="y", nonparametric test statistics are computed based on ranked data. \cr
+    If  \code{nonpara}="n", the original data are used.
+  }
+}
+
+\details{These functions compute permutation adjusted \eqn{p}-values for step-down multiple testing procedures of Westfall & Young (1993). The adjusted \eqn{p}-values for the minP procedure are given in equation (2.10) p. 66, and the maxT procedure is discussed p. 50 and 114. The procedures are for the simultaneous test of \eqn{m} null hypotheses, namely, the null hypotheses of no association between the \eqn{m} variables corresponding to the rows of the data frame \code{X} and the class labels \code{classlabel}. For gene expression data, the null hypotheses correspond to no differential gene expression across mRNA samples.
+}
+
+
+\value{
+  A list with components
+  \item{index}{Vector of row indices sorted first according to
+    their adjusted \eqn{p}-values, next their unadjusted \eqn{p}-values, and finally their test statistics. }
+  \item{teststat}{Vector of test statistics, ordered according to \code{index}. To get the test statistics in the original data order, use \code{t[order(index)]}.}
+  \item{rawp}{Vector of raw (unadjusted) \eqn{p}-values, ordered according to \code{index}.}
+  \item{adjp}{Vector of adjusted \eqn{p}-values, ordered according to \code{index}.}
+  \item{plower}{*** Vector of adjusted \eqn{p}-values when we count multiple "=" as 1 during the comparison for minP formula,
+    only existing for \code{\link{mt.minP}}, ordered according to \code{index}.}
+}
+}
+
+\references{S. Dudoit and J. P. Shaffer. (2001). Multiple hypothesis testing in
+microarray experiments. Technical report  *** NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley.\cr
+
+Y. Ge, S. Dudoit, and T. P. Speed (2001). Fast algorithm for
+resampling-based \eqn{p}-value adjustment in multiple testing. Technical
+report *** NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley. \cr
+
+P. H. Westfall and S. S. Young (1993). Resampling-based
+multiple testing: Examples and methods for \eqn{p}-value adjustment. John Wiley \& Sons.
+}	
+  
+\author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
+Sandrine Dudoit, \email{sandrine@stat.berkeley.edu}.}
+
+\seealso{\code{\link{mt.plot}}, \code{\link{mt.reject}}, \code{\link{mt.sample.teststat}}, \code{\link{mt.teststat}}.}
+
+
+\examples{
+library(multtest)
+
+# Gene expression data from Golub et al. (1999)
+data(golub)
+smallgd<-golub[2:101,-1] # Skip the row labels, consider only the first 100 genes.
+classlabel<-golub[1,-1]
+
+# Permutation unadjusted p-values and adjusted p-values for maxT and minP procedures with Welch t-statistics
+resT<-mt.maxT(smallgd,classlabel)
+resP<-mt.minP(smallgd,classlabel)
+rawp<-resT$rawp[order(resT$index)]
+teststat<-resT$teststat[order(resT$index)]
+
+# Plot results and compare to Bonferroni procedure
+bonf<-mt.rawp2adjp(rawp, proc=c("Bonferroni"))
+allp<-cbind(rawp, bonf$adjp[order(bonf$ord),2], resT$adjp[order(resT$index)],resP$adjp[order(resP$index)])
+
+mt.plot(allp, teststat, plottype="rvsa", proc=c("rawp","Bonferroni","maxT","minP"),leg=c(0.7,50),lty=1,col=1:4,lwd=2)
+mt.plot(allp, teststat, plottype="pvsr", proc=c("rawp","Bonferroni","maxT","minP"),leg=c(60,0.2),lty=1,col=1:4,lwd=2)
+mt.plot(allp, teststat, plottype="pvst", proc=c("rawp","Bonferroni","maxT","minP"),leg=c(-6,0.6),pch=16,col=1:4)
+
+# Permutation adjusted p-values for minP procedure with F-statistics (like equal variance t-statistics)
+smallgd<-golub[2:101,-1] # Skip the row labels
+classlabel<-golub[1,-1]
+mt.minP(smallgd,classlabel,test="f",fixed.seed.sampling="n")
+
+# Note that the test statistics used in the examples below are not appropriate 
+# for the Golub et al. data. The sole purpose of these examples is to 
+# demonstrate the use of the mt.maxT and mt.minP functions.
+
+# Permutation adjusted p-values for maxT procedure with paired t-statistics
+classlabel<-rep(c(0,1),19)
+mt.maxT(smallgd,classlabel,test="pairt")
+
+# Permutation adjusted p-values for maxT procedure with block F-statistics
+classlabel<-c(c(0:18),c(0:18))
+mt.maxT(smallgd,classlabel,test="blockf",side="upper")
+
+}
+\keyword{htest}
