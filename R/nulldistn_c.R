@@ -40,7 +40,13 @@ boot.resample<-function(X,stat.closure,W=NULL,B=1000,theta0=0,tau0=1){
 	muboot<-matrix(muboot,nrow=p,ncol=B)
 	dimnames(muboot)<-list(Xnames,paste(1:B))
 	nas<-is.na(muboot)
+	count<-0
 	while(sum(nas)){
+		count<-count+1
+		if(count>1000)
+			stop("Bootstrap null disrtibution computation 
+terminating. Can not obtain distribution without missing values after 1000 
+attempts.")
 		nascols<-unique(col(muboot)[nas])
 		for(b in nascols){
 			samp<-sample(n,n,replace=TRUE)
