@@ -123,13 +123,15 @@ Bonferroni, \cite{Holm79}, \cite{Hochberg88}, and Sidak procedures for strong co
 
 As a first approximation, compute raw nominal two--sided $p$--values for the $3,051$ test statistics using the standard Gaussian distribution
 
-<<eval=TRUE, echo=TRUE>>=
+%%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 rawp0<-2*(1-pnorm(abs(teststat)))
 @
 
 Adjusted $p$--values for these seven multiple testing procedures can be computed as follows and stored in the original gene order in {\tt adjp} using {\tt order(res\$index)}
 
-<<eval=TRUE, echo=TRUE>>=
+%%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 procs<-c("Bonferroni","Holm","Hochberg","SidakSS","SidakSD","BH","BY")
 res<-mt.rawp2adjp(rawp0,procs)
 adjp<-res$adjp[order(res$index),]
@@ -143,7 +145,8 @@ The {\tt mt.maxT} and {\tt mt.minP} functions compute permutation adjusted $p$--
 
 Permutation unadjusted $p$--values and adjusted $p$--values for the maxT procedure with Welch $t$--statistics are computed as follows. {\tt mt.maxT} returns $p$--values sorted in decreasing order of the absolute $t$--statistics and {\tt order(resT\$index)} is used to obtain $p$--values and test statistics in the original gene order. In practice, the number of permutations $B$ should be several thousands, we set $B=1,000$ here for illustration purposes.
 
-<<eval=TRUE, echo=TRUE>>=
+%%<<eval=TRUE, echo=TRUE>>=
+<<>>=
 resT<-mt.maxT(golub,golub.cl,B=1000)
 ord<-order(resT$index)
 rawp<-resT$rawp[ord]
@@ -192,14 +195,17 @@ ltypes<-c(1,2,2,3,3)
 
 For plotting sorted adjusted $p$--values set the argument {\tt plottype="pvsr"}
 
-<<mtpvsr,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+%%<<mtpvsr,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+<<>>=
 mt.plot(allp[,procs],teststat,plottype="pvsr",proc=procs,leg=c(2000,0.4),lty=ltypes,col=cols,lwd=2)
 @
 
 and for plotting adjusted $p$--values vs. the test statistics use {\tt plottype="pvst"}
 
-<<mtpvst,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-mt.plot(allp[,procs],teststat,plottype="pvst",logscale=TRUE,proc=procs,leg=c(-0.5,2),pch=ltypes,col=cols)
+%%<<mtpvst,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
+<<>>=
+mt.plot(allp[,procs],teststat,plottype="pvst",
+        logscale=TRUE,proc=procs,leg=c(-0.5,2),pch=ltypes,col=cols)
 @
 
 
