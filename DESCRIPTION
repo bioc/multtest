@@ -1,22 +1,25 @@
 Package: multtest
-Version: 0.6
-Date: 2001-12-19
+Version: 1.0
+Date: 2002-04-16
 Title: Multiple Testing Procedures
 Author: Yongchao Ge<gyc@stat.berkeley.edu>
 	Sandrine Dudoit<sandrine@stat.berkeley.edu>
 Maintainer: Yongchao Ge<gyc@stat.berkeley.edu>
 Depends: R (>= 1.3.1)
-Description: Library of functions for multiple testing. Includes
+Description: Functions for multiple testing. Includes
 	     resampling-based multiple testing procedures for controlling the 
 	     family-wise error rate (FWER): Bonferroni, Hochberg (1988), Holm
-	     (1979), Sidak, Westfall & Young (1993) (referred as minP and maxT in the tech report, 2001). Also
-	     includes procedures for controlling the false discovery rate (FDR):
+	     (1979), Sidak, Westfall & Young (1993) (referred to as minP and 
+	     maxT). Also includes procedures for controlling the false 
+	     discovery rate (FDR):
 	     Benjamini & Hochberg (1995), Benjamini & Yekutieli (2001) step-up
 	     procedures. These procedures are implemented for tests based on
-	     t-statistics, F-statistics, paired t-statistics, block F-statistics,
-	     Wilcoxon statistics.  Results are reported in terms of adjusted p-values. The procedures are directly applicable to identify differentially expressed genes in DNA microarray experiments.
+	     t-statistics, F-statistics, paired t-statistics, 
+	     block F-statistics, Wilcoxon statistics.  
+	     Results are reported in terms of adjusted p-values. The procedures are directly applicable to identify differentially expressed genes in DNA microarray experiments.
 License: GPL version 2 or newer.
-URL: http://www.r-project.org,  
+URL: http://www.bioconductor.org,  
+     http://www.r-project.org,  
      http://www.stat.berkeley.edu/~sandrine,
      http://www.stat.berkeley.edu/~gyc,
      http://www.stat.berkeley.edu/users/terry/zarray/Html/index.html

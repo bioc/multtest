@@ -1,13 +1,14 @@
-golub                    Gene expression dataset from Golub et al. (1999)
-multtest-internal        Internal multtest functions and variables
-mt.maxT                  Step-down maxT and minP multiple testing
-                         procedures
-mt.plot                  Plotting results from multiple testing
-                         procedures
-mt.rawp2adjp             Adjusted p-values for simple multiple testing
-                         procedures
-mt.reject                Identity and number of rejected hypotheses
-mt.sample.teststat       Permutation distribution of test statistics and
-                         raw (unadjusted) p-values
-mt.teststat              Computing test statistics for each row of a data
-                         frame
+golub                   Gene expression dataset from Golub et al.
+                        (1999)
+multtest-internal       Internal multtest functions and variables
+mt.maxT                 Step-down maxT and minP multiple testing
+                        procedures 
+mt.plot                 Plotting results from multiple testing
+                        procedures
+mt.rawp2adjp            Adjusted p-values for simple multiple testing
+                        procedures
+mt.reject               Identity and number of rejected hypotheses 
+mt.sample.teststat      Permutation distribution of test statistics and
+                        raw (unadjusted) p-values
+mt.teststat             Computing test statistics for each row of a
+                        data frame

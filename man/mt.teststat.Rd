@@ -1,6 +1,7 @@
 \name{mt.teststat}
 \alias{mt.teststat}
 \alias{mt.teststat.num.denum}
+
 \title{Computing test statistics for each row of a data frame}
 \usage{
 mt.teststat(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
@@ -13,14 +14,14 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
   block F-statistics, for each row of a data frame. 
 }
 \arguments{
-     \item{X}{A data frame, with \eqn{m} rows corresponding to variables
-    (hypotheses) and
-    \eqn{n} columns to observations. In the case of gene expression data, rows
+ \item{X}{A data frame or matrix, with \eqn{m} rows corresponding to variables
+    (hypotheses) and\eqn{n} columns to observations. In the case of gene 
+    expression data, rows
     correspond to genes and columns to mRNA samples. The data can
     be read using \code{\link{read.table}}.
   }
   \item{classlabel}{
-    A vector of integers corresponding to observation (column)
+     A vector of integers corresponding to observation (column)
     class labels. For \eqn{k} classes, the labels must be integers
     between 0 and \eqn{k-1}. For the \code{blockf} test option,
     observations may be divided into
@@ -34,7 +35,7 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     If \code{test="t"}, the tests are based on two-sample Welch t-statistics
     (unequal variances).  \cr
     If \code{test="t.equalvar"}, the tests are based on two-sample
-    t-statistics assuming equal variance for the two samples. The
+    t-statistics with equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
     If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
@@ -49,12 +50,11 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     i.e., test statistics will be based on a smaller sample size.
   }
   \item{nonpara}{If \code{nonpara}="y", nonparametric test statistics are computed based on ranked data. \cr
-    If  \code{nonpara}="n", the original data are used.
-  }
+    If  \code{nonpara}="n", the original data are used.}
 }
 
 \value{
-  For \code{\link{mt.teststat}}, a vector of test statistics for each row (gene). \cr
+  For \code{\link{mt.teststat}}, a vector of test statistics for each row (gene). \cr \cr
   For \code{\link{mt.teststat.num.denum}}, a data frame with \cr
   \item{teststat.num}{the numerator of the test statistics for each row, depending on the
     specific \code{test} option.}
@@ -64,9 +64,9 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 
 
 \author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
-Sandrine Dudoit, \email{sandrine@stat.berkeley.edu}.}
+Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine}.}
 
-\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}.}
+\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{golub}}.}
 
 \examples{
 library(multtest)

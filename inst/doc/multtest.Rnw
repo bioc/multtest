@@ -1,377 +1,138 @@
-\documentclass[12pt]{article}
-\usepackage{fullpage,amsmath,pstricks}
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,epsfig,psfig,pstricks,fullpage}
 \usepackage[authoryear,round]{natbib}
 \usepackage{hyperref}
 
 \parindent 0in
-\newcommand{\scscst}{\scriptscriptstyle}
-\newcommand{\scst}{\scriptstyle}
 
 \bibliographystyle{plainnat} 
 
-
 \begin{document}
 
-\title{Introduction to Bioconductor's multtest R package}
-\author{Sandrine Dudoit and Yongchao Ge}
+\title{\bf Bioconductor's multtest package}
+\author{Sandrine Dudoit$^1$ and Yongchao Ge$^2$}
 
 \maketitle
 
-\copyright 2001 Sandrine Dudoit, Yongchao Ge
+
+\begin{center}
+1. Division of Biostatistics, University of California, Berkeley, {\tt sandrine@stat.berkeley.edu}\\
+2. Department of Statistics, University of California, Berkeley, {\tt yeehwa@stat.berkeley.edu}
+\end{center}
+
 
 \tableofcontents
 
+% library(tools)
+% Rnwfile<- file.path("/home/sandrine/CVS_stuff/Code/multtest/inst/doc","multtest.Rnw")
+% Sweave(Rnwfile,pdf=TRUE,eps=TRUE,stylepath=TRUE,driver=RweaveLatex())
 
-\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Overview}
 
-The {\tt multtest} package contains a collection of functions for multiple hypothesis testing. These functions can be used to identify differentially expressed genes in microarray experiments, {\it i.e.}, genes whose expression levels are associated with a response or covariate of interest.\\
+The {\tt multtest} package contains a collection of functions for multiple hypothesis testing. These functions can be used to identify differentially expressed genes in microarray experiments, i.e., genes whose expression levels are associated with a response or covariate of interest. \\
 
-The biological question of differential expression can be restated as a problem in multiple hypothesis testing: the simultaneous test for each gene of the null hypothesis of no association between the expression levels and the responses or covariates. As a typical microarray experiment measures expression levels for several thousands of genes simultaneously, large multiplicity problems are generated. In any
-testing situation, two types of errors can be committed: a false
-positive, or Type I error, is committed by declaring that a gene is
-differentially expressed when it isn't, and a false negative, or Type
-II error, is committed when the test fails to identify a truly
-differentially expressed gene. When many hypotheses are tested and
-each test has a specified Type I error probability, the chance of
-committing some Type I errors increases, often sharply, with the
-number of hypotheses. In particular, a $p$-value of 0.01 for one gene among a list
-of several thousands will no longer correspond to a significant
-finding, as it is inevitable that such small $p$-values will occur by chance when 
-considering a large enough set of genes. Special problems arising from the multiplicity
-aspect include defining an appropriate Type I error rate and devising
-powerful multiple testing procedures which control this error rate and
-account for the {\it joint} distribution of the test statistics.\\
+{\bf Introduction to multiple testing.} For a detailed introduction to multiple testing consult the document {\tt multtest.intro} in the {\tt inst/doc} directory of the package. See also \cite{Shaffer95} and  \cite{Dudoit&Shaffer02} for a review of multiple testing procedures and complete references.\\
 
-The {\tt multtest} package implements multiple testing procedures for controlling different Type I error rates. It includes procedures for controlling the family-wise Type I error rate (FWER): Bonferroni, \cite{Hochberg88}, \cite{Holm79}, Sidak, \cite{Westfall&Young93} minP and maxT procedures. It also includes procedures for controlling the false discovery rate (FDR): \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} step-up procedures (see \cite{Dudoit&Shaffer01} for a review of multiple testing procedures and complete references). These procedures are implemented for tests based on $t$-statistics, $F$-statistics, paired $t$-statistics, block $F$-statistics, Wilcoxon statistics. The results of the procedures are summarized using adjusted $p$-values, which reflect for each gene the overall experiment Type I error rate when genes with a smaller $p$-value are declared differentially expressed. Adjusted $p$-values may be obtained either from the nominal distribution of the test statistics or by permutation. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
+{\bf Multiple testing procedures implemented in {\tt multtest}.}
+The {\tt multtest} package implements multiple testing procedures for controlling different Type I error rates. It includes procedures for controlling the family--wise Type I error rate (FWER): Bonferroni, \cite{Hochberg88}, \cite{Holm79}, Sidak, \cite{Westfall&Young93} minP and maxT procedures. It also includes procedures for controlling the false discovery rate (FDR): \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} step--up procedures. These procedures are implemented for tests based on $t$--statistics, $F$--statistics, paired $t$--statistics, block $F$--statistics, Wilcoxon statistics. The results of the procedures are summarized using adjusted $p$--values, which reflect for each gene the overall experiment Type I error rate when genes with a smaller $p$--value are declared differentially expressed. Adjusted $p$--values may be obtained either from the nominal distribution of the test statistics or by permutation. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
+
+{\bf Help files.}  As with any R package, detailed information on functions, their arguments and value, can be obtained in the help files. For instance, to view the help file for the function {\tt mt.maxT} in a browser, use {\tt help.start()} followed by {\tt ? mt.maxT}.
 
 
-A concise overview of resources available in {\tt multtest} is as follows:
-*** (At present, 12/15/02, the description file is too complex to be
-rendered directly.)
 
-<<R>>=
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Case study: the ALL/AML leukemia dataset of Golub et al. (1999)}
+
+ We demonstrate the functionality of this package using gene expression data from the leukemia ALL/AML study of \cite{Golubetal}. To load the leukemia dataset, use {\tt data(golub)}, and to view a description of the experiments and data, type {\tt ? golub}. 
+
+<<eval=TRUE, echo=TRUE>>=
 library(multtest)
-# dumpPackTxt("multtest")
-# this
+data(golub)
 @
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Multiple hypothesis testing}
-
-\subsection{Background}
-
-{\bf Set-up.} Consider the problem of testing simultaneously $m$ null hypotheses ${\rm H}_j$, $j=1,\ldots,m$, and denote by $R$ the number of rejected hypotheses. In the frequentist setting, the situation can be summarized by the table below \citep{Benjamini&Hochberg95}. The specific $m$ hypotheses are assumed to be known in advance, the
-numbers $m_0$ and $m_1 = m-m_0$ of true and false null hypotheses are unknown parameters, $R$ is
-an observable random variable, and $S$, $T$, $U$, and $V$ are unobservable random variables. In the microarray context, there is a null hypothesis ${\rm H}_j$ for each gene $j$ and rejection of ${\rm H}_j$ corresponds to declaring that gene $j$ is differentially expressed. For each gene $j$ the null hypothesis ${\rm H}_j$ is tested based on a statistic $T_j$, where $t_j$ denotes a realization of the random variable $T_j$. To simplify matters, and unless specified otherwise, we further assume that the null ${\rm H}_j$ is rejected for large values of $|T_j|$ (two-sided hypotheses). In general, one would like to minimize the number $V$ of {\it false positives}, or {\it Type I errors}, and the number $T$ of {\it false negatives}, or {\it Type II errors}. The standard approach is to prespecify an acceptable Type I error rate $\alpha$ and seek tests which minimize the Type II error rate, {\it i.e.}, maximize {\it power}, within the class of tests with Type I error rate $\alpha$. 
-
-\begin{tabular}{l|cc|l}
-\multicolumn{4}{c}{}\\
-\multicolumn{1}{c}{} & \multicolumn{1}{c}{No. not rejected} & \multicolumn{1}{c}{No. rejected} & \multicolumn{1}{c}{} \\
-\multicolumn{4}{c}{}\\
-\cline{2-3}
-&&&\\
-No. true null hypotheses & $U$ & {\red $V$} & $m_0$\\
-&&&\\
-No. non-true null hypotheses & {\green $T$} & $S$ & $m_1$\\
-&&&\\
-\cline{2-3}
-\multicolumn{4}{c}{}\\
-\multicolumn{1}{c}{}& \multicolumn{1}{c}{\blue $m-R$} & \multicolumn{1}{c}{\blue $R$} &\multicolumn{1}{l}{\blue $m$}\\
-\multicolumn{4}{c}{}
-\end{tabular}
-
-{\bf Type I error rates.} When testing a single hypothesis, ${\rm H}_1$, say, the probability of a Type I error, {\it i.e.}, of rejecting the null hypothesis when it is true, is usually controlled at some designated level $\alpha$. This can be achieved by choosing a critical value $c_{\alpha}$ such that $pr(|T_1| \geq c_{\alpha} | {\rm H}_1) \leq \alpha$ and rejecting ${\rm H}_1$ when $|T_1| \geq c_{\alpha}$. A variety of generalizations to the multiple testing situation are possible; the Type I error rates described next are the most standard \citep{Shaffer95}.
-\begin{itemize}
-\item
-{\it Per-comparison error rate (PCER)}. The PCER is defined as the expected value of (number of Type I errors/number of hypotheses), {\it i.e.},
-$$PCER = E(V)/m.$$
-\item
-{\it Per-family error rate (PFER)}. The PFER is defined as the expected number of Type I errors, {\it i.e.},
-$$PFER = E(V).$$
-\item
-{\it Family-wise error rate (FWER)}. The FWER is defined as the probability of at least one Type I error, {\it i.e.}, 
-$$ FWER = pr(V \geq 1).$$
-\item
-{\it False discovery rate (FDR)}. The FDR of \cite{Benjamini&Hochberg95} is the expected proportion of Type I errors among the rejected hypotheses, {\it i.e.},
-$$FDR = E(Q),$$
-where by definition
-$$
-Q=
-\begin{cases}
-V/R, & \text{if $R > 0$},\\
-0, & \text{if $R = 0$}.
-\end{cases}
-$$
-\end{itemize}
-
-In general, for a given
-multiple testing procedure, $PCER \leq FWER \leq PFER$. Thus, for a
-fixed criterion $\alpha$ for controlling the Type I error rates, the
-order reverses for the number of rejections $R$: procedures
-controlling the PFER are generally more conservative than those
-controlling either the FWER or the PCER, and procedures controlling
-the FWER are more conservative than those controlling the PCER. For a fixed procedure, $FDR \leq FWER$, with $FDR = FWER$ under the complete null. \\
-
-{\bf Strong {\it vs.} weak control.} It is important to note that the
-expectations and probabilities above are {\it conditional} on which
-hypotheses are true. A fundamental,
-yet often ignored distinction, is that between strong and weak control
-of the Type I error rate. {\it Strong control} refers to control of
-the Type I error rate under any combination of true and false
-hypotheses, {\it i.e.}, any value of $m_0$. In contrast, {\it weak
-  control} refers to control of the Type I error rate only when all
-the null hypotheses are true, {\it i.e.}, under the {\it complete null
-  hypothesis} ${\rm H}_0^C = \cap_{j=1}^m {\rm H}_j$ with $m_0=m$. In
-other words, for the FWER, weak control means control of $pr(V\geq 1
-\mid {\rm H}_0^C)$, while strong control means control of $\max_{\Lambda_0
-  \subseteq \{1, \ldots, m\}} pr(V\geq 1 \mid \cap_{j \in \Lambda_0} {\rm
-  H}_j)$. In general, weak control without any other safeguards is
-unsatisfactory. In the microarray setting, where it is very unlikely
-that no genes are differentially expressed, it seems
-particularly important to have strong control of the Type I error
-rate.  In the remainder of this article, unless specified otherwise,
- probabilities and expectations are computed under arbitrary combinations
-of true and false hypotheses, that is, under the null hypotheses $\cap_{j \in \Lambda_0} {\rm
-  H}_j$ for some arbitrary subset $\Lambda_0 \subseteq \{1, \ldots,
-m\}$ of size $m_0$.\\
-
-{\bf Adjusted $p$-values.} Given any test procedure, the {\it adjusted $p$-value} corresponding to the test of a single hypothesis ${\rm H}_j$ can be defined as the level of the entire test procedure at which ${\rm H}_j$ would just be rejected, given the values of all test statistics involved \citep{Shaffer95,Westfall&Young93}. If interest is in controlling the FWER, the FWER adjusted $p$-value for hypothesis ${\rm H}_j$ is
-
-$$\tilde{p}_j = \inf\left \{\alpha \in [0,1]: \mbox{${\rm H}_j$ is rejected at $FWER = \alpha$} \right \}.$$
-
-The corresponding random variables for unadjusted (or raw) and adjusted
-$p$-values are denoted by $P_j$ and $\tilde{P}_j$, respectively. Hypothesis ${\rm H}_j$ is then rejected, {\it i.e.}, gene $j$ is
-declared differentially expressed, at FWER $\alpha$ if $\tilde{p}_j
-\leq \alpha$. Adjusted $p$-values for other Type I error rates are
-defined similarly, that is, for the FDR,  $\tilde{p}_j = \inf\left
-  \{\alpha : \mbox{${\rm H}_j$ is rejected at $FDR = \alpha$} \right
-\}$ \citep{Yekutieli&Benjamini99}. As in the single hypothesis case, an
-advantage of reporting adjusted $p$-values, as opposed to only
-rejection or not of the hypotheses, is that the level of the test does
-not need to be determined in advance. Some multiple testing procedures
-are also most conveniently described in terms of their adjusted
-$p$-values and these can in turn be easily determined using resampling
-methods \citep{Westfall&Young93}. \\
-
-{\bf Stepwise procedures.} One usually distinguishes among three
-types of multiple testing procedures: single-step, step-down, and
-step-up procedures. In {\it single-step} procedures, equivalent
-multiplicity adjustments are performed for all hypotheses, regardless
-of the ordering of the test statistics or unadjusted
-$p$-values, that is, each hypothesis is evaluated using a critical value that is independent of the results of tests of other hypotheses. Improvement in power, while preserving Type I error rate
-control, may be achieved by {\it stepwise procedures}, in which
-rejection of a particular hypothesis is based not only on the total
-number of hypotheses, but also on the outcome of the tests of other
-hypotheses. In {\it step-down} procedures, the hypotheses corresponding to the {\it most} significant test statistics ({\it i.e.}, smallest unadjusted $p$-values or largest absolute test statistics) are considered successively, with further tests depending on the outcomes of earlier ones. As soon as one hypothesis is accepted, all remaining hypotheses are accepted. In contrast, for {\it step-up} procedures, the hypotheses corresponding to the {\it least} significant test statistics are considered successively, again with further tests depending on the outcomes of earlier ones. As soon as one hypothesis is rejected, all remaining hypotheses are rejected.  
-
-
-\subsection{Control of the family-wise error rate}\label{sFWER}
-
-
-{\bf Single-step procedures}\\
-
-
-For strong control of the FWER at level $\alpha$, the Bonferroni
-procedure, perhaps the best known in multiple testing, rejects any
-hypothesis ${\rm H}_j$ with $p$-value less than or equal to $\alpha/m$. The corresponding {\it single-step
-  Bonferroni adjusted $p$-values} are thus given by 
-\begin{equation}\label{ebs}
-\tilde{p}_j = \min \bigl( mp_j,1 \bigr).
-\end{equation}
-
-Closely related to the Bonferroni procedure is the $\check{\rm
-  S}$id\'{a}k procedure which is exact under the complete null for protecting the FWER when the unadjusted $p$-values are independently distributed as $U[0,1]$. The {\it single-step $\check{S}$id\'{a}k adjusted $p$-values} are given by 
-\begin{equation}\label{ess}
-\tilde{p}_j = 1 - (1-p_j)^m.
-\end{equation}
-
-
-However, in many situations, the test statistics and hence the
-$p$-values are correlated. This is the case in microarray experiments,
-where groups of genes tend to have highly correlated expression levels
-due, for example, to co-regulation. \cite{Westfall&Young93} propose adjusted $p$-values for less conservative multiple testing procedures which take into account the dependence structure among test statistics. The {\it single-step minP adjusted $p$-values} are defined by
-\begin{equation}\label{eminPs}
- \tilde{p}_j = pr\bigl(\min_{1 \leq l \leq m} P_l \leq p_j \mid {\rm H}_0^C\bigr),
-\end{equation}
-where ${\rm H}_0^C$ denotes the complete null hypothesis and  $P_l$ 
-the random variable for the unadjusted $p$-value of the $l$th hypothesis. Alternatively, one may consider procedures based on the {\it single-step maxT adjusted $p$-values} which are defined in terms of the test statistics $T_j$ themselves
-\begin{equation}\label{emaxTs}
-\tilde{p}_j = pr\bigl(\max_{1 \leq l \leq m} |T_l| \geq |t_j| | {\rm H}_0^C\bigr).
-\end{equation}
-
-Computing the quantities in (\ref{eminPs}) using the upper
-bound provided by Boole's inequality yields the Bonferroni $p$-values,
-for unadjusted $p$-values
-$P_l \sim U[0,1]$ marginally under ${\rm H}_l$. In other words, procedures based on the minP adjusted $p$-values are less conservative than the Bonferroni procedure. \\
-
-
-{\bf Step-down procedures}\\
-
-
- Below are the step-down analogs, in terms of their
-adjusted $p$-values, of the four procedures described in the previous
-section. Let $p_{\scst r_1} \leq p_{\scst r_2} \leq ... \leq p_{\scst
-  r_m}$ denote the {\it observed ordered unadjusted $p$-values}, and ${\rm
-  H}_{\scst r_1}, {\rm H}_{\scst r_2}, \ldots, {\rm H}_{\scst r_m}$
-the corresponding null hypotheses. For control of the FWER at level $\alpha$, the \cite{Holm79} procedure proceeds as follows. Define 
-$$ j^* = \min \Bigl\{j: p_{\scst r_j} > \frac{\alpha}{m-j+1}\Bigr\}$$
-
-and reject hypotheses ${\rm H}_{\scst r_j}$, for
-$j=1,\ldots,j^*-1$. If no such $j^*$ exists, reject all
-hypotheses. The {\it step-down Holm adjusted $p$-values} are thus given by 
-
-\begin{equation}\label{eholm}
-\tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ \min \bigl( (m-k+1) \, p_{\scst r_k},1 \bigr ) \Bigr\}.
-\end{equation}
-Holm's procedure is less conservative than the standard Bonferroni
-procedure which would multiply the $p$-values by $m$ at each
-step. Note that taking successive maxima of the quantities $\min
-\bigl( (m-k+1) \, p_{\scst r_k},1 \bigr )$ enforces monotonicity of
-the adjusted $p$-values. That is, $\tilde{p}_{\scst r_1} \leq
-\tilde{p}_{\scst r_2} \leq ... \leq \tilde{p}_{\scst r_m}$, and one
-can only reject a particular hypothesis provided all hypotheses with
-smaller unadjusted $p$-values were rejected beforehand. Similarly, the
-{\it step-down $\check{S}$id\'{a}k adjusted $p$-values} are defined as 
-
-\begin{equation}\label{esd}
-\tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ 1-(1-p_{\scst r_k})^{(m-k+1)} \Bigr\}.
-\end{equation}
-
-The \cite{Westfall&Young93} {\it step-down minP adjusted $p$-values} are defined by
-\begin{equation}\label{eminP}
-\tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ pr\bigl(\min_{l
-  \in \{r_k,\ldots,r_m\}} P_l \leq p_{\scst r_k} \mid {\rm H}_0^C \bigr) \Bigr\},
-\end{equation}
-
-and the {\it step-down maxT adjusted $p$-values} are defined by
-
-\begin{equation}\label{emaxTd}
-\tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ pr\bigl( \max_{l \in \{r_k,\ldots,r_m\}} |T_l| \geq |t_{\scst r_k}| \mid {\rm H}_0^C \bigr) \Bigr\},
-\end{equation}
-where $|t_{\scst r_1}| \geq |t_{\scst r_2}| \geq ... \geq |t_{\scst
-  r_m}|$ denote the {\it observed ordered test statistics}. Note that
-  computing the quantities in (\ref{eminP}) under the assumption that
-  $P_l \sim U[0,1]$ and using the upper bound provided by Boole's
-  inequality yields Holm's $p$-values. Procedures based on the
-  step-down minP adjusted $p$-values are thus less conservative than
-  Holm's procedure. For a proof of the strong control of the FWER for
-  the maxT and minP procedures the reader is referred to \cite{Westfall&Young93}, Section 2.8).
-
-
-\subsection{Control of the false discovery rate}\label{sFDR}
-
-Adjusted $p$-values for the \cite{Benjamini&Hochberg95} step-up procedure for (strong) control of the FDR for independent test statistics are
-\begin{equation}\label{eBH}
-\tilde{p}_{\scst r_j} = \min_{k = j,\ldots, m}\ \Bigl\{ \min\Bigl(\frac{m}{k} \, p_{\scst r_k}, 1\Bigr) \Bigr\}.
-\end{equation}
-
-\cite{Benjamini&Yekutieli01} proved that this procedure controls the FDR under certain dependence structures (positive regression dependency). They also proposed a simple conservative modification of the procedure which controls the false discovery rate for arbitrary dependence structures. Adjusted $p$-values for this modified procedure are
-
-\begin{equation}\label{eBY}
-\tilde{p}_{\scst r_j} = \min_{k = j,\ldots, m}\ \Bigl\{ \min\Bigl (\frac{m \sum_{j=1}^m 1/j}{k} \ p_{\scst r_k}, 1\Bigr) \Bigr\}.
-\end{equation}
-For a large number $m$ of hypotheses, the penalty in this conservative
-procedure is about $\log m$, as compared to the
-\cite{Benjamini&Hochberg95} procedure. Note that the
-\cite{Benjamini&Hochberg95} procedure can also be conservative,
-even in the independence case, as it was shown that for this step-up
-procedure $E(Q) \leq \frac{m_0}{m}\alpha \leq \alpha$ . 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Test case: the ALL/AML leukemia dataset of Golub et al. (1999)}
-
-We will illustrate the use of the {\tt multtest} package using the ALL/AML leukemia dataset of Golub et al. (1999). Golub et al. were interested in identifying genes that are differentially expressed in patients with two type of leukemias, acute lymphoblastic leukemia (ALL, class 1) and acute myeloid leukemia (AML, class 2). Gene expression levels were measured using Affymetrix high-density oligonucleotide chips containing $p=6,817$ human genes. The learning set comprises $n=38$ samples, 27 ALL cases and 11 AML cases (data available at {\tt http://www.genome.wi.mit.edu/MPR}). Following Golub et al. (personal communication, Pablo Tamayo), three preprocessing steps were applied to the normalized matrix of intensity values available on the website: (i) thresholding: floor
+\cite{Golubetal} were interested in identifying genes that are differentially expressed in patients with two type of leukemias, acute lymphoblastic leukemia (ALL, class 0) and acute myeloid leukemia (AML, class 1). Gene expression levels were measured using Affymetrix high--density oligonucleotide chips containing $p=6,817$ human genes. The learning set comprises $n=38$ samples, 27 ALL cases and 11 AML cases (data available at {\tt http://www.genome.wi.mit.edu/MPR}). Following Golub et al. (personal communication, Pablo Tamayo), three preprocessing steps were applied to the normalized matrix of intensity values available on the website: (i) thresholding: floor
 of 100 and ceiling of 16,000; (ii) filtering: exclusion of genes with
 $\max/\min \leq 5$ or $(\max-\min) \leq 500$, where $\max$ and $\min$ refer
 respectively to the maximum and minimum intensities for a
 particular gene across mRNA samples; (iii) base 10 logarithmic transformation. Boxplots of the expression levels for each of the 38 samples revealed the need to standardize the expression levels within arrays before combining data across samples. The data were then summarized by a $3,051 \times 38 $ matrix $X=(x_{ji})$, where $x_{ji}$ denotes the expression level for gene $j$ in mRNA sample $i$. \\
 
+The dataset {\tt golub} contains the gene expression data for the 38 training set tumor mRNA samples and 3,051 genes retained after pre--processing. The data set includes
 
-The dataset {\tt golub} contains the gene expression data for the 38 training set tumor mRNA samples and 3,051 genes retained after pre-processing. The data set includes: a $3,051 \times 38 $ matrix, {\tt golub}, of expression levels; a $3,051 \times 3 $ matrix, {\tt golub.gnames}, of gene identifiers; and a vector, {\tt golub.cl}, of tumor class labels (0 for ALL, 1 for AML). 
+\begin{itemize}
+\item
+{{\tt golub}:} a $3,051 \times 38 $ matrix of expression levels;
+\item
+{{\tt golub.gnames}:} a $3,051 \times 3 $ matrix of gene identifiers;
+\item
+{{\tt golub.cl}:} a vector of tumor class labels (0 for ALL, 1 for AML). 
+\end{itemize}
 
-<<R>>=
-data(golub)
-print(dim(golub))
-print(golub[1:4,1:4])
-print(dim(golub.gnames))
-print(golub.gnames[1:4,])
-print(golub.cl)
+<<eval=TRUE, echo=TRUE>>=
+dim(golub)
+golub[1:4,1:4]
+dim(golub.gnames)
+golub.gnames[1:4,]
+golub.cl
 @
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The {\tt mt.teststat} and {\tt mt.teststat.num.denum} functions}
 
 
-The {\tt mt.teststat} and {\tt mt.teststat.num.denum} functions provide a convenient way to compute test statistics, e.g., two-sample Welch t-statistics, Wilcoxon statistics, F-statistics, paired t-statistics, block F-statistics, for each row of a data frame. To compute two-sample $t$-statistics comparing, for each gene, expression in the ALL cases to expression in the AML cases
+The {\tt mt.teststat} and {\tt mt.teststat.num.denum} functions provide a convenient way to compute test statistics for each row of a data frame, e.g., two--sample Welch $t$--statistics, Wilcoxon statistics, $F$--statistics, paired $t$--statistics, block $F$--statistics. To compute two--sample $t$--statistics comparing, for each gene, expression in the ALL cases to expression in the AML cases
 
-<<R>>=
+<<eval=TRUE, echo=TRUE>>=
 teststat<-mt.teststat(golub,golub.cl)
 @
 
-The following produces a normal Quantile-Quantile (Q-Q) plot of the test statistics. In our application, we are not so much interested in testing whether the test statistics follow a particular distribution, but in using the Q-Q plot as a visual aid for identifying genes with ``unusual'' test statistics. Q-Q plots informally correct for the large number of comparisons and the points which deviate markedly from an otherwise linear relationship are likely to correspond to those genes whose expression levels differ between the control and treatment groups.\\
+The following produces a normal Quantile--Quantile (Q--Q) plot of the test statistics (Figure \ref{fig:mtQQ}). In our application, we are not so much interested in testing whether the test statistics follow a particular distribution, but in using the Q--Q plot as a visual aid for identifying genes with ``unusual'' test statistics. Q--Q plots informally correct for the large number of comparisons and the points which deviate markedly from an otherwise linear relationship are likely to correspond to those genes whose expression levels differ between the control and treatment groups.
 
-
-*** SHOW CODE FOR PLOTS\\
-
-<<R.hide>>
+<<mtQQ,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
 qqnorm(teststat)
 qqline(teststat)
 @
 
-\begin{figure}[hhh]
-<<R.fig>>=
-qqnorm(teststat)
-qqline(teststat)
-@
-\caption{Normal Q-Q plot of $t$-statistics for leukemia data.}
-\end{figure}
+We may also wish to look at plots of the numerator and denominators of the test statistics (Figure \ref{fig:mtNumDen})
 
-We may also wish to look at plots of the numerator and denominators of the test statistics
-
-<<R>>=
+<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
 tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
 num<-tmp$teststat.num
 denum<-tmp$teststat.denum
-@
-
-\begin{figure}[hhh]
-<<R.fig>>=
 plot(sqrt(denum),num)
 @
-\caption{Numerator {\it vs.} square root of denominator of the $t$-statistics for the leukemia data.}
-\end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The {\tt mt.rawp2adjp} function}
 
-This function computes adjusted $p$-values for simple multiple testing procedures from a vector of raw (unadjusted) $p$-values. The procedures include the
-Bonferroni, \cite{Holm79}, \cite{Hochberg88}, and Sidak procedures for strong control of the family-wise Type I error rate (FWER), and the \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} procedures for (strong) control of the false discovery rate (FDR). \\
+This function computes adjusted $p$--values for simple multiple testing procedures from a vector of raw (unadjusted) $p$--values. The procedures include the
+Bonferroni, \cite{Holm79}, \cite{Hochberg88}, and Sidak procedures for strong control of the family--wise Type I error rate (FWER), and the \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} procedures for (strong) control of the false discovery rate (FDR). \\
 
-As a first approximation, compute raw nominal two-sided $p$-values for the $3,051$ test statistics using the standard Gaussian distribution
+As a first approximation, compute raw nominal two--sided $p$--values for the $3,051$ test statistics using the standard Gaussian distribution
 
-<<R>>=
+<<eval=TRUE, echo=TRUE>>=
 rawp0<-2*(1-pnorm(abs(teststat)))
 @
 
-Adjusted $p$-values for these seven multiple testing procedures can be computed as follows and stored in the original gene order in {\tt adjp} using {\tt order(res\$index)}
+Adjusted $p$--values for these seven multiple testing procedures can be computed as follows and stored in the original gene order in {\tt adjp} using {\tt order(res\$index)}
 
-<<R>>=
+<<eval=TRUE, echo=TRUE>>=
 procs<-c("Bonferroni","Holm","Hochberg","SidakSS","SidakSD","BH","BY")
 res<-mt.rawp2adjp(rawp0,procs)
 adjp<-res$adjp[order(res$index),]
-print(dimnames(adjp))
+round(adjp[1:10,],2)
 @
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The {\tt mt.maxT} and {\tt mt.minP} functions}
 
-The {\tt mt.maxT} and {\tt mt.minP} functions compute permutation adjusted $p$-values for the maxT and minP step-down multiple testing procedure described in \cite{Westfall&Young93}. These procedure provide strong control of the FWER and also incorporate the joint dependence structure between the test statistics. There are thus in general less conservative than the standard Bonferroni procedure. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
+The {\tt mt.maxT} and {\tt mt.minP} functions compute permutation adjusted $p$--values for the maxT and minP step--down multiple testing procedure described in \cite{Westfall&Young93}. These procedure provide strong control of the FWER and also incorporate the joint dependence structure between the test statistics. There are thus in general less conservative than the standard Bonferroni procedure. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
 
-Permutation unadjusted $p$-values and adjusted $p$-values for the maxT procedure with Welch $t$-statistics are computed as follows. {\tt mt.maxT} returns $p$-values sorted in decreasing order of the absolute $t$-statistics and {\tt order(resT\$index)} is used to obtain $p$-values and test statistics in the original gene order. *** In practice, the number of permutations $B$ should be several thousands, we set $B=1000$ here for illustration purposes.
+Permutation unadjusted $p$--values and adjusted $p$--values for the maxT procedure with Welch $t$--statistics are computed as follows. {\tt mt.maxT} returns $p$--values sorted in decreasing order of the absolute $t$--statistics and {\tt order(resT\$index)} is used to obtain $p$--values and test statistics in the original gene order. In practice, the number of permutations $B$ should be several thousands, we set $B=1,000$ here for illustration purposes.
 
-<<R>>=
+<<eval=TRUE, echo=TRUE>>=
 resT<-mt.maxT(golub,golub.cl,B=1000)
 rawp<-resT$rawp[order(resT$index)]
 maxT<-resT$adjp[order(resT$index)]
@@ -380,31 +141,33 @@ teststat<-resT$teststat[order(resT$index)]
 
 
 Three functions related to the {\tt mt.maxT} and {\tt mt.minP} functions are 
-{\tt mt.sample.teststat}, {\tt mt.sample.rawp}, and {\tt mt.sample.label}. These functions provide tools to investigate the permutation distribution of test statistics, raw (unadjusted) p-values, and class labels, respectively.\\
+{\tt mt.sample.teststat}, {\tt mt.sample.rawp}, and {\tt mt.sample.label}. These functions provide tools to investigate the permutation distribution of test statistics, raw (unadjusted) $p$--values, and class labels, respectively.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The {\tt mt.reject} function}
 
 The function {\tt mt.reject} returns the identity and number of rejected
      hypotheses for several multiple testing procedures and different
-     nominal Type I error rates. The number of hypotheses rejected using unadjusted $p$-values and maxT $p$-values for different Type I error rates ($\alpha=0, 0.1, 0.2, \ldots, 1$) can be obtained by
+     nominal Type I error rates. The number of hypotheses rejected using unadjusted $p$--values and maxT $p$--values for different Type I error rates ($\alpha=0, 0.1, 0.2, \ldots, 1$) can be obtained by
 
-<<R>>=
-print(mt.reject(cbind(rawp,maxT),seq(0,1,0.1))$r)
+<<eval=TRUE, echo=TRUE>>=
+mt.reject(cbind(rawp,maxT),seq(0,1,0.1))$r
 @
 
-The genes with maxT $p$-values less than or equal to 0.01 are 
+The genes with maxT $p$--values less than or equal to 0.01 are 
 
-<<R>>=
+<<eval=TRUE, echo=TRUE>>=
 which<-mt.reject(cbind(rawp,maxT),0.01)$which[,2]
-print(golub.gnames[which,2])
+golub.gnames[which,2]
 @
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The {\tt mt.plot} function}
 
-The {\tt mt.plot} function produces a number of graphical summaries for the results of multiple testing procedures and their corresponding adjusted $p$-values. \\
+The {\tt mt.plot} function produces a number of graphical summaries for the results of multiple testing procedures and their corresponding adjusted $p$--values. To produce plots of sorted permutation unadjusted $p$--values and adjusted $p$--values for the Bonferroni, maxT, \cite{Benjamini&Hochberg95}, and \cite{Benjamini&Yekutieli01} procedures use
 
-To produce plots of sorted permutation unadjusted $p$-values and adjusted $p$-values for the Bonferroni, maxT, \cite{Benjamini&Hochberg95}, and \cite{Benjamini&Yekutieli01} procedures use
-
-<<R>>=
+<<eval=TRUE, echo=TRUE>>=
 res<-mt.rawp2adjp(rawp,c("Bonferroni","BH","BY"))
 adjp<-res$adjp[order(res$index),]
 allp<-cbind(adjp,maxT)
@@ -415,28 +178,50 @@ cols<-c(1,2,3,5,6)
 ltypes<-c(1,2,2,3,3)
 @
 
-*** SHOW CODE FOR PLOTS\\
+For plotting sorted adjusted $p$--values set the argument {\tt plottype="pvsr"}
 
-For plotting sorted adjusted $p$-values set the argument {\tt plottype="pvsr"}
-
-\begin{figure}[hhh]
-<<R.fig>>=
+<<mtpvsr,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
 mt.plot(allp[,procs],teststat,plottype="pvsr",proc=procs,leg=c(2000,0.4),lty=ltypes,col=cols,lwd=2)
 @
-\caption{Sorted adjusted $p$-values for the leukemia data.}
-\end{figure}
 
-and for plotting adjusted $p$-values {\it vs.} the test statistics use {\tt plottype="pvst"}
+and for plotting adjusted $p$--values vs. the test statistics use {\tt plottype="pvst"}
 
-\begin{figure}[hhh]
-<<R.fig>>=
+<<mtpvst,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
 mt.plot(allp[,procs],teststat,plottype="pvst",logscale=TRUE,proc=procs,leg=c(-0.5,2),pch=ltypes,col=cols)
 @
-\caption{Adjusted $p$-values (log scale) {\it vs.} $t$-statistics for the leukemia data.}
-\end{figure}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibliography{multtest} 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[hhh]
+\centerline{\epsfig{figure=mtQQ.eps,width=4in,height=4in,angle=0}}
+\caption{Normal Q--Q plot of $t$--statistics for leukemia data.}
+\protect\label{fig:mtQQ}
+\end{figure}
+
+
+\begin{figure}[hhh]
+\centerline{\epsfig{figure=mtNumDen.eps,width=4in,height=4in,angle=0}}
+\caption{Numerator vs. square root of denominator of the $t$--statistics for the leukemia data.}
+\protect\label{fig:mtNumDen}
+\end{figure}
+
+\begin{figure}[hhh]
+\centerline{\epsfig{figure=mtpvsr.eps,width=4in,height=4in,angle=0}}
+\caption{Sorted adjusted $p$--values for the leukemia data.}
+\protect\label{fig:mtpvsr}
+\end{figure}
+
+\begin{figure}[hhh]
+\centerline{\epsfig{figure=mtpvst.eps,width=4in,height=4in,angle=0}}
+\caption{Adjusted $p$--values (log scale) vs. $t$--statistics for the leukemia data.}
+\protect\label{fig:mtpvst}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \end{document}

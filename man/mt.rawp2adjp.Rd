@@ -6,7 +6,7 @@
   multiple testing procedures from a vector of raw (unadjusted) \eqn{p}-values. The procedures include the Bonferroni, Holm (1979), Hochberg (1988), and Sidak procedures for strong control of the family-wise Type I error rate (FWER), and the Benjamini & Hochberg (1995) and Benjamini & Yekutieli (2001) procedures for (strong) control of the false discovery rate (FDR).
 }
 \usage{
-mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD", "BH"))
+mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD", "BH", "BY"))
 }
 \arguments{
   \item{rawp}{A vector of raw (unadjusted) \eqn{p}-values for each hypothesis under consideration. These could be nominal \eqn{p}-values, for example, from t-tables, or permutation \eqn{p}-values as given in \code{mt.maxT} and \code{mt.minP}. If the \code{mt.maxT} or \code{mt.minP} functions are used, raw \eqn{p}-values should be given in the original data order, \code{rawp[order(index)]}.}
@@ -17,14 +17,14 @@ mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD"
   Adjusted \eqn{p}-values are computed for simple FWER and FDR
   controlling procedures based on a vector of raw (unadjusted) \eqn{p}-values.\cr
 
-\code{Bonferroni}: Bonferroni single-step adjusted \eqn{p}-values for strong control of the FWER.\cr
-\code{Holm}: Holm (1979) step-down adjusted \eqn{p}-values for strong control of the FWER.\cr
-\code{Hochberg}: Hochberg (1988) step-up adjusted \eqn{p}-values for
+\item{\code{Bonferroni}:} Bonferroni single-step adjusted \eqn{p}-values for strong control of the FWER.\cr
+\item{\code{Holm}:} Holm (1979) step-down adjusted \eqn{p}-values for strong control of the FWER.\cr
+\item{\code{Hochberg}:} Hochberg (1988) step-up adjusted \eqn{p}-values for
 strong control of the FWER (for raw (unadjusted) \eqn{p}-values satisfying the Simes inequality).\cr
-\code{SidakSS}: Sidak single-step adjusted \eqn{p}-values for strong control of the FWER (for positive orthant dependent test statistics).\cr
-\code{SidakSD}: Sidak step-down adjusted \eqn{p}-values for strong control of the FWER (for positive orthant dependent test statistics).\cr
-\code{BH}: adjusted \eqn{p}-values for the Benjamini & Hochberg (1995) step-up FDR controlling procedure (independent and positive regression dependent test statistics).\cr
-\code{BY}: adjusted \eqn{p}-values for the Benjamini & Yekutieli (2001) step-up FDR controlling procedure (general dependency structures).\cr
+\item{\code{SidakSS}:} Sidak single-step adjusted \eqn{p}-values for strong control of the FWER (for positive orthant dependent test statistics).\cr
+\item{\code{SidakSD}:} Sidak step-down adjusted \eqn{p}-values for strong control of the FWER (for positive orthant dependent test statistics).\cr
+\item{\code{BH}:} adjusted \eqn{p}-values for the Benjamini & Hochberg (1995) step-up FDR controlling procedure (independent and positive regression dependent test statistics).\cr
+\item{\code{BY}:} adjusted \eqn{p}-values for the Benjamini & Yekutieli (2001) step-up FDR controlling procedure (general dependency structures).\cr
 }
 
 \value{
@@ -41,12 +41,10 @@ Y. Benjamini and Y. Hochberg (1995). Controlling the false discovery rate: a pra
 
 Y. Benjamini and D. Yekutieli (2001). The control of the false discovery rate in multiple hypothesis testing under dependency. \emph{Annals of Statistics}. Accepted.\cr
 
-S. Dudoit and J. P. Shaffer. (2001). Multiple hypothesis testing in
-microarray experiments. Technical report  *** NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley.\cr
+S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
 
-Y. Ge, S. Dudoit, and T. P. Speed (2001). Fast algorithm for
-resampling-based \eqn{p}-value adjustment in multiple testing. Technical
-report *** NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley.\cr
+Y. Ge, S. Dudoit, and T. P. Speed (In preparation). Fast algorithm for
+resampling-based \eqn{p}-value adjustment in multiple testing. \cr
 
 Y. Hochberg (1988). A sharper Bonferroni procedure for multiple tests of significance, \emph{Biometrika}. Vol. 75: 800-802.\cr
 
@@ -54,18 +52,23 @@ S. Holm (1979). A simple sequentially rejective multiple test procedure. \emph{S
 }
  
 \author{
-  Sandrine Dudoit, \email{sandrine@stat.berkeley.edu},\cr
+  Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine},\cr
   Yongchao Ge, \email{gyc@stat.berkeley.edu}. 
 }
 \seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}},
-  \code{\link{mt.plot}}, \code{\link{mt.reject}}.}
+  \code{\link{mt.plot}}, \code{\link{mt.reject}}, \code{\link{golub}}.}
 
 \examples{
 library(multtest)
 
 # Gene expression data from Golub et al. (1999)
+# To reduce computation time and for illustrative purposes, we condider only
+# the first 100 genes and use the default of B=10,000 permutations.
+# In general, one would need a much larger number of permutations
+# for microarray data.
+
 data(golub)
-smallgd<-golub[1:100,] #consider only the first 100 genes.
+smallgd<-golub[1:100,] 
 classlabel<-golub.cl
 
 # Permutation unadjusted p-values and adjusted p-values for maxT procedure

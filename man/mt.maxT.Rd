@@ -12,7 +12,7 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
 }
 
 \arguments{
-  \item{X}{A data frame, with \eqn{m} rows corresponding to variables
+  \item{X}{A data frame or matrix, with \eqn{m} rows corresponding to variables
     (hypotheses) and
     \eqn{n} columns to observations. In the case of gene expression data, rows
     correspond to genes and columns to mRNA samples. The data can
@@ -33,7 +33,7 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
     If \code{test="t"}, the tests are based on two-sample Welch t-statistics
     (unequal variances).  \cr
     If \code{test="t.equalvar"}, the tests are based on two-sample
-    t-statistics assuming equal variance for the two samples. The
+    t-statistics with equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
     If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
@@ -67,7 +67,7 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
   }
 }
 
-\details{These functions compute permutation adjusted \eqn{p}-values for the step-down maxT and minP multiple testing procedures, which provide strong control of the family-wise Type I error rate (FWER). The adjusted \eqn{p}-values for the minP procedure are defined in equation (2.10) p. 66 of Westfall & Young (1993), and the maxT procedure is discussed p. 50 and 114. The permutation algorithms for estimating the adjusted \eqn{p}-values are given in Ge et al. (2001). The procedures are for the simultaneous test of \eqn{m} null hypotheses, namely, the null hypotheses of no association between the \eqn{m} variables corresponding to the rows of the data frame \code{X} and the class labels \code{classlabel}. For gene expression data, the null hypotheses correspond to no differential gene expression across mRNA samples.
+\details{These functions compute permutation adjusted \eqn{p}-values for the step-down maxT and minP multiple testing procedures, which provide strong control of the family-wise Type I error rate (FWER). The adjusted \eqn{p}-values for the minP procedure are defined in equation (2.10) p. 66 of Westfall & Young (1993), and the maxT procedure is discussed p. 50 and 114. The permutation algorithms for estimating the adjusted \eqn{p}-values are given in Ge et al. (In preparation). The procedures are for the simultaneous test of \eqn{m} null hypotheses, namely, the null hypotheses of no association between the \eqn{m} variables corresponding to the rows of the data frame \code{X} and the class labels \code{classlabel}. For gene expression data, the null hypotheses correspond to no differential gene expression across mRNA samples.
 }
 
 
@@ -82,32 +82,37 @@ mt.minP(X,classlabel,test="t",side="abs",fixed.seed.sampling="y",B=10000,na=.mt.
 }
 }
 
-\references{S. Dudoit and J. P. Shaffer. (2001). Multiple hypothesis testing in
-microarray experiments. Technical report  *** NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley.\cr
+\references{
+S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
 
-Y. Ge, S. Dudoit, and T. P. Speed (2001). Fast algorithm for
-resampling-based \eqn{p}-value adjustment in multiple testing. Technical
-report *** NUMBER AND LINK ***, Division of Biostatistics, U.C. Berkeley. \cr
+Y. Ge, S. Dudoit, and T. P. Speed (In preparation). Fast algorithm for
+resampling-based \eqn{p}-value adjustment in multiple testing. \cr
 
-P. H. Westfall and S. S. Young (1993). Resampling-based
-multiple testing: Examples and methods for \eqn{p}-value adjustment. John Wiley \& Sons.
+P. H. Westfall and S. S. Young (1993). \emph{Resampling-based
+multiple testing: Examples and methods for \eqn{p}-value adjustment}. John Wiley \& Sons.
 }	
   
 \author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
-Sandrine Dudoit, \email{sandrine@stat.berkeley.edu}.}
+Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine}.}
 
-\seealso{\code{\link{mt.plot}}, \code{\link{mt.reject}}, \code{\link{mt.sample.teststat}}, \code{\link{mt.teststat}}.}
+\seealso{\code{\link{mt.plot}}, \code{\link{mt.rawp2adjp}}, \code{\link{mt.reject}}, \code{\link{mt.sample.teststat}}, \code{\link{mt.teststat}}, \code{\link{golub}}.}
 
 
 \examples{
 library(multtest)
 
 # Gene expression data from Golub et al. (1999)
+# To reduce computation time and for illustrative purposes, we condider only
+# the first 100 genes and use the default of B=10,000 permutations.
+# In general, one would need a much larger number of permutations
+# for microarray data.
+
 data(golub)
-smallgd<-golub[1:100,] # consider only the first 100 genes.
+smallgd<-golub[1:100,] 
 classlabel<-golub.cl
 
-# Permutation unadjusted p-values and adjusted p-values for maxT and minP procedures with Welch t-statistics
+# Permutation unadjusted p-values and adjusted p-values 
+# for maxT and minP procedures with Welch t-statistics
 resT<-mt.maxT(smallgd,classlabel)
 resP<-mt.minP(smallgd,classlabel)
 rawp<-resT$rawp[order(resT$index)]
@@ -133,7 +138,7 @@ classlabel<-rep(c(0,1),19)
 mt.maxT(smallgd,classlabel,test="pairt")
 
 # Permutation adjusted p-values for maxT procedure with block F-statistics
-classlabel<-c(c(0:18),c(0:18))
+classlabel<-rep(0:18,2)
 mt.maxT(smallgd,classlabel,test="blockf",side="upper")
 
 }

@@ -16,7 +16,7 @@ mt.sample.label(classlabel,test="t",fixed.seed.sampling="y",B=10000)
   \item{V}{A numeric vector containing the data for one of the variables (genes).}
 
  \item{classlabel}{
-    A vector of integers corresponding to observation (column)
+A vector of integers corresponding to observation (column)
     class labels. For \eqn{k} classes, the labels must be integers
     between 0 and \eqn{k-1}. For the \code{blockf} test option,
     observations may be divided into
@@ -30,7 +30,7 @@ mt.sample.label(classlabel,test="t",fixed.seed.sampling="y",B=10000)
     If \code{test="t"}, the tests are based on two-sample Welch t-statistics
     (unequal variances).  \cr
     If \code{test="t.equalvar"}, the tests are based on two-sample
-    t-statistics assuming equal variance for the two samples. The
+    t-statistics with equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
     If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
@@ -65,8 +65,8 @@ mt.sample.label(classlabel,test="t",fixed.seed.sampling="y",B=10000)
 
 }
 \value{
-  For \code{\link{mt.sample.teststat}},  a vector containing \code{B} permutation test statistics. \cr
-  For \code{\link{mt.sample.rawp}},  a vector containing \code{B} permutation unadjusted \eqn{p}-values. \cr
+  For \code{\link{mt.sample.teststat}},  a vector containing \code{B} permutation test statistics. \cr \cr
+  For \code{\link{mt.sample.rawp}},  a vector containing \code{B} permutation unadjusted \eqn{p}-values. \cr\cr 
   For \code{\link{mt.sample.label}}, a matrix containing \code{B}
   sets of permuted class labels. Each row corresponds to one permutation.
 }
@@ -93,9 +93,9 @@ hist(permp)
 }
 
 \author{Yongchao Ge, \email{gyc@stat.berkeley.edu}, \cr
-Sandrine Dudoit, \email{sandrine@stat.berkeley.edu}.}
+Sandrine Dudoit, \url{http://www.stat.berkeley.edu/~sandrine}.}
 
-\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}.}
+\seealso{\code{\link{mt.maxT}}, \code{\link{mt.minP}}, \code{\link{golub}}.}
 
 \keyword{manip}
 
