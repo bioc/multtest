@@ -1,10 +1,10 @@
 Package: multtest
-Version: 1.3.3
+Version: 1.3.4
 Date: 2002-04-16
 Title: Multiple Testing Procedures
 Author: Yongchao Ge<gyc@stat.berkeley.edu>, Sandrine Dudoit<sandrine@stat.berkeley.edu>
 Maintainer: Yongchao Ge<gyc@stat.berkeley.edu>
-Depends: R (>= 1.5.1), ctest
+Depends: R (>= 1.5.1)
 Description: Multiple testing procedures.
 	Includes resampling-based multiple testing procedures for 
 	controlling the family-wise error rate (FWER): Bonferroni, Hochberg 
