@@ -356,7 +356,7 @@ dev.off()
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{figure}[hhh]
+\begin{figure}[ht]
   %%\centerline{\epsfig{figure=mtQQ.eps,width=4in,height=4in,angle=0}}
   \begin{center}
     \includegraphics[width=4in,height=4in,angle=0]{mtQQ}
@@ -365,7 +365,7 @@ dev.off()
   \protect\label{fig:mtQQ}
 \end{figure}
 
-\begin{figure}[hhh]
+\begin{figure}[ht]
   %%\centerline{\epsfig{figure=mtNumDen.eps,width=4in,height=4in,angle=0}}
   \begin{center}
     \includegraphics[width=4in,height=4in,angle=0]{mtNumDen}
@@ -375,7 +375,7 @@ dev.off()
   \protect\label{fig:mtNumDen}
 \end{figure}
 
-\begin{figure}[hhh]
+\begin{figure}[ht]
   %%\centerline{\epsfig{figure=mtpvsr.eps,width=4in,height=4in,angle=0}}
   \begin{center}
     \includegraphics[width=4in,height=4in,angle=0]{mtpvsr}
@@ -384,7 +384,7 @@ dev.off()
   \protect\label{fig:mtpvsr}
 \end{figure}
 
-\begin{figure}[hhh]
+\begin{figure}[ht]
   %%\centerline{\epsfig{figure=mtpvst.eps,width=4in,height=4in,angle=0}}
   \begin{center}
     \includegraphics[width=4in,height=4in,angle=0]{mtpvst}

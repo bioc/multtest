@@ -1,10 +1,11 @@
 \name{mt.plot}
 \alias{mt.plot}
 \title{Plotting results from multiple testing procedures}
-\description{
-This function produces a number of graphical summaries for the results of multiple testing procedures and their corresponding adjusted \emph{p}-values.}
+\description{This function produces a number of graphical summaries
+  for the results of multiple testing procedures and their corresponding
+  adjusted \eqn{p}-values.}
 \usage{
-mt.plot(adjp, teststat, plottype="rvsa", logscale=FALSE, alpha=seq(0, 1, length = 100), proc="", leg=c(0, 0), ...)
+mt.plot(adjp, teststat, plottype="rvsa", logscale=FALSE, alpha=seq(0, 1, length = 100), proc, leg=c(0, 0), \dots)
 }
 \arguments{
   \item{adjp}{A matrix of adjusted \emph{p}-values, with rows
@@ -12,25 +13,28 @@ mt.plot(adjp, teststat, plottype="rvsa", logscale=FALSE, alpha=seq(0, 1, length 
     procedures. This matrix could be obtained from the functions
     \code{\link{mt.maxT}}, \code{\link{mt.minP}}, or \code{\link{mt.rawp2adjp}}.}
   \item{teststat}{A vector of test statistics for each of the hypotheses. This vector could be obtained from the functions \code{\link{mt.teststat}}, \code{\link{mt.maxT}}, or \code{\link{mt.minP}}.}
-   \item{plottype}{A character string specifying the type of graphical summary for the results of the multiple testing procedures. \cr
-If \code{plottype="rvsa"}, the number of rejected hypotheses is plotted against the nominal Type I error rate for each of the procedures given in \code{proc}.\cr
-If \code{plottype="pvsr"}, the ordered adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc}. This can be viewed as a plot of the Type I error rate against the number of rejected hypotheses. \cr
-If \code{plottype="pvst"}, the adjusted \emph{p}-values are plotted against the test statistics for each of the procedures given in \code{proc}.
-\cr
-If \code{plottype="pvsi"}, the adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc} using the original data order.  \cr
-}
-\item{logscale}{A logical variable for the \code{pvst} and \code{pvsi} plots. If \code{logscale} is \code{TRUE}, the negative decimal logarithms of the adjusted \emph{p}-values are plotted against the test statistics or gene indices. If \code{logscale} is \code{FALSE}, the adjusted \emph{p}-values are plotted against the test statistics or gene indices.}
-\item{alpha}{A vector of nominal Type I error rates for the \code{rvsa} plot.}
-\item{proc}{A vector of character strings containing the names of the multiple testing procedures, to be used in the legend.}
-\item{leg}{A vector of coordinates for the legend.}
-\item{\dots}{Graphical parameters such as \code{col}, \code{lty}, \code{pch}, and \code{lwd} may also be supplied as arguments to the function (see \code{\link{par}}).}
+  \item{plottype}{A character string specifying the type of graphical summary for the results of the multiple testing procedures. \cr
+    If \code{plottype="rvsa"}, the number of rejected hypotheses is plotted against the nominal Type I error rate for each of the procedures given in \code{proc}.\cr
+    If \code{plottype="pvsr"}, the ordered adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc}. This can be viewed as a plot of the Type I error rate against the number of rejected hypotheses. \cr
+    If \code{plottype="pvst"}, the adjusted \emph{p}-values are plotted against the test statistics for each of the procedures given in \code{proc}.
+    \cr
+    If \code{plottype="pvsi"}, the adjusted \emph{p}-values are plotted for each of the procedures given in \code{proc} using the original data order.  \cr
+  }
+  \item{logscale}{A logical variable for the \code{pvst} and \code{pvsi} plots. If \code{logscale} is \code{TRUE}, the negative decimal logarithms of the adjusted \emph{p}-values are plotted against the test statistics or gene indices. If \code{logscale} is \code{FALSE}, the adjusted \emph{p}-values are plotted against the test statistics or gene indices.}
+  \item{alpha}{A vector of nominal Type I error rates for the \code{rvsa} plot.}
+  \item{proc}{A vector of character strings containing the names of the
+    multiple testing procedures, to be used in the legend.}
+  \item{\dots}{Graphical parameters such as \code{col}, \code{lty},
+    \code{pch}, and \code{lwd}
+    may also be supplied as arguments to the function (see \code{\link{par}}).}
+  \item{leg}{A vector of coordinates for the legend.}
 }
 
 \references{
-
-S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
-
-Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkeley.edu/~gyc}  \cr
+  
+  S. Dudoit, J. P. Shaffer, and J. C. Boldrick (Submitted). Multiple hypothesis testing in microarray experiments.\cr
+  
+  Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data hypothesis, Technical Report \#633 of UCB Stat. \url{http://www.stat.berkeley.edu/~gyc}  \cr
 
 }
 \author{
