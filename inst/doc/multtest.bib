@@ -1,10 +1,16 @@
-@STRING{annstat	= {The Annals of Statistics} }
+@STRING{ANNSTAT	= {The Annals of Statistics} }
+@string{JASA= {Journal of the American Statistical Association}}
+@string{JC = {Journal of Classification}}
+@string{JSPI = {Journal of Statistical Planning and Inference}}
+@string{JRSSB = {Journal of the Royal Statistical Society, Series B}}
+@string{PNAS = {Proc. Natl. Acad. Sci.}}
+@string{SAGMB = {Statistical Applications in Genetics and Molecular Biology}}
 
 @Article{	  benjamini&hochberg95,
   author	= {Y. Benjamini and Y. Hochberg},
   title		= {Controlling the false discovery rate: a practical and
 		  powerful approach to multiple testing},
-  journal	= {J. R. Statist. Soc. B},
+  journal	= {JRSSB},
   year		= {1995},
   optkey	= {},
   volume	= {57},
@@ -19,12 +25,19 @@
   author	= {Y. Benjamini and D. Yekutieli},
   title		= {The control of the false discovery rate in multiple
 		  hypothesis testing under dependency},
-  journal	= annstat,
+  journal	= ANNSTAT,
   year		= {2001},
   optkey	= {},
   volume	= {29},
   number	= {4},
   pages		= {1165--1188}
+}
+
+@Book{Chambers98,
+   author = {J. M. Chambers},
+   title = {Programming with Data: A Guide to the S Language},
+   publisher = {Springer-Verlag, New York},
+   year = {1998}
 }
 
 @Unpublished{	  dudoit&shaffer02,
@@ -37,6 +50,19 @@ available at UC
   optkey	= {},
   optmonth	= {},
   year		= {2002},
+  optannote	= {}
+}
+
+@Article{DudoitetalStatSci03,
+  author	= {S. Dudoit and J. P. Shaffer and J. C. Boldrick},
+  title		= {Multiple hypothesis testing in microarray experiments},
+  journal		= {Statistical Science},
+  optkey	= {},
+  optmonth	= {},
+  year		= {2003},
+  volume = 	 {18},
+  number = 	 {1},
+  pages = 	 {71--103},
   optannote	= {}
 }
 
@@ -101,6 +127,20 @@ available at UC
   optannote	= {}
 }
 
+@Article{Sidak67,
+  author = 	 {Z.  \v{S}id\'{a}k},
+  title = 	 {Rectangular confidence regions for the means of multivariate normal distributions},
+  journal = 	 JASA,
+  year = 	 {1967},
+  OPTkey = 	 {},
+  volume = 	 {62},
+  OPTnumber = 	 {},
+  pages = 	 {626-633},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
 @Article{	  shaffer95,
   author	= {J. P. Shaffer},
   title		= {Multiple hypothesis testing},
@@ -113,6 +153,21 @@ available at UC
   optmonth	= {},
   optnote	= {},
   optannote	= {}
+}
+
+@TechReport{KelesetalTechRep147,
+  author = 	 {S. Kele\c{s} and M. J. van der Laan and S. Dudoit and S. E. Cawley},
+  title = 	 {Multiple Testing Methods for {ChIP}-{Chip} High Density Oligonucleotide Array Data},
+  institution =  {Division of Biostatistics, University of California, Berkeley},
+  year = 	 {2004},
+  OPTkey = 	 {},
+  OPTtype = 	 {},
+  number = 	 {147},
+  OPTaddress = 	 {},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {},
+  url={www.bepress.com/ucbbiostat/paper147}
 }
 
 @Book{		  westfall&young93,
@@ -131,4 +186,108 @@ available at UC
   optmonth	= {},
   optnote	= {},
   optannote	= {}
+}
+
+@Book{Dudoit&vdLaanMTBook,
+  author =       {S. Dudoit and M. J. van der Laan},
+  ALTeditor =    {},
+  title =        {Multiple Testing Procedures and Applications to
+Genomics},
+  publisher =    {Springer},
+  year =         {2004},
+  OPTkey =       {},
+  OPTvolume =    {},
+  OPTnumber =    {},
+  OPTseries =    {},
+  OPTaddress =   {},
+  OPTedition =   {},
+  OPTmonth =     {},
+  note =         {(In preparation)},
+  OPTannote =    {}
+}
+
+@Article{DudoitetalMT1SAGMB04,
+  author =       {S. Dudoit and M. J. van der Laan and K. S. Pollard},
+  title =        {Multiple testing. {P}art {I}. {S}ingle-step procedures
+for control of general {T}ype {I} error rates},
+  journal =      SAGMB,
+  year =         {2004},
+  OPTkey =       {},
+  volume =       {3},
+  number =       {1},
+  pages =        {Article 13},
+  OPTmonth =     {},
+  OPTnote =      {(To appear)},
+  OPTannote =    {Technical Report 138, Division of Biostatistics,
+University of California, Berkeley},
+  url={www.bepress.com/sagmb/vol3/iss1/art13}
+}
+
+@Article{vdLaanetalMT2SAGMB04,
+  author =       {M. J. van der Laan and S. Dudoit and K. S. Pollard},
+  title =        {Multiple testing. {P}art {II}. {S}tep-down procedures
+for control of the family-wise error rate},
+  journal =      SAGMB,
+  year =         {2004},
+  OPTkey =       {},
+  volume =       {3},
+  number =       {1},
+  pages =        {Article 14},
+  OPTmonth =     {},
+  OPTnote =      {(To appear)},
+  OPTannote =    {Technical Report 139, Division of Biostatistics,
+University of California, Berkeley},
+  url={www.bepress.com/sagmb/vol3/iss1/art14}
+}
+
+@Article{vdLaanetalMT3SAGMB04,
+  author =       {M. J. van der Laan and S. Dudoit and K. S. Pollard},
+  title =        {Augmentation Procedures for Control of the
+Generalized Family-Wise Error Rate and Tail Probabilities for the
+Proportion of
+False Positives},
+  journal =      SAGMB,
+  year =         {2004},
+  OPTkey =       {},
+  volume =       {3},
+  number =       {1},
+  pages =        {Article 15},
+  OPTmonth =     {},
+  OPTnote =      {},
+  OPTannote =    {Technical Report 141, Division of Biostatistics,
+University of California, Berkeley},
+  url={www.bepress.com/sagmb/vol3/iss1/art15}
+}
+
+@Article{Pollard&vdLaanJSPI04,
+  author =       {K. S. Pollard  and M. J. van der Laan},
+  title =        {Choice of a null distribution in resampling-based
+multiple testing},
+  journal =      JSPI,
+  year =         {2004},
+  OPTkey =       {},
+  volume =       {125},
+  number =       {1--2},
+  pages =        {85--100},
+  OPTmonth =     {},
+  OPTnote =      {},
+  annote =       {The Third International Conference on Multiple
+Comparisons}
+}
+
+@Article{Chiarettietal04,
+  author =       {S. Chiaretti and X. Li and R. Gentleman and A. Vitale
+and M. Vignetti and F. Mandelli and J. Ritz and R. Foa},
+  title =        {Gene expression profile of adult T-cell acute
+lymphocytic leukemia identifies distinct subsets of patients with
+different response to therapy and survival},
+  journal =      {Blood},
+  year =         {2004},
+  OPTkey =       {},
+  volume =       {103},
+  number =       {7},
+  pages =        {2771--2778},
+  OPTmonth =     {},
+  OPTnote =      {},
+  OPTannote =    {}
 }

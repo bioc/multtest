@@ -1,24 +1,9 @@
 Package: multtest
-Version: 1.4.4
-Date: 2002-04-16
-Title: Multiple Testing Procedures
-Author: Yongchao Ge<yongchao.ge@mssm.edu>, Sandrine Dudoit<sandrine@stat.berkeley.edu>
-Maintainer: Yongchao Ge<yongchao.ge@mssm.edu>
-Depends: R (>= 1.5.1)
-Description: Multiple testing procedures.
-	Includes resampling-based multiple testing procedures for 
-	controlling the family-wise error rate (FWER): Bonferroni, Hochberg 
-	(1988), Holm (1979), Sidak, Westfall & Young (1993) (referred to as 
-	minP and maxT). Also includes procedures for controlling the false 
-	discovery rate (FDR): Benjamini & Hochberg (1995), Benjamini & 
-	Yekutieli (2001) step-up procedures. These procedures are 
-	implemented for tests based on t-statistics, F-statistics, 
-	paired t-statistics,  block F-statistics, Wilcoxon statistics.  
-	Results are reported in terms of adjusted p-values. The procedures 
-	are directly applicable to identify differentially expressed genes in 
-	DNA microarray experiments.
+Title: Resampling-based multiple hypothesis testing
+Version: 1.5.0
+Author: Katherine S. Pollard, Yongchao Ge, Sandrine Dudoit
+Description: Non-parametric bootstrap and permutation resampling-based multiple testing procedures for controlling the family-wise error rate (FWER), generalized family-wise error rate (gFWER), tail probability of the proportion of false positives (TPPFP), and false discovery rate (FDR). Single-step and step-wise methods are implemented. Tests based on a variety of t- and F-statistics (including t-statistics based on regression parameters from linear and survival models) are included. Results are reported in terms of adjusted p-values, confindence regions and test statistic cutoffs. The procedures are directly applicable to identifying differentially expressed genes in DNA microarray experiments.
+Maintainer: Katherine S. Pollard <kpollard@soe.ucsc.edu>
+Dependencies: R (>= 1.9.0), Biobase, genefilter, survival, reposTools
 License: LGPL
-URL: http://www.mssm.edu/faculty/yongchao-ge/
-     http://www.stat.berkeley.edu/~sandrine,
-     http://www.stat.berkeley.edu/users/terry/zarray/Html/index.html
-
+Packaged: Wed Oct 13 16:19:27 2004; cbse-staff
