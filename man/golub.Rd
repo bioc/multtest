@@ -13,7 +13,7 @@ data(golub)
   Gene expression data (3051 genes and 38 tumor mRNA samples) from the
   leukemia microarray study of Golub et al. (1999). Pre-processing
   was done as described in Dudoit et al. (2002). The R code for pre-processing is available
-from the website \url{http://www.stat.berkeley.edu/~sandrine}.}
+in the file \url{../doc/golub.R}.}
 
 \value{
   \item{golub}{matrix of gene expression levels for the 38 tumor mRNA samples, rows correspond to genes (3051 genes) and columns to mRNA samples.}
@@ -25,7 +25,7 @@ from the website \url{http://www.stat.berkeley.edu/~sandrine}.}
 \source{Golub et al. (1999). Molecular classification of cancer: class
 discovery and class prediction by gene expression
 monitoring, \emph{Science}, Vol. 286:531-537.\cr
-\url{http://www-genome.wi.mit.edu/MPR/data_set_ALL_AML.html}
+\url{http://www-genome.wi.mit.edu/MPR/}
 .}
 
 \references{S. Dudoit, J. Fridlyand, and T. P. Speed (2002). Comparison of discrimination methods for the  classification of tumors using gene expression data. \emph{Journal of the American Statistical Association}, Vol. 97, No. 457, p. 77--87. }
