@@ -17,8 +17,8 @@
 
 
 \begin{center}
-1. Division of Biostatistics, University of California, Berkeley, {\tt sandrine@stat.berkeley.edu}\\
-2. Department of Statistics, University of California, Berkeley, {\tt yeehwa@stat.berkeley.edu}
+1. Division of Biostatistics, University of California, Berkeley, \url{http://www.stat.berkeley.edu/~sandrine}\\
+2. Department of Statistics, University of California, Berkeley, {\tt gyc@stat.berkeley.edu}
 \end{center}
 
 
@@ -33,7 +33,7 @@
 
 The {\tt multtest} package contains a collection of functions for multiple hypothesis testing. These functions can be used to identify differentially expressed genes in microarray experiments, i.e., genes whose expression levels are associated with a response or covariate of interest. \\
 
-{\bf Introduction to multiple testing.} For a detailed introduction to multiple testing consult the document {\tt multtest.intro} in the {\tt inst/doc} directory of the package. See also \cite{Shaffer95} and  \cite{Dudoit&Shaffer02} for a review of multiple testing procedures and complete references.\\
+{\bf Introduction to multiple testing.} This document provides a tutorial for using the {\tt multtest} package. For a detailed introduction to multiple testing consult the document {\tt multtest.intro} in the {\tt inst/doc} directory of the package. See also \cite{Shaffer95} and  \cite{Dudoit&Shaffer02} for a review of multiple testing procedures and complete references.\\
 
 {\bf Multiple testing procedures implemented in {\tt multtest}.}
 The {\tt multtest} package implements multiple testing procedures for controlling different Type I error rates. It includes procedures for controlling the family--wise Type I error rate (FWER): Bonferroni, \cite{Hochberg88}, \cite{Holm79}, Sidak, \cite{Westfall&Young93} minP and maxT procedures. It also includes procedures for controlling the false discovery rate (FDR): \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} step--up procedures. These procedures are implemented for tests based on $t$--statistics, $F$--statistics, paired $t$--statistics, block $F$--statistics, Wilcoxon statistics. The results of the procedures are summarized using adjusted $p$--values, which reflect for each gene the overall experiment Type I error rate when genes with a smaller $p$--value are declared differentially expressed. Adjusted $p$--values may be obtained either from the nominal distribution of the test statistics or by permutation. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
@@ -56,9 +56,9 @@ data(golub)
 of 100 and ceiling of 16,000; (ii) filtering: exclusion of genes with
 $\max/\min \leq 5$ or $(\max-\min) \leq 500$, where $\max$ and $\min$ refer
 respectively to the maximum and minimum intensities for a
-particular gene across mRNA samples; (iii) base 10 logarithmic transformation. Boxplots of the expression levels for each of the 38 samples revealed the need to standardize the expression levels within arrays before combining data across samples. The data were then summarized by a $3,051 \times 38 $ matrix $X=(x_{ji})$, where $x_{ji}$ denotes the expression level for gene $j$ in mRNA sample $i$. \\
+particular gene across mRNA samples; (iii) base 10 logarithmic transformation. Boxplots of the expression levels for each of the 38 samples revealed the need to standardize the expression levels within arrays before combining data across samples. The data were then summarized by a $3,051 \times 38 $ matrix $X=(x_{ji})$, where $x_{ji}$ denotes the expression level for gene $j$ in tumor mRNA sample $i$. \\
 
-The dataset {\tt golub} contains the gene expression data for the 38 training set tumor mRNA samples and 3,051 genes retained after pre--processing. The data set includes
+The dataset {\tt golub} contains the gene expression data for the 38 training set tumor mRNA samples and 3,051 genes retained after pre--processing. The dataset includes
 
 \begin{itemize}
 \item
@@ -95,7 +95,7 @@ qqnorm(teststat)
 qqline(teststat)
 @
 
-We may also wish to look at plots of the numerator and denominators of the test statistics (Figure \ref{fig:mtNumDen})
+We may also wish to look at plots of the numerators and denominators of the test statistics (Figure \ref{fig:mtNumDen})
 
 <<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
 tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
@@ -134,9 +134,10 @@ Permutation unadjusted $p$--values and adjusted $p$--values for the maxT procedu
 
 <<eval=TRUE, echo=TRUE>>=
 resT<-mt.maxT(golub,golub.cl,B=1000)
-rawp<-resT$rawp[order(resT$index)]
-maxT<-resT$adjp[order(resT$index)]
-teststat<-resT$teststat[order(resT$index)]
+ord<-order(resT$index)
+rawp<-resT$rawp[ord]
+maxT<-resT$adjp[ord]
+teststat<-resT$teststat[ord]
 @
 
 

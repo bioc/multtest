@@ -21,18 +21,23 @@
 \author{Sandrine Dudoit\\
 Division of Biostatistics\\
 University of California, Berkeley\\
-{\tt sandrine@stat.berkeley.edu}}
+\url{http://www.stat.berkeley.edu/~sandrine}}
 
 \maketitle
 
+\vspace{2cm}
+
 \tableofcontents
+
+\newpage
 
 \section{Overview}
 
 This document provides an introduction to multiple hypothesis testing, with emphasis on the identification of differentially expressed genes in microarray experiments. It is based on \cite{Dudoit&Shaffer02}. \\
 
-{\bf Bioconducor package {\tt multtest}.} The multiple testing procedures described below are implemented in the Bioconductor R package {\tt multtest}. A tutorial for {\tt multtest} is given in the {\tt multtest} document in the {\tt inst/doc} directory of the package. 
-The {\tt multtest} package implements multiple testing procedures for controlling different Type I error rates. It includes procedures for controlling the family-wise Type I error rate (FWER): Bonferroni, \cite{Hochberg88}, \cite{Holm79}, Sidak, \cite{Westfall&Young93} minP and maxT procedures. It also includes procedures for controlling the false discovery rate (FDR): \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} step-up procedures (see \cite{Dudoit&Shaffer02} for a review of multiple testing procedures and complete references). These procedures are implemented for tests based on $t$-statistics, $F$-statistics, paired $t$-statistics, block $F$-statistics, Wilcoxon statistics. The results of the procedures are summarized using adjusted $p$-values, which reflect for each gene the overall experiment Type I error rate when genes with a smaller $p$-value are declared differentially expressed. Adjusted $p$-values may be obtained either from the nominal distribution of the test statistics or by permutation. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
+{\bf Bioconducor package {\tt multtest}.} The multiple testing procedures described below are implemented in the Bioconductor R package {\tt multtest}. A tutorial for {\tt multtest} is given in the {\tt multtest} document in the {\tt inst/doc} directory of the package. \\
+
+The {\tt multtest} package implements multiple testing procedures for controlling different Type I error rates. It includes procedures for controlling the family--wise Type I error rate (FWER): Bonferroni, \cite{Hochberg88}, \cite{Holm79}, Sidak, \cite{Westfall&Young93} minP and maxT procedures. It also includes procedures for controlling the false discovery rate (FDR): \cite{Benjamini&Hochberg95} and \cite{Benjamini&Yekutieli01} step--up procedures. These procedures are implemented for tests based on $t$--statistics, $F$--statistics, paired $t$--statistics, block $F$--statistics, Wilcoxon statistics. The results of the procedures are summarized using adjusted $p$--values, which reflect for each gene the overall experiment Type I error rate when genes with a smaller $p$--value are declared differentially expressed. Adjusted $p$--values may be obtained either from the nominal distribution of the test statistics or by permutation. The permutation algorithm for the maxT and minP procedures is described in \cite{Ge&Dudoit}.\\
 
 
 \section{Multiple testing in microarray experiments}
@@ -40,7 +45,7 @@ The {\tt multtest} package implements multiple testing procedures for controllin
 Consider a microarray experiment which produces expression data on $m$
 genes (or variables) for $n$ mRNA samples, and further suppose that a response or covariate of interest is recorded for each sample. Such data may arise, for example, from a study of gene expression in tumor biopsy specimens from leukemia patients \citep{Golubetal}: in this case, the response is the tumor type and the goal is to identify genes that are differentially expressed in the different types of tumors. The data for sample $i$ consist of a response or covariate $y_i$ and a gene expression profile ${\bf x}_i = (x_{1i}, \ldots, x_{mi})$, where $x_{ji}$ denotes the expression level of gene $j$ in sample $i$, $i=1, \ldots, n$, $j=1, \ldots, m$. The expression levels $x_{ji}$ might be either absolute ({\it e.g.} Affymetrix oligonucleotide chips) or relative with
 respect to the expression levels of a suitably defined common reference sample
-({\it e.g.} Stanford two-color cDNA microarrays). Note that the expression levels $x_{ji}$ are in general highly processed data. The raw data in a microarray experiment consist of image files, and important preprocessing steps include image analysis of these scanned images and normalization. The gene expression data are conventionally stored in an $m \times n$ matrix $X = (x_{ji})$, with rows corresponding to genes and columns to individual mRNA samples \footnote{Note that this gene expression data matrix is the transpose of the standard $n \times m$ design matrix. The $m \times n$ representation was adopted in the microarray literature for display purposes, since for very large $m$ and small $n$ it is easier to display an $m \times n$ matrix than an $n \times m$ matrix.}. In a typical experiment, the total number $n$ of samples is anywhere between around ten and a few hundreds, and the number $m$ of genes is several thousands. The gene expression levels, $x$, are continuous variables, while the response or covariate, $y$, could be either polytomous or continuous as described above. Let $X_j$ denote the random variable corresponding to the expression level for gene $j$ and let $Y$ denote the response or covariate.  \\
+({\it e.g.} Stanford two--color cDNA microarrays). Note that the expression levels $x_{ji}$ are in general highly processed data. The raw data in a microarray experiment consist of image files, and important preprocessing steps include image analysis of these scanned images and normalization. The gene expression data are conventionally stored in an $m \times n$ matrix $X = (x_{ji})$, with rows corresponding to genes and columns to individual mRNA samples \footnote{Note that this gene expression data matrix is the transpose of the standard $n \times m$ design matrix. The $m \times n$ representation was adopted in the microarray literature for display purposes, since for very large $m$ and small $n$ it is easier to display an $m \times n$ matrix than an $n \times m$ matrix.}. In a typical experiment, the total number $n$ of samples is anywhere between around ten and a few hundreds, and the number $m$ of genes is several thousands. The gene expression levels, $x$, are continuous variables, while the response or covariate, $y$, could be either polytomous or continuous as described above. Let $X_j$ denote the random variable corresponding to the expression level for gene $j$ and let $Y$ denote the response or covariate.  \\
 
 An important and common question in microarray experiments is the
 identification of differentially expressed genes, {\it i.e.}, genes
@@ -50,7 +55,7 @@ treatment/control status, cell type, drug type) or continuous ({\it
   e.g.} dose of a drug, time), and the responses could be, for
 example, censored survival times or other clinical outcomes. The
 biological question of differential expression can be restated as a
-problem in multiple hypothesis testing: the simultaneous test for each
+problem in {\it multiple hypothesis testing}: the simultaneous test for each
 gene of the null hypothesis of no association between the expression
 levels and the responses or covariates. 
 A standard approach to this problem consists of two aspects: (1) computing a test statistic $T_j$ for each gene $j$, and (2) applying a multiple testing procedure to determine which hypotheses to reject while controlling a suitably defined Type I error rate \citep{DudoitetalSinica02,Efronetal01,Golubetal,Manduchietal00,Tusheretal,Westfalletal01}.\\
@@ -59,15 +64,15 @@ The univariate problem in (1) has been studied extensively in the
 statistical literature. In general, the appropriate test statistic
 will depend on the experimental design and the type of response or
 covariate. For example, for binary covariates one might consider a
-$t$- or a Mann-Whitney statistic, for categorical responses one might
-use an $F$-statistic, and for survival data one might rely on the
+$t$-- or a Mann--Whitney statistic, for categorical responses one might
+use an $F$--statistic, and for survival data one might rely on the
 score statistic for the Cox proportional hazard model. We won't
 discuss the choice of statistic any further here, except to say that
 for each gene $j$ the null hypothesis ${\rm H}_j$ is tested based on a
 statistic $T_j$, where $t_j$ denotes a realization of the random
 variable $T_j$. To simplify matters, and unless specified otherwise, we further assume 
 that the null ${\rm H}_j$ is rejected for large values of $|T_j|$
-(two-sided hypotheses).  \\
+(two--sided hypotheses).  \\
 
 Question (2) is the subject of this manuscript. 
 As a typical microarray
@@ -80,9 +85,9 @@ II error, is committed when the test fails to identify a truly
 differentially expressed gene. When many hypotheses are tested and
 each test has a specified Type I error probability, the chance of
 committing some Type I errors increases, often sharply, with the
-number of hypotheses. In particular, a $p$-value of 0.01 for one gene among a list
+number of hypotheses. In particular, a $p$--value of 0.01 for one gene among a list
 of several thousands will no longer correspond to a significant
-finding, as it is inevitable that such small $p$-values will occur by chance when 
+finding, as it is inevitable that such small $p$--values will occur by chance when 
 considering a large enough set of genes. Special problems arising from the multiplicity
 aspect include defining an appropriate Type I error rate and devising
 powerful multiple testing procedures which control this error rate and
@@ -98,9 +103,9 @@ document, we review basic notions and approaches to multiple testing.
 
 \section{Type I error rates}\label{sTypeI}
 
-{\bf Set-up.} Consider the problem of testing simultaneously $m$ null hypotheses ${\rm H}_j$, $j=1,\ldots,m$, and denote by $R$ the number of rejected hypotheses. In the frequentist setting, the situation can be summarized by the table below \citep{Benjamini&Hochberg95}. The specific $m$ hypotheses are assumed to be known in advance, the
+{\bf Set--up.} Consider the problem of testing simultaneously $m$ null hypotheses ${\rm H}_j$, $j=1,\ldots,m$, and denote by $R$ the number of rejected hypotheses. In the frequentist setting, the situation can be summarized by the table below \citep{Benjamini&Hochberg95}. The specific $m$ hypotheses are assumed to be known in advance, the
 numbers $m_0$ and $m_1 = m-m_0$ of true and false null hypotheses are unknown parameters, $R$ is
-an observable random variable, and $S$, $T$, $U$, and $V$ are unobservable random variables. In the microarray context, there is a null hypothesis ${\rm H}_j$ for each gene $j$ and rejection of ${\rm H}_j$ corresponds to declaring that gene $j$ is differentially expressed. In general, one would like to minimize the number $V$ of {\it false positives}, or {\it Type I errors}, and the number $T$ of {\it false negatives}, or {\it Type II errors}. The standard approach in a univariate setting is to prespecify an acceptable Type I error rate $\alpha$ and seek tests which minimize the Type II error rate, {\it i.e.}, maximize {\it power}, within the class of tests with Type I error rate $\alpha$. 
+an observable random variable, and $S$, $T$, $U$, and $V$ are unobservable random variables. In the microarray context, there is a null hypothesis ${\rm H}_j$ for each gene $j$ and rejection of ${\rm H}_j$ corresponds to declaring that gene $j$ is differentially expressed. In general, one would like to minimize the number $V$ of {\it false positives}, or {\it Type I errors}, and the number $T$ of {\it false negatives}, or {\it Type II errors}. The standard approach in a univariate setting is to prespecify an acceptable Type I error rate $\alpha$ and seek tests which minimize the Type II error rate, {\it i.e.}, maximize {\it power}, within the class of tests with Type I error rate $\alpha$. \\
 
 \begin{table}[hhh]
 \begin{tabular}{l|cc|l}
@@ -111,7 +116,7 @@ an observable random variable, and $S$, $T$, $U$, and $V$ are unobservable rando
 &&&\\
 \# true null hypotheses & $U$ & {\red $V$} & $m_0$\\
 &&&\\
-\# non-true null hypotheses & {\mygreen $T$} & $S$ & $m_1$\\
+\# non--true null hypotheses & {\mygreen $T$} & $S$ & $m_1$\\
 &&&\\
 \cline{2-3}
 \multicolumn{4}{c}{}\\
@@ -123,13 +128,13 @@ an observable random variable, and $S$, $T$, $U$, and $V$ are unobservable rando
 {\bf Type I error rates.} When testing a single hypothesis, ${\rm H}_1$, say, the probability of a Type I error, {\it i.e.}, of rejecting the null hypothesis when it is true, is usually controlled at some designated level $\alpha$. This can be achieved by choosing a critical value $c_{\alpha}$ such that $pr(|T_1| \geq c_{\alpha} | {\rm H}_1) \leq \alpha$ and rejecting ${\rm H}_1$ when $|T_1| \geq c_{\alpha}$. A variety of generalizations to the multiple testing situation are possible; the Type I error rates described next are the most standard \citep{Shaffer95}.
 \begin{itemize}
 \item
-{\it Per-comparison error rate (PCER)}. The PCER is defined as the expected value of (number of Type I errors/number of hypotheses), {\it i.e.},
+{\it Per--comparison error rate (PCER)}. The PCER is defined as the expected value of (number of Type I errors/number of hypotheses), {\it i.e.},
 $$PCER = E(V)/m.$$
 \item
-{\it Per-family error rate (PFER)}. The PFER is defined as the expected number of Type I errors, {\it i.e.},
+{\it Per--family error rate (PFER)}. The PFER is defined as the expected number of Type I errors, {\it i.e.},
 $$PFER = E(V).$$
 \item
-{\it Family-wise error rate (FWER)}. The FWER is defined as the probability of at least one Type I error, {\it i.e.}, 
+{\it Family--wise error rate (FWER)}. The FWER is defined as the probability of at least one Type I error, {\it i.e.}, 
 $$ FWER = pr(V \geq 1).$$
 \item
 {\it False discovery rate (FDR)}. The FDR of \cite{Benjamini&Hochberg95} is the expected proportion of Type I errors among the rejected hypotheses, {\it i.e.},
@@ -180,10 +185,10 @@ probability of rejecting the false null hypotheses, $E(S)/m_1$, or {\it
 null 
 hypotheses, $pr(S=m_1) = pr(T=0)$ \citep{Shaffer95}. When the family of
 tests consists of pairwise mean comparisons, these quantities have
-been called any-pair power, per-pair power, and all-pairs power
+been called any--pair power, per--pair power, and all--pairs power
 \citep{Ramsey78}. In a spirit analogous to the FDR, one
 could also define power as $E(S/R|R>0)pr(R>0) = pr(R>0)-FDR$; when $m=m_1$, this is
-the any-pair power $pr(S \geq 1)$. One should note again that
+the any--pair power $pr(S \geq 1)$. One should note again that
 probabilities are conditional on which null hypotheses are true and
 which are false.\\
 
@@ -200,54 +205,54 @@ of the different Type I error rates, suppose each hypothesis ${\rm
   H}_j$ is tested individually at level $\alpha_j$ and the decision to
 reject or not reject this hypothesis is based solely on that test. Under the complete null hypothesis, the PCER is simply the average of the $\alpha_j$ and the PFER is the sum of the $\alpha_j$. In contrast, the FWER is a function not of the test sizes $\alpha_j$ alone, but involves the {\it joint} distribution of the test statistics $T_j$ 
 $$PCER = (\alpha_1 + \ldots + \alpha_m)/m \leq \max( \alpha_1, \ldots, \alpha_m) \ \leq \ FWER \ \leq \ PFER = \alpha_1 + \ldots + \alpha_m.$$
-The FDR also depends on the joint distribution of the test statistics and, for a fixed procedure, $FDR \leq FWER$, with $FDR = FWER$ under the complete null. The classical approach to multiple testing calls for strong control of the FWER ({\it e.g.} Bonferroni procedure). The recent proposal of \cite{Benjamini&Hochberg95} controls the FWER in the weak sense and can be less conservative than FWER otherwise. Procedures controlling the PCER are generally less conservative than those controlling either the FDR or FWER, but tend to ignore the multiplicity problem altogether. The following simple example describes the behavior of the various Type I error rates as the total number of hypotheses $m$ and the proportion of true hypotheses $m_0/m$ vary.
+The FDR also depends on the joint distribution of the test statistics and, for a fixed procedure, $FDR \leq FWER$, with $FDR = FWER$ under the complete null. The classical approach to multiple testing calls for strong control of the FWER ({\it e.g.} Bonferroni procedure). The recent proposal of \cite{Benjamini&Hochberg95} controls the FWER in the weak sense and can be less conservative than FWER otherwise. Procedures controlling the PCER are generally less conservative than those controlling either the FDR or FWER, but tend to ignore the multiplicity problem altogether. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Adjusted $p$-values}\label{sadjp}
+\section{Adjusted $p$--values}\label{sadjp}
 
-{\bf Unadjusted $p$-values.} Consider first a single hypothesis ${\rm H}_1$, say, and a family of tests of ${\rm H}_1$, with level-$\alpha$ nested rejection regions $S_{\alpha}$ such that: (a) $pr(T_1 \in S_{\alpha}| {\rm H}_1) = \alpha$ for all $\alpha \in [0, 1]$ which are achievable under the distribution of $T_1$, and (b) $S_{\alpha'} = \cap_{\alpha \geq \alpha'} S_{\alpha}$ for all $\alpha$ and $\alpha'$ for which these regions are defined in (a). 
-Rather than simply reporting rejection or not of the hypothesis, a {\it $p$-value} connected with the test can be defined as $p_1 = \inf \{ \alpha : t_1 \in S_{\alpha} \}$ (adapted from \cite{TSH}, p. 170, to include discrete test statistics). The $p$-value can be thought of as the level of the test at which the hypothesis ${\rm H}_1$ would just be rejected. The smaller the $p$-value $p_1$, the stronger the evidence against the null hypothesis ${\rm H}_1$. Rejecting ${\rm H}_1$ when $p_1 \leq \alpha$ provides control of the Type I error rate at level $\alpha$. In our context, the $p$-value can also be restated as the probability of observing a test statistic as extreme or more extreme in the direction of rejection as the observed one, that is, $p_1 = pr(|T_1|\geq |t_1| | {\rm H}_1)$.  Extending this concept to the multiple testing situation leads to the very useful notion of adjusted $p$-value.\\
+{\bf Unadjusted $p$--values.} Consider first a single hypothesis ${\rm H}_1$, say, and a family of tests of ${\rm H}_1$, with level--$\alpha$ nested rejection regions $S_{\alpha}$ such that: (a) $pr(T_1 \in S_{\alpha}| {\rm H}_1) = \alpha$ for all $\alpha \in [0, 1]$ which are achievable under the distribution of $T_1$, and (b) $S_{\alpha'} = \cap_{\alpha \geq \alpha'} S_{\alpha}$ for all $\alpha$ and $\alpha'$ for which these regions are defined in (a). 
+Rather than simply reporting rejection or not of the hypothesis, a {\it $p$--value} connected with the test can be defined as $p_1 = \inf \{ \alpha : t_1 \in S_{\alpha} \}$ (adapted from \cite{TSH}, p. 170, to include discrete test statistics). The $p$--value can be thought of as the level of the test at which the hypothesis ${\rm H}_1$ would just be rejected. The smaller the $p$--value $p_1$, the stronger the evidence against the null hypothesis ${\rm H}_1$. Rejecting ${\rm H}_1$ when $p_1 \leq \alpha$ provides control of the Type I error rate at level $\alpha$. In our context, the $p$--value can also be restated as the probability of observing a test statistic as extreme or more extreme in the direction of rejection as the observed one, that is, $p_1 = pr(|T_1|\geq |t_1| | {\rm H}_1)$.  Extending this concept to the multiple testing situation leads to the very useful notion of adjusted $p$--value.\\
 
-{\bf Adjusted $p$-values.} Let $t_j$ and $p_j = pr(|T_j| \geq |t_j| | {\rm H}_j)$ denote respectively the test statistic and $p$-value for hypothesis ${\rm H}_j$ (gene $j$), $j=1,\ldots,m$. Just as in the single hypothesis case, a multiple testing procedure may be defined in terms of critical values for the test statistics or $p$-values of individual hypotheses: {\it e.g.} reject ${\rm H}_j$ if $|t_j| \geq c_j$ or if $p_j \leq \alpha_j$, where the critical values $c_j$ and $\alpha_j$ are chosen to control a given Type I error rate (FWER, PCER, PFER, or FDR) at a prespecified level $\alpha$. Alternatively, the multiple testing procedure may be defined in terms of adjusted $p$-values. Given any test procedure, the {\it adjusted $p$-value} corresponding to the test of a single hypothesis ${\rm H}_j$ can be defined as the level of the entire test procedure at which ${\rm H}_j$ would just be rejected, given the values of all test statistics involved \citep{Hommel&Bernhard99,Shaffer95,Westfall&Young93,Wright92,Yekutieli&Benjamini99}. If interest is in controlling the FWER, the FWER adjusted $p$-value for hypothesis ${\rm H}_j$ is
+{\bf Adjusted $p$--values.} Let $t_j$ and $p_j = pr(|T_j| \geq |t_j| | {\rm H}_j)$ denote respectively the test statistic and $p$--value for hypothesis ${\rm H}_j$ (gene $j$), $j=1,\ldots,m$. Just as in the single hypothesis case, a multiple testing procedure may be defined in terms of critical values for the test statistics or $p$--values of individual hypotheses: {\it e.g.} reject ${\rm H}_j$ if $|t_j| \geq c_j$ or if $p_j \leq \alpha_j$, where the critical values $c_j$ and $\alpha_j$ are chosen to control a given Type I error rate (FWER, PCER, PFER, or FDR) at a prespecified level $\alpha$. Alternatively, the multiple testing procedure may be defined in terms of adjusted $p$--values. Given any test procedure, the {\it adjusted $p$--value} corresponding to the test of a single hypothesis ${\rm H}_j$ can be defined as the level of the entire test procedure at which ${\rm H}_j$ would just be rejected, given the values of all test statistics involved \citep{Hommel&Bernhard99,Shaffer95,Westfall&Young93,Wright92,Yekutieli&Benjamini99}. If interest is in controlling the FWER, the FWER adjusted $p$--value for hypothesis ${\rm H}_j$ is
 
 $$\tilde{p}_j = \inf\left \{\alpha \in [0,1]: \mbox{${\rm H}_j$ is rejected at $FWER = \alpha$} \right \}.$$
 
 The corresponding random variables for unadjusted (or raw) and adjusted
-$p$-values are denoted by $P_j$ and $\tilde{P}_j$, respectively. Hypothesis ${\rm H}_j$ is then rejected, {\it i.e.}, gene $j$ is
+$p$--values are denoted by $P_j$ and $\tilde{P}_j$, respectively. Hypothesis ${\rm H}_j$ is then rejected, {\it i.e.}, gene $j$ is
 declared differentially expressed, at FWER $\alpha$ if $\tilde{p}_j
-\leq \alpha$. Adjusted $p$-values for other Type I error rates are
+\leq \alpha$. Adjusted $p$--values for other Type I error rates are
 defined similarly, that is, for the FDR,  $\tilde{p}_j = \inf\left
   \{\alpha : \mbox{${\rm H}_j$ is rejected at $FDR = \alpha$} \right
 \}$ \citep{Yekutieli&Benjamini99}. As in the single hypothesis case, an
-advantage of reporting adjusted $p$-values, as opposed to only
+advantage of reporting adjusted $p$--values, as opposed to only
 rejection or not of the hypotheses, is that the level of the test does
 not need to be determined in advance. Some multiple testing procedures
 are also most conveniently described in terms of their adjusted
-$p$-values and these can in turn be easily determined using resampling
+$p$--values and these can in turn be easily determined using resampling
 methods \citep{Westfall&Young93}.\\
 
 {\bf Stepwise procedures.} One usually distinguishes among three
-types of multiple testing procedures: single-step, step-down, and
-step-up procedures. In {\it single-step} procedures, equivalent
+types of multiple testing procedures: single--step, step--down, and
+step--up procedures. In {\it single--step} procedures, equivalent
 multiplicity adjustments are performed for all hypotheses, regardless
 of the ordering of the test statistics or unadjusted
-$p$-values, that is, each hypothesis is evaluated using a critical value that is independent of the results of tests of other hypotheses. Improvement in power, while preserving Type I error rate
+$p$--values, that is, each hypothesis is evaluated using a critical value that is independent of the results of tests of other hypotheses. Improvement in power, while preserving Type I error rate
 control, may be achieved by {\it stepwise procedures}, in which
 rejection of a particular hypothesis is based not only on the total
 number of hypotheses, but also on the outcome of the tests of other
-hypotheses. In {\it step-down} procedures, the hypotheses corresponding to the {\it most} significant test statistics ({\it i.e.}, smallest unadjusted $p$-values or largest absolute test statistics) are considered successively, with further tests depending on the outcomes of earlier ones. As soon as one hypothesis is accepted, all remaining hypotheses are accepted. In contrast, for {\it step-up} procedures, the hypotheses corresponding to the {\it least} significant test statistics are considered successively, again with further tests depending on the outcomes of earlier ones. As soon as one hypothesis is rejected, all remaining hypotheses are rejected.  The next section discusses single-step and stepwise procedures for control of the FWER.
+hypotheses. In {\it step--down} procedures, the hypotheses corresponding to the {\it most} significant test statistics ({\it i.e.}, smallest unadjusted $p$--values or largest absolute test statistics) are considered successively, with further tests depending on the outcomes of earlier ones. As soon as one hypothesis is accepted, all remaining hypotheses are accepted. In contrast, for {\it step--up} procedures, the hypotheses corresponding to the {\it least} significant test statistics are considered successively, again with further tests depending on the outcomes of earlier ones. As soon as one hypothesis is rejected, all remaining hypotheses are rejected.  The next section discusses single--step and stepwise procedures for control of the FWER.
 
-%%% {\red *** ADD FIG to explain step-down vs. step-up?}
+%%% {\red *** ADD FIG to explain step--down vs. step--up?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Control of the family-wise error rate}\label{sFWER}
+\section{Control of the family--wise error rate}\label{sFWER}
 
-\subsection{Single-step procedures}
+\subsection{Single--step procedures}
 
 For strong control of the FWER at level $\alpha$, the Bonferroni
 procedure, perhaps the best known in multiple testing, rejects any
-hypothesis ${\rm H}_j$ with $p$-value less than or equal to $\alpha/m$. The corresponding {\it single-step
-  Bonferroni adjusted $p$-values} are thus given by 
+hypothesis ${\rm H}_j$ with $p$--value less than or equal to $\alpha/m$. The corresponding {\it single--step
+  Bonferroni adjusted $p$--values} are thus given by 
 \begin{equation}\label{ebs}
 \tilde{p}_j = \min \bigl( mp_j,1 \bigr).
 \end{equation}
@@ -256,33 +261,33 @@ inequality. Assume without loss of generality that the true null
 hypotheses are ${\rm H}_j$, for $j=1,\ldots,m_0$, then, for  $P_j$
 having a $U[0,1]$ distribution under ${\rm H}_j$
 
-%%% {\red *** CHECK conditions for $U[0,1]$ $p$-values under null, continuous and exact test. usually less than or equal cf. BOOK.}
+%%% {\red *** CHECK conditions for $U[0,1]$ $p$--values under null, continuous and exact test. usually less than or equal cf. BOOK.}
 
 $$ FWER = pr(V \geq 1) = pr\bigl (\bigcup_{j=1}^{m_0} \{ \tilde{P}_j
 \leq \alpha \} \bigr) \leq \sum_{j=1}^{m_0} pr\bigl (\tilde{P}_j \leq
 \alpha \bigr) \leq  \sum_{j=1}^{m_0} pr\bigl (P_j \leq \alpha/m \bigr) = m_0 \alpha/m.$$
 
 Closely related to the Bonferroni procedure is the $\check{\rm
-  S}$id\'{a}k procedure which is exact under the complete null for protecting the FWER when the unadjusted $p$-values are independently distributed as $U[0,1]$. The {\it single-step $\check{S}$id\'{a}k adjusted $p$-values} are given by 
+  S}$id\'{a}k procedure which is exact under the complete null for protecting the FWER when the unadjusted $p$--values are independently distributed as $U[0,1]$. The {\it single--step $\check{S}$id\'{a}k adjusted $p$--values} are given by 
 \begin{equation}\label{ess}
 \tilde{p}_j = 1 - (1-p_j)^m.
 \end{equation}
 However, in many situations, the test statistics and hence the
-$p$-values are correlated. This is the case in microarray experiments,
+$p$--values are correlated. This is the case in microarray experiments,
 where groups of genes tend to have highly correlated expression levels
-due, for example, to co-regulation. \cite{Westfall&Young93} propose adjusted $p$-values for less conservative multiple testing procedures which take into account the dependence structure among test statistics. The {\it single-step minP adjusted $p$-values} are defined by
+due, for example, to co--regulation. \cite{Westfall&Young93} propose adjusted $p$--values for less conservative multiple testing procedures which take into account the dependence structure among test statistics. The {\it single--step minP adjusted $p$--values} are defined by
 \begin{equation}\label{eminPs}
  \tilde{p}_j = pr\bigl(\min_{1 \leq l \leq m} P_l \leq p_j \mid {\rm H}_0^C\bigr),
 \end{equation}
 where ${\rm H}_0^C$ denotes the complete null hypothesis and  $P_l$ 
-the random variable for the unadjusted $p$-value of the $l$th hypothesis. Alternatively, one may consider procedures based on the {\it single-step maxT adjusted $p$-values} which are defined in terms of the test statistics $T_j$ themselves
+the random variable for the unadjusted $p$--value of the $l$th hypothesis. Alternatively, one may consider procedures based on the {\it single--step maxT adjusted $p$--values} which are defined in terms of the test statistics $T_j$ themselves
 \begin{equation}\label{emaxTs}
 \tilde{p}_j = pr\bigl(\max_{1 \leq l \leq m} |T_l| \geq |t_j| | {\rm H}_0^C\bigr).
 \end{equation}
 
 The following points should be noted regarding these four procedures.\\
 
-{\bf 1.} If the unadjusted $p$-values $(P_1, \ldots, P_m)$ are independent and $P_j$ has a $U[0,1]$ distribution under ${\rm H}_j$, the minP adjusted $p$-values are the same as the \v{S}id\'{a}k adjusted $p$-values. \\
+{\bf 1.} If the unadjusted $p$--values $(P_1, \ldots, P_m)$ are independent and $P_j$ has a $U[0,1]$ distribution under ${\rm H}_j$, the minP adjusted $p$--values are the same as the \v{S}id\'{a}k adjusted $p$--values. \\
 
 {\bf 2.} The \v{S}id\'{a}k procedure does not guarantee control of the
 FWER for arbitrary distributions of the test statistics, however, it
@@ -295,74 +300,74 @@ multivariate normal distribution with mean zero and certain types of
 covariance matrix. \cite{Sidak67} extended the result to
 arbitrary covariance matrices, and \cite{Jogdeo77} showed that
 the inequality holds for a larger class of distributions, including
-the multivariate $t$- and $F$-distributions. When the \v{S}id\'{a}k
-inequality holds, the minP adjusted $p$-values are less than or equal
-to the \v{S}id\'{a}k adjusted $p$-values.\\
+the multivariate $t$-- and $F$--distributions. When the \v{S}id\'{a}k
+inequality holds, the minP adjusted $p$--values are less than or equal
+to the \v{S}id\'{a}k adjusted $p$--values.\\
 
 {\bf 3.} Computing the quantities in (\ref{eminPs}) using the upper
-bound provided by Boole's inequality yields the Bonferroni $p$-values,
-for unadjusted $p$-values
+bound provided by Boole's inequality yields the Bonferroni $p$--values,
+for unadjusted $p$--values
 $P_l \sim U[0,1]$ marginally under ${\rm H}_l$.\\
 
-In other words, procedures based on the minP adjusted $p$-values are less conservative than the Bonferroni or \v{S}id\'{a}k (under the \v{S}id\'{a}k inequality) procedures. In the case of independent test statistics, the \v{S}id\'{a}k and minP adjustments are equivalent as discussed in item 1, above.\\
+In other words, procedures based on the minP adjusted $p$--values are less conservative than the Bonferroni or \v{S}id\'{a}k (under the \v{S}id\'{a}k inequality) procedures. In the case of independent test statistics, the \v{S}id\'{a}k and minP adjustments are equivalent as discussed in item 1, above.\\
 
-{\bf 4.} Procedures based on the maxT and minP adjusted $p$-values control the FWER weakly under all conditions. Strong control of the FWER also holds under the assumption of subset pivotality (\cite{Westfall&Young93}, p. 42). The distribution of unadjusted $p$-values $(P_1, \ldots, P_m)$ is said to have the {\it subset pivotality} property if the joint distribution of the sub-vector $\{P_j: j \in \Lambda_0\}$ is identical under the restrictions $\cap_{j \in \Lambda_0} {\rm H}_j$ and ${\rm H}_0^C = \cap_{j=1}^m {\rm H}_j$, for all subsets $\Lambda_0$ of $\{1, \ldots, m\}$. The subset pivotality condition is important because it ensures that procedures based on adjusted $p$-values computed under the complete null provide strong control of the FWER. A practical consequence of this property is that resampling for computing adjusted $p$-values may be done conveniently under the complete null rather than the partial null hypotheses. Without subset pivotality, multiplicity adjustment is more complex.\\
+{\bf 4.} Procedures based on the maxT and minP adjusted $p$--values control the FWER weakly under all conditions. Strong control of the FWER also holds under the assumption of subset pivotality (\cite{Westfall&Young93}, p. 42). The distribution of unadjusted $p$--values $(P_1, \ldots, P_m)$ is said to have the {\it subset pivotality} property if the joint distribution of the sub--vector $\{P_j: j \in \Lambda_0\}$ is identical under the restrictions $\cap_{j \in \Lambda_0} {\rm H}_j$ and ${\rm H}_0^C = \cap_{j=1}^m {\rm H}_j$, for all subsets $\Lambda_0$ of $\{1, \ldots, m\}$. The subset pivotality condition is important because it ensures that procedures based on adjusted $p$--values computed under the complete null provide strong control of the FWER. A practical consequence of this property is that resampling for computing adjusted $p$--values may be done conveniently under the complete null rather than the partial null hypotheses. Without subset pivotality, multiplicity adjustment is more complex.\\
 
-{\bf 5.} The maxT $p$-values are easier to compute than the minP $p$-values and are equal to the minP $p$-values when the test statistics $T_j$ are identically distributed. However, the two procedures generally produce different adjusted $p$-values, and considerations of balance, power, and computational feasibility should dictate the choice between the two approaches. In the case of
-  non-identically distributed test statistics $T_j$ ({\it e.g.}
-  $t$-statistics with different degrees of freedom), not all tests
-  contribute equally to the maxT adjusted $p$-values and this can lead
+{\bf 5.} The maxT $p$--values are easier to compute than the minP $p$--values and are equal to the minP $p$--values when the test statistics $T_j$ are identically distributed. However, the two procedures generally produce different adjusted $p$--values, and considerations of balance, power, and computational feasibility should dictate the choice between the two approaches. In the case of
+  non--identically distributed test statistics $T_j$ ({\it e.g.}
+  $t$--statistics with different degrees of freedom), not all tests
+  contribute equally to the maxT adjusted $p$--values and this can lead
   to unbalanced adjustments (\cite{Beran88},
-  \cite{Westfall&Young93} p. 50). When adjusted $p$-values are estimated by permutation
+  \cite{Westfall&Young93} p. 50). When adjusted $p$--values are estimated by permutation
   (Section \ref{sresamp}) and a large number of hypotheses are tested,
-  procedures based on the minP $p$-values tend to be more sensitive to
+  procedures based on the minP $p$--values tend to be more sensitive to
   the number of permutations and more conservative than those based on
-  the maxT $p$-values. Also, the minP $p$-values require more
-  computations than the maxT $p$-values, because the unadjusted
-  $p$-values must be computed before considering the distribution of
+  the maxT $p$--values. Also, the minP $p$--values require more
+  computations than the maxT $p$--values, because the unadjusted
+  $p$--values must be computed before considering the distribution of
   their successive minima \citep{Ge&Dudoit}. 
 
-\subsection{Step-down procedures}
+\subsection{Step--down procedures}
 
-While single-step procedures are simple to implement, they tend to be
+While single--step procedures are simple to implement, they tend to be
 conservative for control of the FWER. Improvement in power, while
-preserving strong control of the FWER, may be achieved by step-down
-procedures. Below are the step-down analogs, in terms of their
-adjusted $p$-values, of the four procedures described in the previous
+preserving strong control of the FWER, may be achieved by step--down
+procedures. Below are the step--down analogs, in terms of their
+adjusted $p$--values, of the four procedures described in the previous
 section. Let $p_{\scst r_1} \leq p_{\scst r_2} \leq ... \leq p_{\scst
-  r_m}$ denote the {\it observed ordered unadjusted $p$-values}, and ${\rm
+  r_m}$ denote the {\it observed ordered unadjusted $p$--values}, and ${\rm
   H}_{\scst r_1}, {\rm H}_{\scst r_2}, \ldots, {\rm H}_{\scst r_m}$
 the corresponding null hypotheses. For control of the FWER at level $\alpha$, the \cite{Holm79} procedure proceeds as follows. Define 
 $$ j^* = \min \Bigl\{j: p_{\scst r_j} > \frac{\alpha}{m-j+1}\Bigr\}$$
 
 and reject hypotheses ${\rm H}_{\scst r_j}$, for
 $j=1,\ldots,j^*-1$. If no such $j^*$ exists, reject all
-hypotheses. The {\it step-down Holm adjusted $p$-values} are thus given by 
+hypotheses. The {\it step--down Holm adjusted $p$--values} are thus given by 
 
 \begin{equation}\label{eholm}
 \tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ \min \bigl( (m-k+1) \, p_{\scst r_k},1 \bigr ) \Bigr\}.
 \end{equation}
 Holm's procedure is less conservative than the standard Bonferroni
-procedure which would multiply the $p$-values by $m$ at each
+procedure which would multiply the $p$--values by $m$ at each
 step. Note that taking successive maxima of the quantities $\min
 \bigl( (m-k+1) \, p_{\scst r_k},1 \bigr )$ enforces monotonicity of
-the adjusted $p$-values. That is, $\tilde{p}_{\scst r_1} \leq
+the adjusted $p$--values. That is, $\tilde{p}_{\scst r_1} \leq
 \tilde{p}_{\scst r_2} \leq ... \leq \tilde{p}_{\scst r_m}$, and one
 can only reject a particular hypothesis provided all hypotheses with
-smaller unadjusted $p$-values were rejected beforehand. Similarly, the
-{\it step-down $\check{S}$id\'{a}k adjusted $p$-values} are defined as 
+smaller unadjusted $p$--values were rejected beforehand. Similarly, the
+{\it step--down $\check{S}$id\'{a}k adjusted $p$--values} are defined as 
 
 \begin{equation}\label{esd}
 \tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ 1-(1-p_{\scst r_k})^{(m-k+1)} \Bigr\}.
 \end{equation}
 
-The \cite{Westfall&Young93} {\it step-down minP adjusted $p$-values} are defined by
+The \cite{Westfall&Young93} {\it step--down minP adjusted $p$--values} are defined by
 \begin{equation}\label{eminP}
 \tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ pr\bigl(\min_{l
   \in \{r_k,\ldots,r_m\}} P_l \leq p_{\scst r_k} \mid {\rm H}_0^C \bigr) \Bigr\},
 \end{equation}
 
-and the {\it step-down maxT adjusted $p$-values} are defined by
+and the {\it step--down maxT adjusted $p$--values} are defined by
 
 \begin{equation}\label{emaxTd}
 \tilde{p}_{\scst r_j} = \max_{k = 1,\ldots, j}\ \Bigl\{ pr\bigl( \max_{l \in \{r_k,\ldots,r_m\}} |T_l| \geq |t_{\scst r_k}| \mid {\rm H}_0^C \bigr) \Bigr\},
@@ -371,35 +376,35 @@ where $|t_{\scst r_1}| \geq |t_{\scst r_2}| \geq ... \geq |t_{\scst
   r_m}|$ denote the {\it observed ordered test statistics}. Note that
   computing the quantities in (\ref{eminP}) under the assumption that
   $P_l \sim U[0,1]$ and using the upper bound provided by Boole's
-  inequality yields Holm's $p$-values. Procedures based on the
-  step-down minP adjusted $p$-values are thus less conservative than
+  inequality yields Holm's $p$--values. Procedures based on the
+  step--down minP adjusted $p$--values are thus less conservative than
   Holm's procedure. For a proof of the strong control of the FWER for
-  the maxT and minP procedures the reader is referred to (\cite{Westfall&Young93}, Section 2.8). Step-down procedures such as the Holm procedure may be further improved by taking into account logically related hypotheses as described in \cite{Shaffer86}.
+  the maxT and minP procedures the reader is referred to (\cite{Westfall&Young93}, Section 2.8). Step--down procedures such as the Holm procedure may be further improved by taking into account logically related hypotheses as described in \cite{Shaffer86}.
 
 
-\subsection{Step-up procedures}
+\subsection{Step--up procedures}
 
-In contrast to step-down procedures, step-up procedures begin with the
-least significant $p$-value, $p_{\scst r_m}$, and are usually based on
+In contrast to step--down procedures, step--up procedures begin with the
+least significant $p$--value, $p_{\scst r_m}$, and are usually based on
 the following probability result of \cite{Simes86}. Under the
 complete null hypothesis ${\rm H}_0^C$ and for independent test
-statistics, the ordered unadjusted $p$-values $P_{(1)} \leq
+statistics, the ordered unadjusted $p$--values $P_{(1)} \leq
 P_{(2)} \leq ... \leq P_{(m)}$ satisfy 
 
 $$pr \bigl(P_{(j)} > \alpha j/m,\ \forall\ j= 1, \ldots, m \mid {\rm H}_0^C \bigr) \geq 1- \alpha,$$ 
 
 with equality in the continuous case. This inequality is known as the {\it Simes inequality}. In important cases of dependent test statistics, Simes showed that the probability was larger than $1-\alpha$, however this does not hold generally for all joint distributions.\\
 
-The \cite{Hochberg88} procedure, based on the Simes inequality, can be viewed as a step-up modification of Holm's step-down procedure, since the ordered $p$-values are compared to the same critical values in both procedures. For control of the FWER at level $\alpha$, define 
+The \cite{Hochberg88} procedure, based on the Simes inequality, can be viewed as a step--up modification of Holm's step--down procedure, since the ordered $p$--values are compared to the same critical values in both procedures. For control of the FWER at level $\alpha$, define 
 $$ j^* = \max \Bigl\{j: p_{\scst r_j} \leq \frac{\alpha}{m-j+1}\Bigr\}$$
 
-and reject hypotheses ${\rm H}_{\scst r_j}$, for $j=1,\ldots,j^*$. If no such $j^*$ exists, reject no hypothesis. The {\it step-up Hochberg adjusted $p$-values} are thus given by 
+and reject hypotheses ${\rm H}_{\scst r_j}$, for $j=1,\ldots,j^*$. If no such $j^*$ exists, reject no hypothesis. The {\it step--up Hochberg adjusted $p$--values} are thus given by 
 
 \begin{equation}\label{ehoch}
 \tilde{p}_{\scst r_j} = \min_{k = j,\ldots, m}\ \Bigl\{ \min \bigl( (m-k+1) \, p_{\scst r_k},1 \bigr) \Bigr\}.
 \end{equation}
 
-Related procedures include those of \cite{Hommel88} and \cite{Rom90}. Step-up procedures have often been found to be more powerful than their step-down counterparts; however, it is important to keep in mind that all procedures based on the Simes inequality rely on the assumption that the result proved under independence yields a conservative procedure for dependent tests. More research is needed to determine circumstances in which such methods are applicable, and in particular, whether they are applicable for the types of correlation structures encountered in microarray experiments. \cite{Troendle96} proposed a permutation-based step-up multiple testing procedure which takes into account the dependence structure among the test statistics and is related to the \cite{Westfall&Young93} step-down maxT procedure.
+Related procedures include those of \cite{Hommel88} and \cite{Rom90}. Step--up procedures have often been found to be more powerful than their step--down counterparts; however, it is important to keep in mind that all procedures based on the Simes inequality rely on the assumption that the result proved under independence yields a conservative procedure for dependent tests. More research is needed to determine circumstances in which such methods are applicable, and in particular, whether they are applicable for the types of correlation structures encountered in microarray experiments. \cite{Troendle96} proposed a permutation--based step--up multiple testing procedure which takes into account the dependence structure among the test statistics and is related to the \cite{Westfall&Young93} step--down maxT procedure.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -413,7 +418,7 @@ procedures and one may be prepared to tolerate some Type I
 errors, provided their number is small in comparison to the number of
 rejected hypotheses. These considerations led to a less conservative
 approach which calls for controlling the expected proportion of Type I
-errors among the rejected hypotheses - the {\it false discovery rate},
+errors among the rejected hypotheses -- the {\it false discovery rate},
 FDR. More specifically, the FDR is defined as $FDR = E(Q)$, where $Q =
 V/R$ if $R >0$, and $0$ if $R=0$, {\it i.e.}, $FDR = E(V/R \mid
 R>0)pr(R>0)$. Under the complete null, given the definition of $0/0 =
@@ -421,16 +426,16 @@ R>0)pr(R>0)$. Under the complete null, given the definition of $0/0 =
 controlling the FDR thus also control the FWER in the weak sense. Note that
 earlier references to the FDR can be found in \cite{Seeger68} and \cite{Soric89}.\\
 
-\cite{Benjamini&Hochberg95} derived the following step-up procedure for (strong) control of the FDR for independent test statistics. Let $p_{\scst r_1} \leq p_{\scst r_2} \leq ... \leq p_{\scst r_m}$ denote the observed ordered unadjusted $p$-values. For control of the FDR at level $\alpha$ define 
+\cite{Benjamini&Hochberg95} derived the following step--up procedure for (strong) control of the FDR for independent test statistics. Let $p_{\scst r_1} \leq p_{\scst r_2} \leq ... \leq p_{\scst r_m}$ denote the observed ordered unadjusted $p$--values. For control of the FDR at level $\alpha$ define 
 $$j^* = \max \Bigl\{j: p_{\scst r_j} \leq \frac{j}{m} \alpha \Bigr\}$$
-and reject hypotheses ${\rm H}_{\scst r_j}$, for $j=1,\ldots,j^*$. If no such $j^*$ exists, reject no hypothesis. Corresponding adjusted $p$-values are
+and reject hypotheses ${\rm H}_{\scst r_j}$, for $j=1,\ldots,j^*$. If no such $j^*$ exists, reject no hypothesis. Corresponding adjusted $p$--values are
 \begin{equation}\label{eBH}
 \tilde{p}_{\scst r_j} = \min_{k = j,\ldots, m}\ \Bigl\{ \min\Bigl(\frac{m}{k} \, p_{\scst r_k}, 1\Bigr) \Bigr\}.
 \end{equation}
 
 \cite{Benjamini&Yekutieli01} proved that this procedure controls the FDR under certain dependence structures (positive regression dependency). They also proposed a simple conservative modification of the procedure which controls the false discovery rate for arbitrary dependence structures. For control of the FDR at level $\alpha$, define 
 $$ j^* = \max \Bigl\{j: p_{\scst r_j} \leq \frac{j}{m\sum_{j=1}^m 1/j} \alpha \Bigr\}$$ 
-and reject hypotheses ${\rm H}_{\scst r_j}$, for $j=1,\ldots,j^*$. If no such $j^*$ exists, reject no hypothesis.  Corresponding adjusted $p$-values are
+and reject hypotheses ${\rm H}_{\scst r_j}$, for $j=1,\ldots,j^*$. If no such $j^*$ exists, reject no hypothesis.  Corresponding adjusted $p$--values are
 
 \begin{equation}\label{eBY}
 \tilde{p}_{\scst r_j} = \min_{k = j,\ldots, m}\ \Bigl\{ \min\Bigl (\frac{m \sum_{j=1}^m 1/j}{k} \ p_{\scst r_k}, 1\Bigr) \Bigr\}.
@@ -439,17 +444,17 @@ For a large number $m$ of hypotheses, the penalty in this conservative
 procedure is about $\log m$, as compared to the
 \cite{Benjamini&Hochberg95} procedure. Note that the
 \cite{Benjamini&Hochberg95} procedure can also be conservative,
-even in the independence case, as it was shown that for this step-up
+even in the independence case, as it was shown that for this step--up
 procedure $E(Q) \leq \frac{m_0}{m}\alpha \leq \alpha$ . Until recently, most FDR
 controlling procedures were either designed for independent test
 statistics or did not make use of the dependency structure among
 the test statistics. In the spirit of the
 \cite{Westfall&Young93} resampling procedures for FWER control,
 \cite{Yekutieli&Benjamini99} proposed new FDR controlling
-procedures which use resampling based adjusted $p$-values to
+procedures which use resampling based adjusted $p$--values to
 incorporate certain types of dependency structures among the test
 statistics (the procedures assume among other things that the
-unadjusted $p$-values for the true null hypotheses are independent of the $p$-values for the false null hypotheses). \\
+unadjusted $p$--values for the true null hypotheses are independent of the $p$--values for the false null hypotheses). \\
 
 In the microarray setting, where thousands of comparisons are performed simultaneously and a fairly large number of genes are expected to be differentially expressed, FDR controlling procedures present a promising alternative to more conservative FWER approaches. In this context, one may be willing to bear a few false positives as long as their number is small in comparison to the number of rejected hypotheses. The problematic definition of $0/0=0$ is also not as important in this case.
 
@@ -459,7 +464,7 @@ In the microarray setting, where thousands of comparisons are performed simultan
 
 In many situations, the joint (and marginal) distribution of the test
 statistics is unknown. Resampling methods (bootstrap or permutation)
-can be used to estimate unadjusted and adjusted $p$-values while
+can be used to estimate unadjusted and adjusted $p$--values while
 avoiding parametric assumptions about the joint distribution
 of the test statistics. In the microarray setting, the joint
 distribution under the complete null hypothesis of the test statistics
@@ -472,15 +477,15 @@ of the gene expression levels. Depending on the sample size $n$, it may
 be infeasible to consider all possible permutations, and in such a
 case a random subset of $B$ permutations (including the observed) may be
 considered. The manner in which the responses/covariates are permuted
-depends on the experimental design, for example, for a two-factor
+depends on the experimental design, for example, for a two--factor
 design, one should permute the levels of the factor of interest within
-the levels of the other factor (see \cite{Scheffe}, Section 9.3, and Section \ref{sboldrick} for an example).
+the levels of the other factor (see \cite{Scheffe} for an example).
 
 
 
 \begin{center}
 \fbox{\parbox{5.5in}{%
-{\bf Box 1. Permutation algorithm for unadjusted $p$-values.} \\
+{\bf Box 1. Permutation algorithm for unadjusted $p$--values.} \\
 
 For the $b$th permutation, $b=1,\ldots, B$
 \begin{enumerate}
@@ -489,22 +494,22 @@ Permute the $n$ columns of the data matrix $X$.
 \item
 Compute test statistics $t_{1,b}, \ldots, t_{m,b}$ for each hypothesis.
 \end{enumerate}
-The permutation distribution of the test statistic $T_j$ for hypothesis ${\rm H}_j$, $j=1, \ldots, m$, is given by the empirical distribution of $t_{j,1}, \ldots, t_{j,B}$. For two-sided alternative hypotheses, the permutation $p$-value for hypothesis ${\rm H}_j$ is 
+The permutation distribution of the test statistic $T_j$ for hypothesis ${\rm H}_j$, $j=1, \ldots, m$, is given by the empirical distribution of $t_{j,1}, \ldots, t_{j,B}$. For two--sided alternative hypotheses, the permutation $p$--value for hypothesis ${\rm H}_j$ is 
 $$p_j^* = \frac{\sum_{b=1}^B I\bigl( |t_{j,b}| \geq |t_j| \bigr)}{B},$$
 where $I(\cdot)$ is the indicator function, equaling 1 if the condition in parentheses is true, and 0 otherwise.
 }}
 \end{center}
 
 
-Permutation adjusted $p$-values for the Bonferroni, $\check{\rm
+Permutation adjusted $p$--values for the Bonferroni, $\check{\rm
   S}$id\'{a}k, Holm, and Hochberg procedures can be obtained by replacing $p_j$ by
-  $p_j^*$ in equations (\ref{ebs}), (\ref{ess}), (\ref{eholm}), (\ref{esd}), and (\ref{ehoch}). The permutation unadjusted $p$-values can also be used for the FDR controlling procedures described in Section \ref{sFDR}. For the step-down maxT adjusted $p$-values of \cite{Westfall&Young93}, the null distribution of successive maxima $\max_{l \in \{r_j,\ldots,r_m\}} |T_l|$ of the test statistics needs to be estimated (the single-step case is simpler and omitted here as we only need the distribution of the maximum $\max_{l \in \{r_1,\ldots,r_m\}} |T_l|$).
+  $p_j^*$ in equations (\ref{ebs}), (\ref{ess}), (\ref{eholm}), (\ref{esd}), and (\ref{ehoch}). The permutation unadjusted $p$--values can also be used for the FDR controlling procedures described in Section \ref{sFDR}. For the step--down maxT adjusted $p$--values of \cite{Westfall&Young93}, the null distribution of successive maxima $\max_{l \in \{r_j,\ldots,r_m\}} |T_l|$ of the test statistics needs to be estimated (the single--step case is simpler and omitted here as we only need the distribution of the maximum $\max_{l \in \{r_1,\ldots,r_m\}} |T_l|$).
 
 
 \begin{center}
 \fbox{\parbox{5.5in}{%
-{\bf  Box 2. Permutation algorithm for step-down maxT adjusted $p$-values \\
-- based on Algorithms 2.8 and  4.1 in \cite{Westfall&Young93}.}\\
+{\bf  Box 2. Permutation algorithm for step--down maxT adjusted $p$--values \\
+-- based on Algorithms 2.8 and  4.1 in \cite{Westfall&Young93}.}\\
 
 For the $b$th permutation, $b=1,\ldots, B$
 \begin{enumerate}
@@ -522,7 +527,7 @@ u_{j,b} &=& \max\Bigl(u_{j+1,b},|t_{r_j,b}|\Bigr)\qquad
 where $r_j$ are such that $|t_{\scst r_1}| \geq |t_{\scst r_2}|
 \geq ... \geq |t_{\scst r_m}|$ for the {\bf original} data.
 \end{enumerate}
-The adjusted $p$-values are estimated by
+The adjusted $p$--values are estimated by
 
 $$\tilde{p}_{\scst r_j}^* = \frac{\sum_{b=1}^B I\bigl(u_{j,b} \geq |t_{\scst r_j}| \bigr)}{B},$$
 
@@ -535,7 +540,7 @@ $$  \tilde{p}^*_{\scst r_1} \leftarrow  \tilde{p}^*_{\scst r_1}, \qquad \tilde{p
 \end{center}
 
 
-The reader is referred to \cite{Ge&Dudoit} for a fast permutation algorithm for estimating minP adjusted $p$-values.
+The reader is referred to \cite{Ge&Dudoit} for a fast permutation algorithm for estimating minP adjusted $p$--values.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
