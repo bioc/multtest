@@ -1,4 +1,3 @@
-% \VignetteDepends{tools}
 % \VignetteIndexEntry{multtest Tutorial}
 % \VignetteKeywords{Expression Analysis}
 % \VignettePackage{multtest}
