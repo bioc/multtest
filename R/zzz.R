@@ -151,7 +151,7 @@ setMethod("plot","MTP",
               if(show[6]){
                   if(top>length(x@adjp))
                       top<-length(x@adjp)
-                  topp<-order(get.index(adjp=x@adjp,rawp=x@rawp,stat=x@statistic))[1:top]
+                  topp<-get.index(adjp=x@adjp,rawp=x@rawp,stat=x@statistic)[1:top]
                   plot(c(1,top),range(c(x@cutoff[topp,],x@statistic[topp])),type="n",main=paste("Top",top,"Hypotheses",sep=" "),xlab="Hypotheses",ylab="Test Statistics")
                   points(1:top,x@statistic[topp],pch="o")
                   nominal<-eval(call.list$alpha)
