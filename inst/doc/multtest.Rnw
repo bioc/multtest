@@ -3,6 +3,8 @@
 % likely to be overwritten.
 %
 % \VignetteIndexEntry{multtest Tutorial}
+% \VignetteDepends{tools}
+% \VignetteKeywords{Expression Analysis}
 
 \documentclass[11pt]{article}
 
