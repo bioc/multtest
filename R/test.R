@@ -516,7 +516,7 @@ fwer2tppfp<-function(adjp,q=0.05){
 	if(any(q>1)|any(q<0))
 		stop(paste("proportion of false positives q=",q," must be in [0,1]",sep=""))
 	for(l in q)
-       		newp<-rbind(newp,quantile(adjp,(1-l)*(1:m)/m))
+       		newp<-rbind(newp,adjp[ord][ceiling((1:m)*(1-l))])
     	rownames(newp)<-q
     	colnames(newp)<-names(ord)
         newp<-matrix(newp[,order(ord)],ncol=m,byrow=FALSE)
