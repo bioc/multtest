@@ -108,7 +108,7 @@ qqline(teststat)
 We may also wish to look at plots of the numerators and denominators of the test statistics (Figure \ref{fig:mtNumDen})
 
 %<<mtNumDen,fig=TRUE,prefix=FALSE,echo=TRUE,include=FALSE>>=
-
+<<>>=
 tmp<-mt.teststat.num.denum(golub,golub.cl,test="t")
 num<-tmp$teststat.num
 denum<-tmp$teststat.denum
