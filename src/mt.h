@@ -18,7 +18,7 @@ extern long int g_random_seed;
 			  when myDEBUG is 1, you need to try small data and small simulations
 			  otherwise, it just has too much printing*/
 #define PROMPT_LEN 0        
-/*  if PROMPT_LEN>1, then we'll use PROMPT_LEN to report the progess
+/*  if PROMPT_LEN>1, then we'll use PROMPT_LEN+1 to report the progess
     in permutations, otherwise, we'll report it when finish 1% of 
     permutations, this only applies to the permutations in 
     get the unadjusted p-values. For calculating adjusted p-values, it always 
