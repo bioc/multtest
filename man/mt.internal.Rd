@@ -22,11 +22,12 @@
 .mt.naNUM
 mt.number2na(x,na)
 mt.na2number(x,na)
-mt.getmaxB(classlabel,test,B)
+mt.getmaxB(classlabel,test,B, verbose)
 mt.transformL(classlabel,test)
 mt.transformV(V,classlabel,test,na,nonpara)
 mt.transformX(X,classlabel,test,na,nonpara)
-mt.checkothers(side="abs",fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
+mt.checkothers(side="abs",fixed.seed.sampling="y", B=10000,
+na=.mt.naNUM, nonpara="n")
 mt.checkX(X,classlabel,test)
 mt.checkV(V,classlabel,test)
 mt.checkclasslabel(classlabel,test)

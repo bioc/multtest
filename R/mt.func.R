@@ -36,7 +36,7 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 	       as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
 	       t.num=double(tmp$m),t.denum=double(tmp$m),as.character(options),
                as.integer(extra))
-    
+
     data.frame(teststat.num=teststat$t.num,teststat.denum=teststat$t.denum)
 }
 mt.maxT<-function(X,classlabel,test="t",side="abs",
@@ -84,14 +84,14 @@ mt.sample.teststat<-function(V,classlabel,test="t",fixed.seed.sampling="y",
   newB<-mt.getmaxB(classlabel,test,B)
   if(B==0||newB<B)
     fixed.seed.sampling<-"n" #as we're doing complete premutation
-  options<-c(test,"abs",fixed.seed.sampling);#the "abs" has no meaing here.  
+  options<-c(test,"abs",fixed.seed.sampling);#the "abs" has no meaing here.
   res<-.C("get_samples_T",as.double(tmp$V),as.integer(tmp$n),
           as.integer(tmp$classlabel),T=double(newB),as.double(na),
           as.integer(newB),as.character(options),as.integer(extra))
   res$T
 }
 mt.sample.rawp<-function(V,classlabel,test="t",side="abs",
-                       fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")   
+                       fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
 {
   extra<-max(classlabel)+1
   mt.checkothers(side=side,fixed.seed.sampling=fixed.seed.sampling,B=B,na=na,nonpara=nonpara)
@@ -188,7 +188,7 @@ mt.checkclasslabel<-function(classlabel,test)
           stop(paste("the classlabel has some errors for the blockf test at block",i,"located at",
                "(",(K+1)*(i-1)+1,(K+1)*i,")","There is no elements =",j,"within this block\n","your classlabel=",classlabel,"\n"))
     }
-  }           
+  }
 }
 mt.checkX<-function(X,classlabel,test){
   if((!is.matrix(X)) || !(is.numeric(X)))
@@ -280,7 +280,7 @@ mt.transformV<-function(V,classlabel,test,na,nonpara)
   if(test=="wilcoxon"||nonpara=="y"){
     newV<-rank(newV)
     }
-  newL<-mt.transformL(classlabel,test) 
+  newL<-mt.transformL(classlabel,test)
   list(V=mt.na2number(newV,na),n=n,classlabel=newL$classlabel)
 }
 mt.transformL<-function(classlabel,test)
@@ -304,7 +304,7 @@ mt.transformL<-function(classlabel,test)
 #this functions finds the maximum number of permutation
 #if the the initial B=0, or initial B greater than the maximum number of
 #permutation maxB, it will return all possible of number of permutation.
-mt.getmaxB<-function(classlabel,test,B)
+mt.getmaxB<-function(classlabel,test,B, verbose=FALSE)
 {
   if(B>.mt.BLIM)
     stop(paste("The setting of B=",B,"is too large, Please set B<",.mt.BLIM,"\n"))
@@ -337,13 +337,13 @@ mt.getmaxB<-function(classlabel,test,B)
     stop(paste("The complete enumeration is too big",maxB,
                "is too large, Please set random permutation\n"))
   }
-  if((B>maxB) ||(B==0)){
+  if((B>maxB) ||(B==0) && verbose ){
     cat("We'll do complete enumerations\n")
     return(maxB)
   }
   return(B)
 }
-  
+
 mt.na2number<-function(x,na){
   y<-x
   y[is.na(y)]<-na
@@ -355,8 +355,8 @@ mt.number2na<-function(x,na){
   y
 }
 
-           
-         
-  
+
+
+
 
 
