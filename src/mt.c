@@ -33,7 +33,7 @@ void print_b(int b,int B,char* prompt){
 	     Rprintf("\n");
 
       }
-  }else if((b%(PROMPT_LEN+1))==0){ /*use PROMPT_LEN+1 to avoid the compiling warnings*/
+  }else if((b%PROMPT_LEN)==0){
     p++;
     /*fprintf(stderr,"%s%d",prompt,b);*/
     Rprintf("%s%d",prompt,b);
