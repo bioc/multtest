@@ -35,7 +35,7 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
 
     data.frame(teststat.num=teststat$t.num,teststat.denum=teststat$t.denum)
 }
-  qmt.maxT<-function(X,classlabel,test="t",side="abs",
+  mt.maxT<-function(X,classlabel,test="t",side="abs",
                   fixed.seed.sampling="y",B=10000,na=.mt.naNUM,nonpara="n")
 {
     extra<-max(classlabel)+1
