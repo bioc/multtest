@@ -37,7 +37,7 @@ mt.teststat.num.denum(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     If \code{test="t.equalvar"}, the tests are based on two-sample
     t-statistics with equal variance for the two samples. The
     square of the t-statistic is equal to an F-statistic for \eqn{k=2}. \cr
-    If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics for the \code{\link{mt.maxT}} function, and on centered rank sum Wilcoxon statistics for the \code{\link{mt.minP}} function.\cr
+    If \code{test="wilcoxon"}, the tests are based on standardized rank sum Wilcoxon statistics.\cr
     If \code{test="f"}, the tests are based on F-statistics.\cr
     If \code{test="pairt"}, the tests are based on paired t-statistics. The
     square of the paired t-statistic is equal to a block F-statistic for \eqn{k=2}. \cr

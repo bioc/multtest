@@ -1,9 +1,5 @@
-%
-% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
-% likely to be overwritten.
-%
-% \VignetteIndexEntry{multtest Tutorial}
 % \VignetteDepends{tools}
+% \VignetteIndexEntry{multtest Tutorial}
 % \VignetteKeywords{Expression Analysis}
 % \VignettePackage{multtest}
 \documentclass[11pt]{article}

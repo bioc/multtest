@@ -207,10 +207,10 @@ int type2test(char* ptest,SAMPLING_DATA* sd)
   }
   else if(strcmp(ptest,"wilcoxon")==0){
     test=mtWilcoxon;
-    sd->fn_stat=Wilcoxon_stat;
+    sd->fn_stat=Wilcoxon_T;
     sd->fn_num_denum=Wilcoxon_num_denum;
-    sd->fn_maxT=Wilcoxon_T;/*changed to normalize*/
-    sd->fn_minP=sd->fn_stat;
+    sd->fn_maxT=sd->fn_stat;/*changed to normalize*/
+    sd->fn_minP=Wilcoxon_stat;
   }else if(strcmp(ptest,"t.equalvar")==0){
     test=mtTequalVar;
     sd->fn_stat=two_sample_t1stat;
