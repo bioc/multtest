@@ -332,8 +332,8 @@ mt.getmaxB<-function(classlabel,test,B, verbose=FALSE)
     stop(paste("The complete enumeration is too big",maxB,
                "is too large, Please set random permutation\n"))
   }
-  if((B>maxB) ||(B==0) && verbose ){
-    cat("We'll do complete enumerations\n")
+  if((B>maxB)||(B==0)){
+    if(verbose) cat("We'll do complete enumerations\n")
     return(maxB)
   }
   return(B)
