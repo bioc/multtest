@@ -85,7 +85,7 @@ mt.reject<-function(adjp,alpha)
   {
     r<-matrix(0,length(alpha),ncol(adjp))
     for(i in 1:length(alpha))
-      r[i,]<-apply(adjp<=alpha[i],2,sum)
+        r[i,] <- colSums(adjp<=alpha[i])
     dimnames(r)<-list(alpha,dimnames(adjp)[[2]])
   }
 
