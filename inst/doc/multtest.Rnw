@@ -5,7 +5,7 @@
 % \VignetteIndexEntry{multtest Tutorial}
 % \VignetteDepends{tools}
 % \VignetteKeywords{Expression Analysis}
-
+% \VignettePackage{multtest}
 \documentclass[11pt]{article}
 
 \usepackage{amsmath,epsfig,psfig,pstricks,fullpage}
