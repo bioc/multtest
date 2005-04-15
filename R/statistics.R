@@ -397,21 +397,42 @@ coxY<-function(surv.obj,strata=NULL,psi0=0,na.rm=TRUE,standardize=TRUE,alternati
     	samp<-1:nrow(surv.obj)
     	function(x,w=NULL){
         	if(!is.null(w)&length(w)!=length(x))
-            	stop("x and w must have same length")
-        	na.action<-
-			if(na.rm)
-				"na.omit"
-			else
-				"na.fail"
+            		stop("x and w must have same length")
+# Old method, using coxph. Now use coxph.fit since faster
+#        	na.action<-
+#			if(na.rm)
+#				"na.omit"
+#			else
+#				"na.fail"
+#		dep<-surv.obj[samp,]
+#		if(!is.null(strata))
+#			covar<-strata[samp,]
+#		fmla<- 
+#            		if(is.null(strata))
+#                		dep ~ .
+#            		else
+#                		dep ~ . + strata(covar)
+#        	srvd<-try(coxph(fmla,data=as.data.frame(x),weights=w,init=init,method=method,na.action=na.action))
+# New method, using coxph.fit and namespaces
 		dep<-surv.obj[samp,]
 		if(!is.null(strata))
-			covar<-strata[samp,]
-		fmla<- 
-            		if(is.null(strata))
-                		dep ~ .
-            		else
-                		dep ~ . + strata(covar)
-        	srvd<-try(coxph(fmla,data=as.data.frame(x),weights=w,init=init,method=method,na.action=na.action))
+			covar<-strata(strata[samp,])
+		if(na.rm){
+			drop<-is.na(x)
+			if(!is.null(w))
+				drop<-drop+is.na(w)
+			if(!is.null(strata))
+				drop<-drop+is.na(covar)
+			x<-x[!drop]
+			w<-w[!drop]
+			covar<-covar[!drop]
+			dep<-dep[!drop,]
+		}
+		design<-cbind(x,rep(1,length(x)))		
+		design[!is.finite(w),]<-NA
+		control<-survival:::coxph.control()
+		srvd<-try(survival:::coxph.fit(design,dep,strata=covar,init=init,control=control,weights=w,method=method,rownames=row.names(design)))
+# end new method
         	if(inherits(srvd,"try-error"))
 	            return(c(NA,NA,NA))
 	        denom<-ifelse(standardize,sqrt(srvd$var[1,1]),1)

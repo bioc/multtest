@@ -13,7 +13,7 @@ boot.resample<-function(X,stat.closure,W=NULL,B=1000,theta0=0,tau0=1){
 		W<-matrix(1,nrow=p,ncol=n)
 	if(is.vector(W)){
 		if(length(W)==n)
-			W<-matrix(W,nrow=p,ncol=n,byrow=T)
+			W<-matrix(W,nrow=p,ncol=n,byrow=TRUE)
 		if(length(W)==p)
 			W<-matrix(W,nrow=p,ncol=n)
 		if(length(W)!=n & length(W)!=p)
@@ -57,7 +57,7 @@ attempts.")
 		}
 		nas<-is.na(muboot)
 	}
-	return(muboot-apply(muboot,1,mean)+theta0)*sqrt(pmin(1,tau0/apply(muboot,1,var)))
+	(muboot-apply(muboot,1,mean)+theta0)*sqrt(pmin(1,tau0/apply(muboot,1,var)))
 }
 
 

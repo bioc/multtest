@@ -11,9 +11,9 @@ A user-level function to perform multiple testing procedures (MTP). A variety of
 MTP(X, W = NULL, Y = NULL, Z = NULL, Z.incl = NULL, Z.test = NULL, 
 na.rm = TRUE, test = "t.twosamp.unequalvar", robust = FALSE, 
 standardize = TRUE, alternative = "two.sided", psi0 = 0, typeone = "fwer", 
-k = 0, q = 0.1, fdr.method = "conservative", alpha = 0.05, 
-nulldist = "boot", B = 1000, method = "ss.maxT", get.cr = FALSE, 
-get.cutoff = FALSE, get.adjp = TRUE, keep.nulldist = FALSE, seed = NULL)
+k = 0, q = 0.1, fdr.method = "conservative", alpha = 0.05, smooth.null = 
+FALSE, nulldist = "boot", B = 1000, method = "ss.maxT", get.cr = FALSE, 
+get.cutoff = FALSE, get.adjp = TRUE, keep.nulldist = TRUE, seed = NULL)
 }
 
 \arguments{
@@ -34,13 +34,14 @@ get.cutoff = FALSE, get.adjp = TRUE, keep.nulldist = FALSE, seed = NULL)
   \item{q}{The allowed proportion of false positives for TPPFP control. Default is 0.1.}
   \item{fdr.method}{Character string indicating which FDR controlling method should be used when \code{typeone="fdr"}. The options are "conservative" (default) for the more conservative, general FDR controlling procedure and "restricted" for the method which requires more assumptions.}
   \item{alpha}{The target nominal type I error rate, which may be a vector of error rates. Default is 0.05.}
+  \item{smooth.null}{Indicator of whether to use a kernal density estimate for the tail of the null distributon for computing raw pvalues close to zero. Only used if 'rawp' would be zero without smoothing. Default is 'FALSE'.}
   \item{nulldist}{Character string indicating which resampling method to use for estimating the joint test statistics null distribution, by default non-parametric bootstrap ('boot').}
   \item{B}{The number of bootstrap iterations (i.e. how many resampled data sets) or the number of permutations (if \code{nulldist} is 'perm'). Can be reduced to increase the speed of computation, at a cost to precision. Default is 1000.}
   \item{method}{The multiple testing procedure to use. Options are single-step maxT ('ss.maxT', default), single-step minP ('ss.minP'), step-down maxT ('sd.maxT'), and step-down minP ('sd.minP').}
   \item{get.cr}{Logical indicating whether to compute confidence intervals for the estimates. Not available for f-tests. Default is 'FALSE'.}
   \item{get.cutoff}{Logical indicating whether to compute thresholds for the test statistics. Default is 'FALSE'.}
   \item{get.adjp}{Logical indicating whether to compute adjusted p-values. Default is 'TRUE'.}
-  \item{keep.nulldist}{Logical indicating whether to return the computed null distribution, by default 'FALSE' since this matrix can be quite large. }
+  \item{keep.nulldist}{Logical indicating whether to return the computed null distribution, by default 'TRUE'. Note that this matrix can be quite large. }
   \item{seed}{Integer to be used as argument to \code{set.seed} to set the seed for the random number generator for bootstrap resampling. This argument can be used to repeat exactly a test performed with a given seed. If the seed is specified via this argument, the same seed will be returned in the seed slot of the MTP object created. Else a random seed will be generated, used and returned.}
 }
 

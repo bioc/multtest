@@ -1,11 +1,11 @@
 #main user-level function for multiple hypothesis testing
 
-MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.twosamp.unequalvar",robust=FALSE,standardize=TRUE,alternative="two.sided",psi0=0,typeone="fwer",k=0,q=0.1,fdr.method="conservative",alpha=0.05,nulldist="boot",B=1000,method="ss.maxT",get.cr=FALSE,get.cutoff=FALSE,get.adjp=TRUE,keep.nulldist=FALSE,seed=NULL){
+MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.twosamp.unequalvar",robust=FALSE,standardize=TRUE,alternative="two.sided",psi0=0,typeone="fwer",k=0,q=0.1,fdr.method="conservative",alpha=0.05,smooth.null=FALSE,nulldist="boot",B=1000,method="ss.maxT",get.cr=FALSE,get.cutoff=FALSE,get.adjp=TRUE,keep.nulldist=TRUE,seed=NULL){
 	##sanity checks / formatting
 	#X
 	if(missing(X))
 		stop("Argument X is missing")
-	if(inherits(X,"exprSet")){ 
+	if(inherits(X,"exprSet") | inherits(X,"eSet")){ 
 		if(is.character(Y))
 			Y<-pData(X)[,Y]
 		if(is.character(Z)){
@@ -28,7 +28,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
 		W[W<=0]<-NA
 	#Y
 	if(!is.null(Y)){
-		if(is.Surv(Y)){
+		if(survival:::is.Surv(Y)){
 			if(test!="coxph.YvsXZ")
 				stop(paste("Test ",test," does not work with a survival object Y",sep=""))
 		}
@@ -166,6 +166,8 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
 	if(nulldist=="perm"){
 		if(method=="ss.minP" | method=="ss.maxT")
 			stop("Only step-down procedures are currently available with permutation nulldist")
+		if(smooth.null)
+			warning("Kernal density p-values not available with permutation nulldist")
 		if(get.cr)
 			warning("Confidence regions not available with permuation nulldist")
 		if(get.cutoff)
@@ -264,15 +266,29 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
 		##computing observed test statistics
 		obs<-get.Tn(X,stat.closure,W)
 		##computing the nonparametric bootstrap null distribution
-    		if(is.null(seed)){
-			state<-runif(1)
-    			seed<-trunc(1+state*1e6)
-		}
-		set.seed(as.integer(seed))
+		if(!is.null(seed))
+	    		set.seed(seed)
 		nulldistn<-boot.resample(X,stat.closure,W,B,theta0,tau0)
 		##performing multiple testing
 		#rawp values
 		rawp<-apply((obs[1,]/obs[2,])<=nulldistn,1,mean)
+		if(smooth.null & (min(rawp,na.rm=TRUE)==0)){
+			zeros<-(rawp==0)
+			if(sum(zeros)==1){
+				den<-density(nulldistn[zeros,],to=max(obs[1,zeros]/obs[2,zeros],nulldist[zeros,],na.rm=TRUE),na.rm=TRUE)
+				rawp[zeros]<-sum(den$y[den$x>=(obs[3,zeros]*obs[1,zeros]/obs[2,zeros])])/sum(den$y)
+			}
+			else{
+				den<-apply(nulldistn[zeros,],1,density,to=max(obs[1,zeros]/obs[2,zeros],nulldistn[zeros,],na.rm=TRUE),na.rm=TRUE)
+				newp<-NULL
+				stats<-obs[3,zeros]*obs[1,zeros]/obs[2,zeros]
+				for(i in 1:length(den)){
+					newp[i]<-sum(den[[i]]$y[den[[i]]$x>=stats[i]])/sum(den[[i]]$y)
+				}
+				rawp[zeros]<-newp		
+			}
+			rawp[rawp<0]<-0
+		}
 		#c, cr, adjp values
 		pind<-ifelse(typeone!="fwer",TRUE,get.adjp)
 		if(method=="ss.maxT")

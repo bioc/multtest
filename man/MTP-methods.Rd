@@ -7,20 +7,27 @@
 
 \alias{as.list-methods}
 \alias{as.list,MTP-method}
+\alias{as.list}
 
 \alias{plot-methods}
 \alias{plot,MTP-method}
+\alias{plot}
 
 \alias{print-methods}
 \alias{print,MTP-method}
+\alias{print.MTP}
 
 \alias{summary-methods}
-\alias{summary,MTP-method}
+\alias{summary,MTP-method} 
+\alias{summary}
 
+\alias{update-methods}
+\alias{update,MTP-method}
+\alias{update}
 
 \title{Methods for MTP objects in Package `multtest'}
 
-\description{Summary, printing, plotting, subsetting, and as.list methods were defined for the \code{MTP} class. These methods provide visual and numeric summaries of the results of a multiple testing procedure (MTP) and allow one to perform some basic manipulations of an object of class \code{MTP}.}
+\description{Summary, printing, plotting, subsetting, updating and as.list methods were defined for the \code{MTP} class. These methods provide visual and numeric summaries of the results of a multiple testing procedure (MTP) and allow one to perform some basic manipulations of an object of class \code{MTP}.}
 
 \section{Methods}{
 \describe{
@@ -56,7 +63,10 @@ In addition, this method produces a table with the class, mode, length, and dime
 2. index: A numeric vector of indices for ordering the hypotheses according to first \code{adjp}, then \code{rawp}, and finally the absolute value of \code{statistic} (not printed in the summary). \cr 
 
 3. summaries: When applicable (i.e., when the corresponding quantities are returned by \code{MTP}), a table with six number summaries of the distributions of the adjusted p-values, unadjusted p-values, test statistics, and parameter estimates.}
-}}
+}
+    \item{update}{: update method for \code{MTP} class, provides a mechanism to re-run the MTP with different choices of the following arguments - alternative, typeone, k, q, fdr.method, alpha, smooth.null, method, get.cr, get.cutoff, get.adjp, keep.nulldist. When evaluate is 'TRUE', a new object of class MTP is returned. Else, the updated call is returned. The \code{MTP} object passed to the update method must have a non-empty nulldist slot (ie: must have been called with 'keep.nulldist=TRUE').
+} 
+}
 
 \author{Katherine S. Pollard, \url{http://lowelab.ucsc.edu/katie/} \cr
 with design contributions from Sandrine Dudoit and Mark J. van der Laan.}
