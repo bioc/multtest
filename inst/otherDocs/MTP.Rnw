@@ -868,9 +868,8 @@ Providing parameter confidence regions and test statistic cut-offs for other Typ
 Implementing the new augmentation multiple testing procedures proposed in Dudoit \& van der Laan \cite{Dudoit&vdLaanMTBook} for controlling tail probabilities $Pr(g(V_n,R_n) > q)$ for an arbitrary function $g(V_n,R_n)$ of the numbers of false positives $V_n$ and rejected hypotheses $R_n$.
 \item
 Providing a formula interface for a symbolic description of the tests to be performed (cf. model specification in \Robject{lm}).
-\item
-Providing an \Robject{update} method for objects of class \Rclass{MTP}. 
-This would allow reusing available estimates of the null distribution to implement different MTPs for a given Type I error rate and to control different Type I error rates. 
+%\item
+%Providing an \Robject{update} method for objects of class \Rclass{MTP}. This would allow reusing available estimates of the null distribution to implement different MTPs for a given Type I error rate and to control different Type I error rates. 
 \item
 Extending the \Rclass{MTP} class to keep track of results for several MTPs.
 \item

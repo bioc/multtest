@@ -45,7 +45,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
-\title{{Applications of Multiple Testing Procedures: ALL Data} 
+\title{Applications of Multiple Testing Procedures: ALL Data} 
 \author{Katherine S. Pollard$^1$, Sandrine Dudoit$^2$, Mark J. van der Laan$^3$} 
 \maketitle
 
@@ -101,26 +101,39 @@ Available in the data package \Rpackage{ALL}, this dataset includes 21 phenotype
 
 The main user-level function for resampling-based multiple testing is \Robject{MTP}. Its input/output and usage are described in the accompanying vignette (MTP). Here, we illustrate some of the functionality of the \Rpackage{multtest} package using the Acute Lymphoblastic Leukemia (ALL) microarray dataset of Chiaretti et al. \cite{Chiarettietal04}, available in the data package \Rpackage{ALL}. We begin by loading the necessary packages.
 
-<<loadPacks, eval=TRUE, echo=TRUE>>=
+<<loadPacks, eval=TRUE, echo=TRUE, results=hide>>=
 library(Biobase)
 library(multtest)
-library(genefilter)
-library(reposTools)
+<<setWidth, eval=TRUE, echo=FALSE, results=hide>>=
+options(width=60)
 @
 
-We use the \Rpackage{reposTools} package to get the necessary data pacakges.
+We use the \Robject{install.packages} command to get the necessary analysis and data pacakges from the R and Bioconductor repositories, after first checking if they are already installed.
 
-<<getDataPacks, eval=TRUE, echo=TRUE>>=
-if(!is.installed("ALL")){
- z<-try(getReposEntry("http://www.bioconductor.org/data/experimental/repos"))
- try(install.packages2("ALL",repEntry=z))
-}
+<<getDataPacksNew, eval=TRUE, echo=TRUE>>=
+reposList<-c("http://www.bioconductor.org/packages/bioc/devel",
+          "http://www.bioconductor.org/packages/data/devel",
+          "http://www.bioconductor.org/packages/omegahat/devel",
+          "http://cran.fhcrc.org")
+installed<-installed.packages()[,"Package"]
+if(!("genefilter"%in%installed))
+ try(install.packages("genefilter",repos=reposList,dependencies=c("Depends", "Imports")))
+library(genefilter)
+if(!("ALL"%in%installed))
+try(install.packages("ALL",repos=reposList,dependencies=c("Depends", "Imports")))
 library(ALL)
-if(!is.installed("hgu95av2")){
- try(install.packages2("hgu95av2"))
-}
+if(!("hgu95av2"%in%installed))
+try(install.packages("hgu95av2",repos=reposList,dependencies=c("Depends", "Imports")))
 library(hgu95av2)
 @
+
+%<<getDataPacks, eval=TRUE, echo=TRUE>>=
+%z<-try(getReposEntry("http://www.bioconductor.org/data/experimental/repos"))
+%try(install.packages2("ALL",repEntry=z))
+%library(ALL)
+%try(install.packages2("hgu95av2"))
+%library(hgu95av2)
+%@
 
 \subsection{\Rpackage{ALL} data package and initial gene filtering}
 
@@ -141,7 +154,7 @@ pheno <- pData(ALL)
 @
 
 Our goal is to identify genes whose expression measures are associated with (possibly censored) biological and clinical outcomes such as: cytogenetic test status (normal vs. abnormal), tumor molecular subtype (BCR/ABL, NEG, ALL1/AF4, E2A/PBX1, p15/p16,  NUP-98), and time to relapse. 
-However, before applying the multiple testing procedures discussed in Section \ref{anal:mult:s:methods}, above, we perform initial gene filtering as in  Chiaretti et al. \cite{Chiarettietal04} and retain only those genes for which
+Before applying the multiple testing procedures, we perform initial gene filtering as in  Chiaretti et al. \cite{Chiarettietal04} and retain only those genes for which
 (i) at least 20\% of the subjects have a measured intensity of at least 100 and
 (ii)  the coefficient of variation (i.e., the ratio of the standard deviation to the mean) of the intensities across samples is between 0.7 and 10.
 These two filtering criteria can be readily applied using functions from the \Rpackage{genefilter} package.
@@ -285,7 +298,7 @@ At nominal FWER level $\alpha=0.05$, the bootstrap step-down minP MTP based on t
 
 In the context of microarray gene expression data analysis or other high-dimensional inference problems, one is often willing to accept some false positives, provided their number is small in comparison to the number of rejected hypotheses.
 In this case, the FWER is not a suitable choice of Type I error rate and one should consider other rates that lead to larger sets of rejected hypotheses.
-The augmentation procedures of Section \ref{anal:mult:s:AMTP}, implemented in the function \Robject{MTP}, allow one to reject additional hypotheses, while controlling an error rate such as the generalized family-wise error rate (gFWER), the tail probability of the proportion of false positives (TPPFP), or the false discovery rate (FDR). 
+The augmentation procedures implemented in the function \Robject{MTP}, allow one to reject additional hypotheses, while controlling an error rate such as the generalized family-wise error rate (gFWER), the tail probability of the proportion of false positives (TPPFP), or the false discovery rate (FDR). 
 We illustrate the use of the \Robject{fwer2gfwer}, \Robject{fwer2tppfp}, and \Robject{fwer2fdr} functions, but note that the gFWER, TPPFP, and FDR can also be controlled directly using the \Robject{MTP} function with appropriate choices of arguments \Robject{typeone}, \Robject{k}, \Robject{q}, and \Robject{fdr.method}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -394,7 +407,7 @@ sum(mb.boot@statistic>=mb.boot@cutoff[,"alpha=0.01"] & mb.diff)
 @
 
 For control of the FWER at nominal level $\alpha=0.01$, the bootstrap-based single-step maxT procedure with $F$-statistics identifies 
-\Sexpr{sum(mb.diff)} genes (i.e., almost all the \Sexpr{sum(filt)} filtered genes) 
+\Sexpr{sum(mb.diff)} genes (out of the \Sexpr{sum(filt)} filtered genes) 
 as having significant differences in mean expression measures between tumor molecular subtypes.  
 This set can be identified through either adjusted $p$-values or cut-offs for the test statistics. 
 The plot of test statistics and corresponding cut-offs in Figure \ref{f:mbPlot} illustrates that the $F$-statistics for the 10 genes with the smallest adjusted $p$-values are much larger than expected by chance under the null distribution.
@@ -458,7 +471,7 @@ abline(h=0, col=2, lwd=2)
 
 For control of the FWER at nominal level $\alpha=0.05$, the bootstrap-based single-step maxT procedure identifies \Sexpr{sum(cox.diff)} genes whose expression measures are significantly associated with time to relapse.
 Equivalently, Figure \ref{f:coxphPlot} illustrates that the level $\alpha=0.05$ confidence regions corresponding to these \Sexpr{sum(cox.diff)} genes do not include the null value $\psi_0=0$ for the Cox regression parameters (indicated by red horizontal line). 
-The confidence intervals for the next four genes barely cover $\psi_0=0$. 
+%The confidence intervals for the next four genes barely cover $\psi_0=0$. 
 
 
 \begin{figure}
