@@ -7,7 +7,7 @@
 }
 
 \usage{
-boot.resample(X, stat.closure, W = NULL, B = 1000, theta0 = 0, tau0 = 1)
+boot.resample(X, stat.closure, W = NULL, B = 1000, theta0 = 0, tau0 = 1, alternative = "two.sided")
 }
 
 \arguments{
@@ -17,6 +17,7 @@ boot.resample(X, stat.closure, W = NULL, B = 1000, theta0 = 0, tau0 = 1)
   \item{B}{The number of bootstrap iterations (i.e. how many resampled data sets) or the number of permutations (if \code{nulldist} is 'perm'). Can be reduced to increase the speed of computation, at a cost to precision. Default is 1000.}
   \item{theta0}{The value used to center the test statistics. For tests based on a form of t-statistics, this should be zero (default). For f-tests, this should be 1.}
   \item{tau0}{The value used to scale the test statistics. For tests based on a form of t-statistics, this should be 1 (default). For f-tests, this should be 2/(K-1), where K is the number of groups.}
+  \item{alternative}{Character string indicating the alternative hypotheses, by default 'two.sided'. For one-sided tests, use 'less' or 'greater' for null hypotheses of 'greater than or equal' (i.e. alternative is 'less') and 'less than or equal', respectively.}
 }
 
 \value{
@@ -57,7 +58,7 @@ ttest<-meanX(psi0=0,na.rm=TRUE,standardize=TRUE,alternative="two.sided",robust=F
 obs<-get.Tn(X=data,stat.closure=ttest,W=NULL)
 
 #bootstrap null distribution (B=100 for speed)
-nulldistn<-boot.resample(X=data,W=NULL,stat.closure=ttest,B=100,theta0=0,tau0=1)
+nulldistn<-boot.resample(X=data,W=NULL,stat.closure=ttest,B=100,theta0=0,tau0=1,alternative="two.sided")
 
 #unadjusted p-values
 rawp<-apply((obs[1,]/obs[2,])<=nulldistn,1,mean)
