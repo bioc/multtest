@@ -28,7 +28,7 @@ void bootloop(double *X, double *W, int *p, int *n, int *B, double *muboot, int 
       defineVar(install("w"),Wb,fenv);
 
       Tb=eval(fbody,fenv);
-      muboot[p_len*b+j]=REAL(Tb)[0]/REAL(Tb)[1];
+      muboot[p_len*b+j]=REAL(Tb)[2]*REAL(Tb)[0]/REAL(Tb)[1];
     }
   }
 
