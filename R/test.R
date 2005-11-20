@@ -268,7 +268,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
 		##computing the nonparametric bootstrap null distribution
 		if(!is.null(seed))
 	    		set.seed(seed)
-		nulldistn<-boot.resample(X,stat.closure,W,B,theta0,tau0)
+		nulldistn<-boot.resample(X,stat.closure,W,B,theta0,tau0,alternative)
 		##performing multiple testing
 		#rawp values
 		rawp<-apply((obs[1,]/obs[2,])<=nulldistn,1,mean)
