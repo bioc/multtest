@@ -1,7 +1,7 @@
 #function to generate bootstrap null distribution
 #theta0 is the value of the test statistics under the complete null hypthesis
 
-boot.resample<-function(X,stat.closure,W=NULL,B=1000,theta0=0,tau0=1){	
+boot.resample<-function(X,stat.closure,W=NULL,B=1000,theta0=0,tau0=1,alternative="two.sided"){	
 	cat("running bootstrap...\n")
 	Xnames<-dimnames(X)[[1]]
 	X<-as.matrix(X)
@@ -53,12 +53,22 @@ attempts.")
 			samp<-sample(n,n,replace=TRUE)
 			Xb<-X[,samp]
 			Wb<-W[,samp]
+			if(p==1){
+				Xb<-t(as.matrix(Xb))
+				Wb<-t(as.matrix(Wb))
+			}
 			Tb<-get.Tn(Xb,stat.closure,Wb)
-			muboot[,b]<-Tb[1,]/Tb[2,]
+			muboot[,b]<-Tb[3,]*Tb[1,]/Tb[2,]
 		}
 		nas<-is.na(muboot)
 	}
-	(muboot-apply(muboot,1,mean))*sqrt(pmin(1,tau0/apply(muboot,1,var)))+theta0
+	muboot<-(muboot-apply(muboot,1,mean))*sqrt(pmin(1,tau0/apply(muboot,1,var)))+theta0
+	if(alternative=="greater")
+		return(muboot)
+	if(alternative=="less")
+		return(-muboot)
+	if(alternative=="two.sided")
+                return(abs(muboot))
 }
 
 
