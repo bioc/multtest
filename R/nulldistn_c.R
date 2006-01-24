@@ -45,9 +45,7 @@ boot.resample<-function(X,stat.closure,W=NULL,B=1000,theta0=0,tau0=1,alternative
 	while(sum(nas)){
 		count<-count+1
 		if(count>1000)
-			stop("Bootstrap null disrtibution computation 
-terminating. Can not obtain distribution without missing values after 1000 
-attempts.")
+			stop("Bootstrap null disrtibution computation terminating. Can not obtain distribution without missing values after 1000 attempts. This problem may be resolved if you try again with a different seed.")
 		nascols<-unique(col(muboot)[nas])
 		for(b in nascols){
 			samp<-sample(n,n,replace=TRUE)
