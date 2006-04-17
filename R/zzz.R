@@ -447,7 +447,16 @@ print.MTP<-function(x,...){
 
 
 .First.lib<-function(libname,pkgname,where){
-    library.dynam("multtest",pkgname,libname)
+   dyn.load(
+               file.path(libname, pkgname, "libs", 
+                         paste("multtest",
+                               .Platform$"dynlib.ext",
+                               sep = ""
+                               )
+                         )
+               )
+
+    #library.dynam("multtest",pkgname,libname)
 }
 
 .Last.lib<-function(libpath){

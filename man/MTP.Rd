@@ -113,7 +113,7 @@ Katherine S. Pollard and Mark J. van der Laan, "Resampling-based Multiple Testin
 \author{Katherine S. Pollard, \url{http://lowelab.ucsc.edu/katie/} \cr
 with design contributions from Sandrine Dudoit and Mark J. van der Laan.}
 
-\notes{Thank you to Peter Dimitrov for suggestions about the code.}
+\note{Thank you to Peter Dimitrov for suggestions about the code.}
 
 \seealso{\code{\link{MTP-class}}, \code{\link{MTP-methods}}, \code{\link{mt.minP}}, \code{\link{mt.maxT}}, \code{\link{ss.maxT}}, \code{\link{fwer2gfwer}}}
 
