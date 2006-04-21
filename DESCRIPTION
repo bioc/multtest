@@ -18,4 +18,5 @@ Maintainer: Katherine S. Pollard <kpollard@wald.ucdavis.edu>
 Depends: R (>= 2.1.0), methods, Biobase, survival
 SaveImage: yes
 License: LGPL
+biocViews: Microarray, DifferentialExpression, MultipleComparisons
 
