@@ -446,29 +446,12 @@ print.MTP<-function(x,...){
           }
 
 
-.First.lib<-function(libname,pkgname,where){
-   dyn.load(
-               file.path(libname, pkgname, "libs", 
-                         paste("multtest",
-                               .Platform$"dynlib.ext",
-                               sep = ""
-                               )
-                         )
-               )
-
-    #library.dynam("multtest",pkgname,libname)
+.First.lib<-function(libname,pkgname){
+    library.dynam("multtest",pkgname)
 }
 
 .Last.lib<-function(libpath){
-    dyn.unload(
-               file.path(libpath,
-                         "libs",
-                         paste("multtest",
-                               .Platform$"dynlib.ext",
-                               sep = ""
-                               )
-                         )
-               )
+    library.dynam.unload("multtest", libpath)
 }
 
 #apply function with a weight matrix/vector
