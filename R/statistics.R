@@ -393,30 +393,38 @@ coxY<-function(surv.obj,strata=NULL,psi0=0,na.rm=TRUE,standardize=TRUE,alternati
     	if(!inherits(surv.obj,"Surv"))  #covers NULL case
         	stop("Response must be a survival object")
 	if(!is.null(strata))
-		strata<-as.matrix(strata)
+		strat<-as.matrix(strata)
 	else
-		strata<-strata(rep(1,nrow(surv.obj)))
+		strat<-rep(1,nrow(surv.obj))
+	strat<-strata(strat)
     	samp<-1:nrow(surv.obj)
     	function(x,w=NULL){
         	if(!is.null(w)&length(w)!=length(x))
             		stop("x and w must have same length")
 		dep<-surv.obj[samp,]
-		covar<-strata[samp]
+		covar<-strat[samp]
 		if(na.rm){
 			drop<-is.na(x)
 			if(!is.null(w))
 				drop<-drop+is.na(w)
-			if(!is.null(strata))
+			if(!is.null(strat))
 				drop<-drop+is.na(covar)
 			x<-x[!drop]
 			w<-w[!drop]
 			covar<-covar[!drop]
 			dep<-dep[!drop,]
 		}
+		if(sum(is.na(covar))){
+			drop<-is.na(covar)
+			x<-x[!drop]
+			w<-w[!drop]
+			covar<-covar[!drop]
+			dep<-dep[!drop,]	
+		}	
 		design<-cbind(x,rep(1,length(x)))		
 		design[!is.finite(w),]<-NA
 		control<-survival:::coxph.control()
-		srvd<-try(survival:::coxph.fit(design,dep,strata=covar,init=init,control=control,weights=w,method=method,rownames=row.names(design)))
+		srvd<-try(survival:::coxph.fit(design,dep,strata=covar,init=init,control=control,weights=w,method=method,rownames=rownames(design)))
         	if(inherits(srvd,"try-error"))
 	            return(c(NA,NA,NA))
 	        denom<-ifelse(standardize,sqrt(srvd$var[1,1]),1)
