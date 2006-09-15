@@ -21,6 +21,10 @@ setClass("MTP",representation(statistic="numeric",
          call=NULL,
          seed=vector("integer",0)))
 
+
+if( !isGeneric("plot") )
+    setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
+
 setMethod("plot","MTP",
 	function(x,y="missing",which=1:4,caption=c("Rejections vs. Error Rate",
                                            "Ordered Adjusted p-values","Adjusted p-values vs. Statistics",
@@ -137,6 +141,10 @@ setMethod("plot","MTP",
               invisible()
           })
 
+
+if( !isGeneric("summary") )
+    setGeneric("summary", function(object, ...) standardGeneric("summary"))
+
 setMethod("summary","MTP",
 	function(object,...){
               call.list<-as.list(object@call)
@@ -216,6 +224,8 @@ setMethod("as.list","MTP",
               invisible(lobj)
           })
 
+if( !isGeneric("update") )
+    setGeneric("update", function(object, ...) standardGeneric("update"))
 setMethod("update","MTP",
 	function(object,formula.="missing",alternative="two.sided",typeone="fwer",k=0,q=0.1,fdr.method="conservative",alpha=0.05,smooth.null=FALSE,method="ss.maxT",get.cr=FALSE,get.cutoff=FALSE,get.adjp=TRUE,keep.nulldist=TRUE,...,evaluate=TRUE){
 		## checking
@@ -445,13 +455,10 @@ print.MTP<-function(x,...){
               invisible(x)
           }
 
+.onLoad <- function(lib, pkg) require(methods)
 
-.First.lib<-function(libname,pkgname,where){
-    library.dynam("multtest",pkgname)
-}
-
-.Last.lib<-function(libpath){
-    library.dynam.unload("multtest", libpath)
+.onUnload <- function( libpath ) {
+  library.dynam.unload( "multtest", libpath )
 }
 
 #apply function with a weight matrix/vector
