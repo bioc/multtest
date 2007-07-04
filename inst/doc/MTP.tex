@@ -620,26 +620,8 @@ The main user-level function for resampling-based multiple testing is \Robject{M
 \begin{Schunk}
 \begin{Sinput}
 > library(Biobase)
-\end{Sinput}
-\begin{Soutput}
-Welcome to Bioconductor 
-	 Vignettes contain introductory material.  To view, 
-	 simply type: openVignette() 
-	 For details on reading vignettes, see
-	 the openVignette help page.
-\end{Soutput}
-\begin{Sinput}
 > library(multtest)
 \end{Sinput}
-\begin{Soutput}
-Loading required package: genefilter 
-Loading required package: survival 
-Loading required package: reposTools 
-Creating a new generic function for "print" in "multtest" 
-Creating a new generic function for "plot" in "multtest" 
-Creating a new generic function for "summary" in "multtest" 
-Creating a new generic function for "as.list" in "multtest" 
-\end{Soutput}
 \end{Schunk}
 
 \begin{Schunk}
@@ -651,9 +633,9 @@ function (X, W = NULL, Y = NULL, Z = NULL, Z.incl = NULL, Z.test = NULL,
     na.rm = TRUE, test = "t.twosamp.unequalvar", robust = FALSE, 
     standardize = TRUE, alternative = "two.sided", psi0 = 0, 
     typeone = "fwer", k = 0, q = 0.1, fdr.method = "conservative", 
-    alpha = 0.05, nulldist = "boot", B = 1000, method = "ss.maxT", 
-    get.cr = FALSE, get.cutoff = FALSE, get.adjp = TRUE, keep.nulldist = FALSE, 
-    seed = NULL) 
+    alpha = 0.05, smooth.null = FALSE, nulldist = "boot", B = 1000, 
+    method = "ss.maxT", get.cr = FALSE, get.cutoff = FALSE, get.adjp = TRUE, 
+    keep.nulldist = TRUE, seed = NULL) 
 NULL
 \end{Soutput}
 \end{Schunk}
@@ -723,9 +705,10 @@ Testing can be performed for a range of nominal Type I error rates by specifying
 \item{\em Test statistics null distribution.} 
 In the current implementation of \Robject{MTP}, the test statistics null distribution is estimated by default using the non-parametric version of bootstrap Procedure~\ref{anal:mult:proc:boot} (argument \Robject{nulldist="boot"}). 
 The bootstrap procedure is implemented in the internal function \Robject{boot.resample}, which calls C to compute test statistics for each bootstrap sample.
-The values of the shift ($\lambda_0$) and scale ($\tau_0$) parameters are determined by the type of test statistics (e.g., $\lambda_0=0$ and $\tau_0=1$ for $t$-statistics). 
+The values of the shift ($\lambda_0$) and scale ($\tau_0$) parameters are determined by the type of test statistics (e.g., $\lambda_0=0$ and $\tau_0=1$ for $t$-statistics). When \Robject{csnull=TRUE} (default), these values will be used to center and scale the estimated test statistics distribution, producing a null distribution. One may specify \Robject{csnull=FALSE} to compute a non-null test statistics distribution.
 Permutation null distributions are also available via \Robject{nulldist="perm"}.
 The number of resampling steps is specified by the argument \Robject{B}, by default 1,000. 
+Since the upper tail of a the bootstrap distribution may be difficult to estimate, particularly for small values of \Robject{B}, a kernal density estimator may be used for the tail of the distribution by setting \Robject{smooth.null=TRUE} (default is FALSE). 
 
 \item{\em Multiple testing procedures.} 
 Several methods for controlling the chosen Type I error rate are available in \Rpackage{multtest}. 
@@ -741,6 +724,32 @@ Two FDR-controlling procedures can then be derived from the TPPFP-controlling AM
 The AMTPs are implemented in the functions \Robject{fwer2gfwer}, \Robject{fwer2tppfp}, and \Robject{fwer2fdr}, that take FWER adjusted $p$-values as input and return augmentation adjusted $p$-values for control of the gFWER, TPPFP, and FDR, respectively. 
 Note that the aforementioned AMTPs can be applied directly via the \Robject{typeone} argument of the main function \Robject{MTP}.
 \end{itemize}
+
+\item{\em Parallel processing.}
+MTP can be run on a computer cluster with multiple nodes. This functionality requires the package \Rpackage{snow}. In addition, the packages \Rpackage{multtest} and \Rpackage{Biobase} must be
+installed on each node. \Robject{MTP} will load these packages as long as they are in the library
+search path. Else the user must load the packages on each node. When \Robject{cluster=1}, computations are performed on a single CPU. To implement bootstrapping in parallel, the user either sets \Robject{cluster} equal to a cluster object created using the function \Robject{makeCluster} 
+in \Rpackage{snow} or specifies the integer number of nodes to use in a cluster. For the latter 
+approach, \Robject{MTP} creates a cluster object with the specified number of nodes for the user. 
+In this case, the type of interface system to use must be specified in the \Robject{type} argument. 
+MPI and PVM interfaces require the packages \Rpackage{Rmpi} and \Rpackage{rpvm}, respectively. The number or percentage of bootstrap iterations to dispatch at one time to each node is specified 
+with the \Robject{dispatch} argument (default is 5\%).
+
+The following example illustrates how to load the \Rpackage{snow} package, make a cluster consisting 
+of two nodes, and load \Rpackage{Biobase} and \Rpackage{multtest} onto each node of the 
+cluster using \Robject{clusterEvalQ}. The object \Robject{cl} can be passed to \Robject{MTP} via
+the \Robject{cluster} argument. 
+
+\begin{Schunk}
+\begin{Sinput}
+> library(snow)
+> cl <- makeCluster(2, "MPI")
+> clusterEvalQ(cl, {
++     library(Biobase)
++     library(multtest)
++ })
+\end{Sinput}
+\end{Schunk}
 
 \item{\em Output control.} 
 Various arguments are available to control output, i.e., specify which combination of the following quantities should be returned: 
@@ -906,9 +915,8 @@ Providing parameter confidence regions and test statistic cut-offs for other Typ
 Implementing the new augmentation multiple testing procedures proposed in Dudoit \& van der Laan \cite{Dudoit&vdLaanMTBook} for controlling tail probabilities $Pr(g(V_n,R_n) > q)$ for an arbitrary function $g(V_n,R_n)$ of the numbers of false positives $V_n$ and rejected hypotheses $R_n$.
 \item
 Providing a formula interface for a symbolic description of the tests to be performed (cf. model specification in \Robject{lm}).
-\item
-Providing an \Robject{update} method for objects of class \Rclass{MTP}. 
-This would allow reusing available estimates of the null distribution to implement different MTPs for a given Type I error rate and to control different Type I error rates. 
+%\item
+%Providing an \Robject{update} method for objects of class \Rclass{MTP}. This would allow reusing available estimates of the null distribution to implement different MTPs for a given Type I error rate and to control different Type I error rates. 
 \item
 Extending the \Rclass{MTP} class to keep track of results for several MTPs.
 \item
