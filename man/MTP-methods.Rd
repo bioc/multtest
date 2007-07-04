@@ -68,8 +68,7 @@ In addition, this method produces a table with the class, mode, length, and dime
 } 
 }
 
-\author{Katherine S. Pollard, \url{http://lowelab.ucsc.edu/katie/} \cr
-with design contributions from Sandrine Dudoit and Mark J. van der Laan.}
+\author{Katherine S. Pollard with design contributions from Sandrine Dudoit and Mark J. van der Laan.}
 
 \keyword{methods}
 
