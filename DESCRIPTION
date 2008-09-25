@@ -1,7 +1,8 @@
 Package: multtest
 Title: Resampling-based multiple hypothesis testing
-Version: 1.21.1
-Author: Katherine S. Pollard, Yongchao Ge, Sandra Taylor, Sandrine Dudoit
+Version: 1.21.2
+Author: Katherine S. Pollard, Yongchao Ge, Sandra 
+Taylor, Sandrine Dudoit
 Description: Non-parametric bootstrap and permutation resampling-based
         multiple testing procedures for controlling the family-wise
         error rate (FWER), generalized family-wise error rate (gFWER),
