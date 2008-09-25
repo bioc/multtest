@@ -69,8 +69,8 @@ diffmeanX<-function(label,psi0=0,var.equal=FALSE,na.rm=TRUE,standardize=TRUE,alt
     xlabel <- as.numeric(xlabel)
 
     # Check for at least 2 unique values in each group
-    if(length(unique.default(x[xlabel==lab1]))==1) stop("Only one unique value in bootstrap sample for first group. Cannot calculate variance. This problem may be resolved if you try again with a different seed.")
-		if(length(unique.default(x[xlabel!=lab1]))==1) stop("Only one unique value in bootstrap sample for second group. Cannot calculate variance. This problem may be resolved if you try again with a different seed.")
+    if(standardize & length(unique.default(x[xlabel==lab1]))==1) stop("Only one unique value in bootstrap sample for first group. Cannot calculate variance. This problem may be resolved if you try again with a different seed.")
+    if(standardize & length(unique.default(x[xlabel!=lab1]))==1) stop("Only one unique value in bootstrap sample for second group. Cannot calculate variance. This problem may be resolved if you try again with a different seed.")
     n<-length(x)
     if(robust) x<-rank(x)
     if ((sum(w==1)==n)&(standardize)){
