@@ -1,6 +1,6 @@
 useDynLib(multtest)
 
-import(methods, Biobase, survival)
+import(methods, Biobase)
 
 importFrom(graphics, plot)
 importFrom(stats, update)
