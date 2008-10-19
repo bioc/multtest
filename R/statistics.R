@@ -601,8 +601,8 @@ coxY<-function(surv.obj,strata=NULL,psi0=0,na.rm=TRUE,standardize=TRUE,alternati
 		}
 		design<-cbind(x,rep(1,length(x)))
 		design[!is.finite(w),]<-NA
-		control<-survival:::coxph.control()
-		srvd<-try(survival:::coxph.fit(design,dep,strata=covar,init=init,control=control,weights=w,method=method,rownames=rownames(design)))
+		control<-coxph.control()
+		srvd<-try(coxph.fit(design,dep,strata=covar,init=init,control=control,weights=w,method=method,rownames=rownames(design)))
         	if(inherits(srvd,"try-error"))
 	            return(c(NA,NA,NA))
 	        if(standardize) denom <- sqrt(srvd$var[1,1])
