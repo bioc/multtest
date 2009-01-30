@@ -28,7 +28,7 @@ mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD"
     \code{"SidakSS"}, \code{"SidakSD"}, \code{"BH"}, \code{"BY"}. 
 }
 }
-\details{
+\describe{
   Adjusted \eqn{p}-values are computed for simple FWER and FDR
   controlling procedures based on a vector of raw (unadjusted)
   \eqn{p}-values.
@@ -36,7 +36,7 @@ mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD"
 for strong control of the FWER.} 
 \item{Holm}{Holm (1979) step-down adjusted \eqn{p}-values for
 strong control of the FWER.}
-\item{Hochberg}{ Hochberg (1988) step-up adjusted \eqn{p}-values
+\item{Hochberg}{Hochberg (1988) step-up adjusted \eqn{p}-values
 for 
 strong control of the FWER (for raw (unadjusted) \eqn{p}-values
 satisfying the Simes inequality).} 
