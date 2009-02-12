@@ -56,7 +56,6 @@ mt.rawp2adjp(rawp, proc=c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD"
 
 \value{
 A list with components
-  \describe{
    \item{adjp}{A matrix of adjusted \eqn{p}-values, with rows
     corresponding to hypotheses and columns to multiple testing
     procedures. Hypotheses are sorted in increasing order of their raw
@@ -66,7 +65,6 @@ A list with components
     their raw (unadjusted) \eqn{p}-values. To obtain the adjusted
     \eqn{p}-values in the original data order, use
     \code{adjp[order(index),]}.}
-  }
 }
 
 \references{
