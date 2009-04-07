@@ -6,7 +6,13 @@ setClass("MTP",representation(statistic="numeric",
                               conf.reg="array",
                               cutoff="matrix",
                               reject="matrix",
+                              rawdist="matrix",
                               nulldist="matrix",
+                              nulldist.type="character",
+                              marg.null="character",
+                              marg.par="matrix",
+                              label="numeric",
+                              index="matrix",
                               call="call",
                               seed="integer"),
          prototype=list(statistic=vector("numeric",0),
@@ -17,10 +23,41 @@ setClass("MTP",representation(statistic="numeric",
          conf.reg=array(),
          cutoff=matrix(nr=0,nc=0),
          reject=matrix(nr=0,nc=0),
+         rawdist=matrix(nr=0,nc=0),
          nulldist=matrix(nr=0,nc=0),
+         nulldist.type=vector("character",0),
+         marg.null=vector("character",0),
+         marg.par=matrix(nr=0,nc=0),
+         label=vector("numeric",0),
+         index=matrix(nr=0,nc=0),
          call=NULL,
          seed=vector("integer",0)))
 
+
+if( !isGeneric("mtp2ebmtp") )
+    setGeneric("mtp2ebmtp", function(object, ...) standardGeneric("mtp2ebmtp"))
+
+setMethod("mtp2ebmtp","MTP",
+          function(object,...){
+            y<-new("EBMTP")
+            slot(y,"statistic") <- object@statistic
+            slot(y,"estimate") <- object@estimate
+            slot(y,"sampsize") <- object@sampsize
+            slot(y,"rawp") <- object@rawp
+            slot(y,"adjp") <- object@adjp
+            slot(y,"reject") <- object@reject
+            slot(y,"rawdist") <- object@rawdist
+            slot(y,"nulldist") <- object@nulldist
+            slot(y,"nulldist.type") <- object@nulldist.type
+            slot(y,"marg.null") <- object@marg.null
+            slot(y,"marg.par") <- object@marg.par
+            slot(y,"label") <- object@label
+            slot(y,"index") <- object@index
+            slot(y,"call") <- object@call
+            slot(y,"seed") <- object@seed
+            invisible(y)
+          }
+          )
 
 if( !isGeneric("plot") ) setGeneric("plot", function(x, y, ...) standardGeneric("plot"))
 
@@ -135,7 +172,14 @@ setMethod("summary","MTP",
 	    cat(paste("Type I error rate: ",err,"\n\n"))
             nominal<-eval(call.list$alpha)
             if(is.null(nominal)) nominal<-0.05
-            out1<-data.frame(Level=nominal,Rejections=apply(object@reject,2,sum),row.names=NULL)
+            if(is.null(call.list$test)) test <- "t.twosamp.unequalvar"
+            else test <- call.list$test
+            if(test!="t.cor" & test!="z.cor") out1<-data.frame(Level=nominal,Rejections=apply(object@reject,2,sum),row.names=NULL)
+            else{
+              tmp <- rep(0,length(nominal))
+              for(i in 1:length(nominal)) tmp[i] <- sum(object@adjp < nominal[i])
+              out1 <- data.frame(Level=nominal,Rejections=tmp,row.names=NULL)
+            }
             print(out1)
             cat("\n")
             out2<-get.index(object@adjp,object@rawp,abs(object@statistic))
@@ -171,6 +215,7 @@ setMethod("[","MTP",
             slot(newx,"estimate")<-x@estimate[i]
             slot(newx,"rawp")<-x@rawp[i]
             if(sum(length(x@adjp))) slot(newx,"adjp")<-x@adjp[i]
+            if(sum(length(x@label))) slot(newx,"label")<-x@label[i]
 	    d<-dim(x@conf.reg)
             dn<-dimnames(x@conf.reg)
             if(sum(d)) slot(newx,"conf.reg")<-array(x@conf.reg[i,,],dim=c(ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),d[-1]),dimnames=list(dn[[1]][i],dn[[2]],dn[[3]]))
@@ -181,6 +226,9 @@ setMethod("[","MTP",
             dn<-dimnames(x@reject)
             if(sum(d)) slot(newx,"reject")<-matrix(x@reject[i,],nr=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),nc=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
             if(sum(dim(x@nulldist))) slot(newx,"nulldist")<-x@nulldist[i,]
+            if(sum(dim(x@rawdist))) slot(newx,"rawdist")<-x@nulldist[i,]
+            if(sum(dim(x@marg.par))) slot(newx,"marg.par")<-x@marg.par[i,]
+            if(sum(dim(x@index))) slot(newx,"index")<-x@index[i,]
 	    invisible(newx)
           })
 
@@ -198,7 +246,11 @@ if( !isGeneric("update") )
     setGeneric("update", function(object, ...) standardGeneric("update"))
 
 setMethod("update","MTP",
-          function(object,formula.="missing",alternative="two.sided",typeone="fwer",k=0,q=0.1,fdr.method="conservative",alpha=0.05,smooth.null=FALSE,method="ss.maxT",get.cr=FALSE,get.cutoff=FALSE,get.adjp=TRUE,keep.nulldist=TRUE,...,evaluate=TRUE){
+          function(object,formula.="missing",alternative="two.sided",typeone="fwer",
+          k=0,q=0.1,fdr.method="conservative",alpha=0.05,smooth.null=FALSE,
+          method="ss.maxT",get.cr=FALSE,get.cutoff=FALSE,get.adjp=TRUE,nulldist="boot.cs",
+          keep.rawdist=TRUE,keep.nulldist=TRUE,marg.null=object@marg.null,
+          marg.par=object@marg.par,perm.mat=NULL,ncp=NULL,...,evaluate=TRUE){
             ## checking
             #Error rate
             ERROR<-c("fwer","gfwer","tppfp","fdr")
@@ -238,80 +290,221 @@ setMethod("update","MTP",
               if(get.cutoff==TRUE) warning("Cut-offs not currently implemented for FDR")
               get.cr<-get.cutoff<-FALSE
             }
-            #methods
+
             METHODS<-c("ss.maxT","ss.minP","sd.maxT","sd.minP")
             method<-METHODS[pmatch(method,METHODS)]
-            if(is.na(method)) stop(paste("Invalid method, try one of ",METHODS,sep=""))
+            if(is.na(method)) stop(paste("Invalid method, try one of ",METHODS," ",sep=""))
+
             #get args from previous call
-            call.list<-as.list(object@call)
+            call.list <- as.list(object@call)
             #estimate and conf.reg
             ftest<-FALSE
-            if(is.null(call.list$test)) test<-"t.twosamp.unequalvar"
+            if(is.null(call.list$test)) test<-"t.twosamp.unequalvar" #default
             else test<-call.list$test
             if(test%in%c("f","f.block","f.twoway")){
               ftest<-TRUE
               if(get.cr) stop("Confidence intervals not available for F tests, try get.cr=FALSE")
             }
-            #nulldistn
-            if(!ncol(object@nulldist)) stop("Update method requires that keep.null=TRUE in original call to MTP")
-            nulldist<-
-               if(is.null(call.list$nulldist)) "boot"
+            
+            #alternative
+            #if(is.null(call.list$alternative)) alternative<-"two.sided"
+            #else alternative<-call.list$alternative
+
+            #typeone
+            #if(is.null(call.list$typeone)) typeone<-"fwer"
+            #else typeone<-call.list$typeone
+            
+            ### nulldistn
+            ### Preserve the old null dist, if kept (i.e., could have alternatively kept raw dist)
+            nulldistn <- object@nulldist
+            if(object@nulldist.type=="perm") stop("No way to update objects which originally used the permutation distribution. No available options for storing nulldist.  Rawdist can only be stored for bootstrap distribution.")
+            ### For boot.qt, make sure values of marg.null and marg.par, if set previously, are kept.
+            ### Otherwise, these become null, but the original values are set here before proceeding.
+            prev.marg.null <- object@marg.null
+            prev.marg.par <- object@marg.par
+
+            if(!ncol(object@nulldist) & !ncol(object@rawdist)) stop("Update method requires either keep.raw and/or keep.null=TRUE in original call to MTP")
+            nulldist<- # just setting character value of what nulldist should be
+               if(is.null(call.list$nulldist)) "boot.cs"
                else call.list$nulldist
-               if(nulldist=="perm"){
-                 if(method=="ss.minP" | method=="ss.maxT") stop("Only step-down procedures are currently available with permutation nulldist")
-                 if(get.cr) warning("Confidence regions not available with permuation nulldist")
-                 if(get.cutoff) warning("Cut-offs not available with permuation nulldist")
-                 if(keep.nulldist) warning("keep.nulldist not available with permuation nulldist")
-               }
-	       ## new call
-               newcall.list<-as.list(match.call())
-               changed<-names(call.list)[names(call.list)%in%names(newcall.list)]
-               changed<-changed[changed!=""]
-               added<-names(newcall.list)[!(names(newcall.list)%in%names(call.list))]
-               added<-added[added!="x"]
-               for(n in changed) call.list[[n]]<-newcall.list[[n]]
-               for(n in added) call.list[[n]]<-newcall.list[[n]]
-               newcall<-as.call(call.list)
-	       ## return call if evaluate is false
-               if(!evaluate) return(newcall)
-	       ## else redo MTP
-               else{
-                 num<-object@estimate
-                 snum<-1
-                 if(alternative=="two.sided"){
-                   snum<-sign(num)
-                   num<-abs(num)
-                 }
-                 if(alternative=="less"){
-                   snum<-(-1)
-                   num<-(-num)
-                 }
-                 obs<-rbind(num,object@estimate/object@statistic,sign(object@estimate))
-                 rawp<-apply((obs[1,]/obs[2,])<=object@nulldist,1,mean)
-		if(smooth.null & min(rawp,na.rm=TRUE)==0){
+
+            ## new call
+            newcall.list<-as.list(match.call())
+            changed<-names(call.list)[names(call.list)%in%names(newcall.list)]
+            changed<-changed[changed!=""]
+            added<-names(newcall.list)[!(names(newcall.list)%in%names(call.list))]
+            added<-added[added!="x"]
+            for(n in changed) call.list[[n]]<-newcall.list[[n]]
+            for(n in added) call.list[[n]]<-newcall.list[[n]]
+            newcall<-as.call(call.list)
+            ### NB can still use "call.list" to help with what has been changed.
+            df <- marg.par
+            call.list$marg.par <- df
+               
+            ## return call if evaluate is false
+            if(!evaluate) return(newcall)
+
+            ## else redo MTP
+            else{
+              num<-object@estimate
+              snum<-1
+              if(alternative=="two.sided"){
+                snum<-sign(num)
+                num<-abs(num)
+              }
+              if(alternative=="less"){
+                snum<-(-1)
+                num<-(-num)
+              }
+
+              if(object@nulldist.type!="boot.qt"){
+                marg.null = vector("character",length=0)
+                marg.par = matrix(nr=0,nc=0)
+              }
+                 
+         ### Move rawp down from before.
+         ### Redoing the new null distributions needs to go here.
+              if("method" %in% changed | "method" %in% added) method <- call.list$method
+              if("alternative" %in% changed | "alternative" %in% added) alternative <- call.list$alternative
+              
+         ### Preserve the old null dist, if kept (i.e., could have alternatively kept raw dist)
+              nulldistn <- object@nulldist
+
+              if("marg.null" %in% changed | "marg.null" %in% added) marg.null <- call.list$marg.null
+              if("marg.par" %in% changed | "marg.par" %in% added){
+                  marg.par <- call.list$marg.par
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                }
+              if("perm.mat" %in% changed | "perm.mat" %in% added) perm.mat <- call.list$perm.mat
+              if("ncp" %in% changed | "ncp" %in% added) ncp <- call.list$ncp
+         ### Check value of nulldist in this case
+              if("nulldist" %in% changed | "nulldist" %in% added) {
+                nulldist <- call.list$nulldist
+         ### Otherwise, nulldist keeps the old/default value in the original call.list, not the updated one.
+                if(nulldist=="perm") stop("Calls to update() cannot include changes involving the permutation distribution. Please try a separate call to MTP() with nulldist='perm'")
+                if(object@nulldist.type=="ic") stop("You cannot update an influence curve null distribution to another choice of null distribution.  Valid only for changes in the bootstrap distribution when keep.rawdist=TRUE.  Please try a separate call to MTP() if nulldist='boot' or 'perm' desired. Changing 'MVN.method', 'ic.quant.trans' or 'penalty' also requires new calculation of null distribution using nulldist='ic'")
+                if(nulldist=="ic") stop("Calls to update() cannot include changes involving the influence curve null distribution. Please try a separate call to MTP() with nulldist='ic'")
+                if(!ncol(object@rawdist)) stop("Calls to update() involving changes in bootstrap-based null distributions require keep.rawdist=TRUE")
+              
+
+    ### Just recompute (bootstrap-based) nulldistn - way easier this way (with keep.raw=TRUE)
+    ### "Easy" ones first.  Need to get tau0 and theta0.
+              if(nulldist=="ic"){
+                marg.null = vector("character",length=0)
+                marg.par = matrix(nr=0,nc=0)
+              }
+              if(nulldist=="boot" | nulldist=="boot.cs" | nulldist=="boot.ctr"){
+                marg.null = vector("character",length=0)
+                marg.par = matrix(nr=0,nc=0)
+                tau0<-1
+                theta0<-0
+                if(test=="f"){
+                  theta0<-1
+                  tau0<-2/(length(unique(object@label))-1)
+                }
+                if(test=="f.twoway"){
+                  theta0<-1
+                  tau0 <- 2/((length(unique(object@label))*length(gregexpr('12', paste(object@label, collapse=""))[[1]]))-1)
+                }
+                if(nulldist=="boot") nulldistn <- center.scale(object@rawdist, theta0, tau0, alternative)
+                if(nulldist=="boot.cs") nulldistn <- center.scale(object@rawdist, theta0, tau0, alternative)
+                if(nulldist=="boot.ctr") nulldistn <- center.only(object@rawdist, theta0, alternative)
+              }
+
+              if(nulldist=="boot.qt"){
+                if("marg.null" %in% changed | "marg.null" %in% added) marg.null <- call.list$marg.null
+                else marg.null <- NULL
+                if("marg.par" %in% changed | "marg.par" %in% added){
+                  marg.par <- call.list$marg.par
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                }
+                else marg.par <- NULL
+      
+        ### If these additional args are changed or added, these will be the new defaults, but they will not be NULL
+                ### Cannot be NULL for object defn.
+                ncp <- if(is.null(call.list$ncp)) 0
+                perm.mat <- if(is.null(call.list$perm.mat)) NULL
+                if(!is.null(perm.mat)){
+                  if(length(object@statistic)!=dim(perm.mat)[1]){ stop("Permutation and bootstrap matrices must have same number of rows (hypotheses).")
+                                                                }
+                }
+
+                nstats <- c("t.twosamp.unequalvar","z.cor","lm.XvsZ","lm.YvsXZ","coxph.lmYvsXZ")
+                tstats <- c("t.onesamp","t.twosamp.equalvar","t.pair","t.cor")
+                fstats <- c("f","f.block","f.twoway")
+         # If default (=NULL), set values of marg.null to pass on.
+                if(is.null(marg.null)){
+                  if(any(nstats == test)) marg.null="normal"
+                  if(any(tstats == test)) marg.null="t"
+                  if(any(fstats == test)) marg.null="f"
+                }
+                else{ # Check to see that user-supplied entries make sense.  
+                  MARGS <- c("normal","t","f","perm")
+                  marg.null <- MARGS[pmatch(marg.null,MARGS)]
+                  if(is.na(marg.null)) stop("Invalid marginal null distribution. Try one of: normal, t, f, or perm")
+                  if(any(tstats==test) & marg.null == "f") stop("Choice of test stat and marginal nulldist do not match")
+                  if(any(fstats==test) & (marg.null == "normal" | marg.null=="t")) stop("Choice of test stat and marginal nulldist do not match")
+                  if(marg.null=="perm" & is.null(perm.mat)) stop("Must supply a matrix of permutation test statistics if marg.null='perm'")
+                  if(marg.null=="f" & ncp < 0) stop("Cannot have negative noncentrality parameter with F distribution.")
+                }
+    
+        # If default (=NULL), set values of marg.par. Return as m by 1 or 2 matrix.
+                if(is.null(marg.par)){
+                  marg.par <- switch(test,
+                          t.onesamp = object@sampsize-1,
+                          t.twosamp.equalvar = object@sampsize-2,
+                          t.twosamp.unequalvar = c(0,1),
+                          t.pair = object@sampsize-2,
+                          f = c(length(is.finite(unique(object@label)))-1,object@sampsize-length(is.finite(unique(object@label)))),
+                          f.twoway = {
+                            c(length(is.finite(unique(object@label)))-1,object@sampsize-(length(is.finite(unique(object@label)))*length(gregexpr('12', paste(y, collapse=""))[[1]]))-2)
+                            },
+                          lm.XvsZ = c(0,1),
+                          lm.YvsXZ = c(0,1),
+                          coxph.YvsXZ = c(0,1),
+                          t.cor = object@sampsize-2,
+                          z.cor = c(0,1)
+                          )
+                  marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+        }
+                else{ # Check that user-supplied values of marg.par make sense (marg.par != NULL)
+                  if((marg.null=="t" | marg.null=="f") & any(marg.par[,1]==0)) stop("Cannot have zero df with t or F distributions. Check marg.par settings")
+                  if(marg.null=="t" & dim(marg.par)[2]>1) stop("Too many parameters for t distribution.  marg.par should have length 1.")
+                  if((marg.null=="f" | marg.null=="normal") & dim(marg.par)[2]!=2) stop("Incorrect number of parameters defining marginal null distribution.  marg.par should have length 2.")
+                }
+                nulldistn <- quant.trans(object@rawdist, marg.null, marg.par, ncp, alternative, perm.mat)
+              }
+              }
+
+     ### Cool. Now pick up where we left off.
+         obs<-rbind(num,object@estimate/object@statistic,sign(object@estimate))
+         rawp<-apply((obs[1,]/obs[2,])<=nulldistn,1,mean)
+		     if(smooth.null & min(rawp,na.rm=TRUE)==0){
                   zeros<-rawp==0
                   if(sum(zeros)==1){
-                    den<-density(object@nulldist[zeros,],to=max(obs[1,zeros]/obs[2,zeros],object@nulldist[zeros,],na.rm=TRUE),na.rm=TRUE)
+                    den<-density(nulldistn[zeros,],to=max(obs[1,zeros]/obs[2,zeros],nulldistn[zeros,],na.rm=TRUE),na.rm=TRUE)
                     rawp[zeros]<-sum(den$y[den$x>=(obs[1,zeros]/obs[2,zeros])])/sum(den$y)
                   }
                   else{
-                    den<-apply(object@nulldist[zeros,],1,density,to=max(obs[1,zeros]/obs[2,zeros],object@nulldist[zeros,],na.rm=TRUE),na.rm=TRUE)
+                    den<-apply(nulldistn[zeros,],1,density,to=max(obs[1,zeros]/obs[2,zeros],nulldistn[zeros,],na.rm=TRUE),na.rm=TRUE)
                     newp<-NULL
                     stats<-obs[1,zeros]/obs[2,zeros]
                     for(i in 1:length(den)) newp[i]<-sum(den[[i]]$y[den[[i]]$x>=stats[i]])/sum(den[[i]]$y)
-                    rawp[zeros]<-newp		
+                    rawp[zeros]<-newp
                   }
                   rawp[rawp<0]<-0
                 }
 		pind<-ifelse(typeone!="fwer",TRUE,get.adjp)
-		if(method=="ss.maxT") out<-ss.maxT(object@nulldist,obs,alternative,get.cutoff,get.cr,pind,alpha)
-		if(method=="ss.minP") out<-ss.minP(object@nulldist,obs,rawp,alternative,get.cutoff,get.cr,pind,alpha)
-                if(method=="sd.maxT") out<-sd.maxT(object@nulldist,obs,alternative,get.cutoff,get.cr,pind,alpha)
-                if(method=="sd.minP") out<-sd.minP(object@nulldist,obs,rawp,alternative,get.cutoff,get.cr,pind,alpha)
+		if(method=="ss.maxT") out<-ss.maxT(nulldistn,obs,alternative,get.cutoff,get.cr,pind,alpha)
+		if(method=="ss.minP") out<-ss.minP(nulldistn,obs,rawp,alternative,get.cutoff,get.cr,pind,alpha)
+                if(method=="sd.maxT") out<-sd.maxT(nulldistn,obs,alternative,get.cutoff,get.cr,pind,alpha)
+                if(method=="sd.minP") out<-sd.minP(nulldistn,obs,rawp,alternative,get.cutoff,get.cr,pind,alpha)
                 if(typeone=="fwer" & nalpha){
                   for(a in 1:nalpha) reject[,a]<-(out$adjp<=alpha[a])
 		}
 		#augmentation procedures
+                #cat(typeone,"\n")
+                #cat(k,"\n")
 		if(typeone=="gfwer"){
                   out$adjp<-as.numeric(fwer2gfwer(out$adjp,k))
                   out$c<-matrix(nr=0,nc=0)
@@ -340,11 +533,20 @@ setMethod("update","MTP",
                   rm(temp)
                 }
 		#output results
-		if(!keep.nulldist) object@nulldist<-matrix(nr=0,nc=0)		
-                out<-new("MTP",statistic=object@statistic,estimate=object@estimate,sampsize=object@sampsize,rawp=rawp,adjp=out$adjp,conf.reg=out$cr,cutoff=out$c,reject=reject,nulldist=object@nulldist,call=newcall,seed=object@seed)
-		return(out)	
-               }
-             })
+  if(!keep.nulldist) nulldistn <-matrix(nr=0,nc=0)
+  if(keep.rawdist==FALSE) object@rawdist<-matrix(nr=0,nc=0)
+                out<-new("MTP",statistic=object@statistic,estimate=object@estimate,
+                sampsize=object@sampsize,rawp=rawp,adjp=out$adjp,conf.reg=out$cr,
+                cutoff=out$c,reject=reject,rawdist=object@rawdist,nulldist=nulldistn,
+                nulldist.type=nulldist,marg.null=marg.null,marg.par=marg.par,label=object@label,
+                index=object@index,call=newcall,seed=object@seed)
+		return(out)
+               } #re else redo MTP
+             } # re function
+             ) # re set method
+             
+###  
+
 
 print.MTP<-function(x,...){
   call.list<-as.list(x@call)
