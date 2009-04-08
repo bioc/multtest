@@ -115,7 +115,7 @@ generalized tail probability and expected value error rates: Focus on the false
 discovery rate and simulation study. \emph{Biometrical Journal}, 50(5):716-44. \url{http://www.stat.berkeley.edu/~houston/BJMCPSupp/BJMCPSupp.html}. \cr
 
 Y. Ge, S. Dudoit, and T. P. Speed (2003). Resampling-based multiple testing for 
-\microarray data analysis. \emph{TEST}. Vol. 12: 1-44 (plus discussion p. 44-77).\cr 
+microarray data analysis. \emph{TEST}. Vol. 12: 1-44 (plus discussion p. 44-77).\cr 
 
 Y. Hochberg (1988). A sharper Bonferroni procedure for multiple tests of
 significance, \emph{Biometrika}. Vol. 75: 800-802.\cr 
