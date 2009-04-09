@@ -178,8 +178,8 @@ corr.null <- function(X,W=NULL,Y=NULL,Z=NULL,test="t.twosamp.unequalvar",alterna
     }
     if(test=="z.cor" & marg.null=="t") warning("IC nulldist for z.cor already MVN. Transforming to N-2 df t marginal distribution not advised.")
     if(marg.null!="t" & marg.null!="perm") stop("IC nulldists can only be quantile transformed to a marginal t-distribution or user-supplied marginal permutation distribution")
-    if(marg.null=="t") nulldist <- t.quant.trans(nulldist,marg.null="t",marg.par,ncp=0,perm.mat=NULL)
-    if(marg.null=="perm") nulldist <- t.quant.trans(nulldist,marg.null="perm",marg.par=NULL,ncp=NULL,perm.mat=perm.mat)
+    if(marg.null=="t") nulldist <- tQuantTrans(nulldist,marg.null="t",marg.par,ncp=0,perm.mat=NULL)
+    if(marg.null=="perm") nulldist <- tQuantTrans(nulldist,marg.null="perm",marg.par=NULL,ncp=NULL,perm.mat=perm.mat)
   }
   if(alternative=="greater") nulldist <- nulldist
   else if(alternative=="less") nulldist <- -nulldist
@@ -267,7 +267,7 @@ out
 }
 
 ### Quantile transform streamlined for IC nulldists.
-t.quant.trans <- function(rawboot, marg.null, marg.par, ncp, perm.mat=NULL){
+tQuantTrans <- function(rawboot, marg.null, marg.par, ncp, perm.mat=NULL){
   m <- dim(rawboot)[1]
   B <- dim(rawboot)[2] 
   ranks <- t(apply(rawboot,1,rank,ties.method="random"))

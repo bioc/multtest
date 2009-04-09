@@ -329,7 +329,9 @@ setMethod("EBupdate","EBMTP",
 
             #get args from previous call
             call.list<-as.list(object@call)
-            
+
+            if(is.null(call.list$test)) test<-"t.twosamp.unequalvar" #default
+            else test<-call.list$test
             ### nulldistn
             ### Preserve the old null dist, if kept (i.e., could have alternatively kept raw dist)
             nulldistn <- object@nulldist
@@ -377,8 +379,15 @@ setMethod("EBupdate","EBMTP",
                 marg.null = vector("character",length=0)
                 marg.par = matrix(nr=0,nc=0)
               }
-          
-              
+              if("alternative" %in% changed | "alternative" %in% added) alternative <- call.list$alternative
+              if("marg.null" %in% changed | "marg.null" %in% added) marg.null <- call.list$marg.null
+              if("marg.par" %in% changed | "marg.par" %in% added){
+                  marg.par <- call.list$marg.par
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                }
+              if("perm.mat" %in% changed | "perm.mat" %in% added) perm.mat <- call.list$perm.mat
+              if("ncp" %in% changed | "ncp" %in% added) ncp <- call.list$ncp
+              if("MVN.method" %in% changed | "MVN.method" %in% added | "penalty" %in% changed | "penalty" %in% added |"ic.quant.trans" %in% changed | "ic.quant.trans" %in% added) stop("Changing 'MVN.method', 'ic.quant.trans' or 'penalty' requires new calculation of null distribution using nulldist='ic'.  Please use a new call to EBMTP.")
          ### Check value of nulldist in this case
               if("nulldist" %in% changed | "nulldist" %in% added) {
                 nulldist <- call.list$nulldist

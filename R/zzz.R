@@ -377,6 +377,7 @@ setMethod("update","MTP",
                 }
               if("perm.mat" %in% changed | "perm.mat" %in% added) perm.mat <- call.list$perm.mat
               if("ncp" %in% changed | "ncp" %in% added) ncp <- call.list$ncp
+              if("MVN.method" %in% changed | "MVN.method" %in% added | "penalty" %in% changed | "penalty" %in% added |"ic.quant.trans" %in% changed | "ic.quant.trans" %in% added) stop("Changing 'MVN.method', 'ic.quant.trans' or 'penalty' requires new calculation of null distribution using nulldist='ic'.  Please use a new call to MTP.")
          ### Check value of nulldist in this case
               if("nulldist" %in% changed | "nulldist" %in% added) {
                 nulldist <- call.list$nulldist
