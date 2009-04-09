@@ -1,5 +1,6 @@
 \name{corr.null}
 \alias{corr.null}
+\alias{tQuantTrans}
 
 \title{Function to estimate a test statistics joint null distribution for t-statistics via the vector influence curve}
 

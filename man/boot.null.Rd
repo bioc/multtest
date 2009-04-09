@@ -4,7 +4,7 @@
 \alias{center.scale}
 \alias{center.only}
 \alias{quant.trans}
-\alias{t.quant.trans}
+
 
 \title{Non-parametric bootstrap resampling function in package `multtest'}
 

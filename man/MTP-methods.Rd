@@ -35,8 +35,14 @@
 \alias{EBupdate,EBMTP-method}
 \alias{EBupdate}
 
+\alias{mtp2ebmtp-methods}
+\alias{mtp2ebmtp,MTP-method}
 \alias{mtp2ebmtp}
+
+\alias{ebmtp2mtp-methods}
+\alias{ebmtp2mtp,EBMTP-method}
 \alias{ebmtp2mtp}
+
 
 \title{Methods for MTP and EBMTP objects in Package `multtest'}
 
@@ -81,23 +87,20 @@ In addition, this method produces a table with the class, mode, length, and dime
 2. index: A numeric vector of indices for ordering the hypotheses according to first \code{adjp}, then \code{rawp}, and finally the absolute value of \code{statistic} (not printed in the summary). \cr 
 
 3. summaries: When applicable (i.e., when the corresponding quantities are returned by \code{MTP} or \code{EBMTP}), a table with six number summaries of the distributions of the adjusted p-values, unadjusted p-values, test statistics, and parameter estimates.}
-    
     \item{update}{: update methods for \code{MTP} class, respectively, provides a mechanism to re-run the MTP with different choices of the following arguments - nulldist, alternative, typeone, k, q, fdr.method, alpha, smooth.null, method, get.cr, get.cutoff, get.adjp, keep.nulldist, keep.rawdist, keep.margpar. When evaluate is 'TRUE', a new object of class MTP is returned. Else, the updated call is returned. The \code{MTP} object passed to the update method must have either a  non-empty \code{rawdist} slot or a non-empty \code{nulldist} slot (i.e., must have been called with either 'keep.rawdist=TRUE' or 'keep.nulldist=TRUE').\cr}
 
     \item{EBupdate}{: update method for \code{EBMTP} class, provides a mechanism to re-run the MTP with different choices of the following arguments - nulldist, alternative, typeone, k, q, alpha, smooth.null, bw, kernel, prior, keep.nulldist, keep.rawdist, keep.falsepos, keep.truepos, keep.errormat, keep.margpar. When evaluate is 'TRUE', a new object of class EBMTP is returned. Else, the updated call is returned. The \code{EBMTP} object passed to the update method must have either a  non-empty \code{rawdist} slot or a non-empty \code{nulldist} slot (i.e., must have been called with either 'keep.rawdist=TRUE' or 'keep.nulldist=TRUE').\cr 
 
 Additionally, when calling \code{EBupdate} for any Type I error rate other than FWER, the \code{typeone} argument must be specified (even if the original object did not control FWER). For example, 
-\code{typeone="fdr"}, would always have to be speciﬁed, even if the original object also controlled the FDR. In other words, for all function arguments, it is safest to always assume that you 
+\code{typeone="fdr"}, would always have to be specified, even if the original object also controlled the FDR. In other words, for all function arguments, it is safest to always assume that you 
 are updating from the \code{EBMTP} default function settings, regardless of the original call to the \code{EBMTP} function. Currently, the main advantage of the \code{EBupdate} method is that it prevents the need for repeated estimation of the test statistics null distribution. \cr 
-
 
 To save on memory, if one knows ahead of time that one will want to compare different choices of bootstrap-based null distribution, then it is both necessary and sufficient to specify 'keep.rawdist=TRUE', as there is no other means of moving between null distributions other than through the non-transformed non-parametric bootstrap distribution.  In this case, 'keep.nulldist=FALSE' may be used.  Specifically, if an object of class \code{MTP} or \code{EBMTP} contains a non-empty \code{rawdist} slot and an empty \code{nulldist} slot, then a new null distribution will be generated according to the values of the \code{nulldist=} argument in the original call to \code{(EB)MTP} or any additional specifications in the call to \code{(EB)update}. On the other hand, if one knows that one wishes to only update an \code{(EB)MTP} object in ways which do not involve choice of bootstrap null distribution, then 'keep.nulldist=TRUE' will suffice and 'keep.rawdist' can be set to \code{FALSE} (default settings).  The original null distribution object will then be used for all subsequent calls to \code{update}. \cr
 
-N.B.: Note that \code{keep.rawdist=TRUE} is only available for the bootstrap-based resampling methods.  The non-null distribution does not exist for the permutation or influence curve multivariate normal null distributions. }
-
-    \item{mtp2ebmtp}{: coersion method for converting objects of class \code{MTP} to objects of class \code{EBMTP}.  Slots common to both objects are taken from the object of class \code{MTP} and used to create a new object of class \code{EBMTP}.  Once an object of class \code{EBMTP} is created, one may use the method \code{EBupdate} to perform resampling-based empirical Bayes multiple testing without the need for repeated resampling.\cr}
-
-   \item{ebmtp2mtp}{: coersion method for converting objects of class \code{EBMTP} to objects of class \code{MTP}.  Slots common to both objects are taken from the object of class \code{EBMTP} and used to create a new object of class \code{MTP}.  Once an object of class \code{MTP} is created, one may use the method \code{update} to perform resampling-based multiple testing (as would have been done with calls to \code{MTP}) without the need for repeated resampling.}
+N.B.: Note that \code{keep.rawdist=TRUE} is only available for the bootstrap-based resampling methods.  The non-null distribution does not exist for the permutation or influence curve multivariate normal null distributions.
+}
+    \item{mtp2ebmtp}{: coersion method for converting objects of class \code{MTP} to objects of class \code{EBMTP}.  Slots common to both objects are taken from the object of class \code{MTP} and used to create a new object of class \code{EBMTP}.  Once an object of class \code{EBMTP} is created, one may use the method \code{EBupdate} to perform resampling-based empirical Bayes multiple testing without the need for repeated resampling.}
+    \item{ebmtp2mtp}{: coersion method for converting objects of class \code{EBMTP} to objects of class \code{MTP}.  Slots common to both objects are taken from the object of class \code{EBMTP} and used to create a new object of class \code{MTP}.  Once an object of class \code{MTP} is created, one may use the method \code{update} to perform resampling-based multiple testing (as would have been done with calls to \code{MTP}) without the need for repeated resampling.}
 }
 }
 

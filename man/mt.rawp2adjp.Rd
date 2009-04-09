@@ -93,32 +93,21 @@ Y. Benjamini and Y. Hochberg (1995). Controlling the false discovery
 rate: a practical and powerful approach to multiple
 testing. \emph{J. R. Statist. Soc. B}. Vol. 57: 289-300.\cr 
 
-Y. Benjamini and Y. Hochberg (2000). On the adaptive control of the false 
-discovery rate in multiple testing with independent statistics. \emph{J. Behav.
-Educ. Statist}. Vol 25: 60-83.\cr
+Y. Benjamini and Y. Hochberg (2000). On the adaptive control of the false discovery rate in multiple testing with independent statistics. \emph{J. Behav. Educ. Statist}. Vol 25: 60-83.\cr
 
-Y. Benjamini and D. Yekutieli (2001). The control of the false discovery
-rate in multiple hypothesis testing under dependency. \emph{Annals of
-  Statistics}. Vol. 29: 1165-88.\cr 
+Y. Benjamini and D. Yekutieli (2001). The control of the false discovery rate in multiple hypothesis testing under dependency. \emph{Annals of Statistics}. Vol. 29: 1165-88.\cr 
 
-Y. Benjamini, A. M. Krieger and D. Yekutieli (2006). Adaptive linear step-up
-procedures that control the false discovery rate. \emph{Biometrika}. 
-Vol. 93: 491-507.\cr
+Y. Benjamini, A. M. Krieger and D. Yekutieli (2006). Adaptive linear step-up procedures that control the false discovery rate. \emph{Biometrika}. Vol. 93: 491-507.\cr
 
 S. Dudoit, J. P. Shaffer, and J. C. Boldrick (2003). Multiple
-hypothesis testing in microarray experiments. \emph{Statistical Science}. 
-Vol. 18: 71-103. \cr 
+hypothesis testing in microarray experiments. \emph{Statistical Science}. Vol. 18: 71-103. \cr 
 
 S. Dudoit, H. N. Gilbert, and M. J. van der Laan (2008). 
-Resampling-based empirical Bayes multiple testing procedures for controlling 
-generalized tail probability and expected value error rates: Focus on the false
-discovery rate and simulation study. \emph{Biometrical Journal}, 50(5):716-44. \url{http://www.stat.berkeley.edu/~houston/BJMCPSupp/BJMCPSupp.html}. \cr
+Resampling-based empirical Bayes multiple testing procedures for controlling generalized tail probability and expected value error rates: Focus on the false discovery rate and simulation study. \emph{Biometrical Journal}, 50(5):716-44. \url{http://www.stat.berkeley.edu/~houston/BJMCPSupp/BJMCPSupp.html}. \cr
 
-Y. Ge, S. Dudoit, and T. P. Speed (2003). Resampling-based multiple testing for 
-microarray data analysis. \emph{TEST}. Vol. 12: 1-44 (plus discussion p. 44-77).\cr 
+Y. Ge, S. Dudoit, and T. P. Speed (2003). Resampling-based multiple testing for microarray data analysis. \emph{TEST}. Vol. 12: 1-44 (plus discussion p. 44-77).\cr 
 
-Y. Hochberg (1988). A sharper Bonferroni procedure for multiple tests of
-significance, \emph{Biometrika}. Vol. 75: 800-802.\cr 
+Y. Hochberg (1988). A sharper Bonferroni procedure for multiple tests of significance, \emph{Biometrika}. Vol. 75: 800-802.\cr 
 
 S. Holm (1979). A simple sequentially rejective multiple test
 procedure. \emph{Scand. J. Statist.}. Vol. 6: 65-70. 

@@ -41,7 +41,6 @@ MTP(X, W = NULL, Y = NULL, Z = NULL, Z.incl = NULL, Z.test = NULL,
   \item{alpha}{The target nominal type I error rate, which may be a vector of error rates. Default is 0.05.}
   \item{smooth.null}{Indicator of whether to use a kernel density estimate for the tail of the null distributon for computing raw pvalues close to zero. Only used if 'rawp' would be zero without smoothing. Default is 'FALSE'.}
   \item{nulldist}{Character string indicating which resampling method to use for estimating the joint test statistics null distribution, by default the non-parametric bootstrap with centering and scaling ('boot.cs').  The old default 'boot' will still compile and will correspond to 'boot.cs'.  Other null distribution options include 'perm', 'boot.ctr', 'boot.qt', and 'ic', corresponding to the permutation distribution, centered-only bootstrap distribution, quantile-transformed bootstrap distribution, and influence curve multivariate normal joint null distribution, respectively.  More details below.}
-  \item{csnull}{DEPRECATED as of \code{multtest} v. 2.0.0 given expanded null distribution options. Previously, this argument was an indicator of whether the bootstrap estimated test statistics distribution should be centered and scaled (to produce a null distribution) or not. If \code{csnull=FALSE}, the (raw) non-null bootstrap estimated test statistics distribution was returned.  If the non-null bootstrap distribution should be returned, this object is now stored in the 'rawdist' slot when \code{keep.rawdist=TRUE} in the original \code{MTP} function call.  See below.} 
   \item{B}{The number of bootstrap iterations (i.e. how many resampled data sets), the number of permutations (if \code{nulldist} is 'perm'), or the number of samples from the multivariate normal distribution (if \code{nulldist} is 'ic') Can be reduced to increase the speed of computation, at a cost to precision. Default is 1000.}
   \item{ic.quant.trans}{If \code{nulldist='ic'}, a logical indicating whether or not a marginal quantile transformation using a t-distribution or user-supplied marginal distribution (stored in \code{perm.mat}) should be applied to the multivariate normal null distribution.  Defaults for \code{marg.null} and \code{marg.par} exist, but can also be specified by the user (see below). Default is 'FALSE'.}
   \item{MVN.method}{If \code{nulldist='ic'}, one of 'mvrnorm' or 'Cholesky' designating how correlated normal test statistics are to be generated.  Selecting 'mvrnorm' uses the function of the same name found in the \code{MASS} library, whereas 'Cholesky' relies on a Cholesky decomposition. Default is 'mvrnorm'.}
@@ -51,7 +50,7 @@ MTP(X, W = NULL, Y = NULL, Z = NULL, Z.incl = NULL, Z.test = NULL,
   \item{get.cutoff}{Logical indicating whether to compute thresholds for the test statistics. Default is 'FALSE'.}
   \item{get.adjp}{Logical indicating whether to compute adjusted p-values. Default is 'TRUE'.}
   \item{keep.nulldist}{Logical indicating whether to return the computed bootstrap or influence curve null distribution, by default 'TRUE'.  Not available for \code{nulldist}='perm'. Note that this matrix can be quite large.}
-  \item{keep.rawdist}{Logical indicating whether to return the computed non-null (raw) bootstrap distribution, by default 'FALSE'.  Not available for when using \code{nulldist}='perm' or 'ic'.  Note that this matrix can become quite large.  If one wishes to use subsequent calls to \code{update} in which one updates choice of bootstrap null distribution, \code{keep.rawdist} must be TRUE.  To save on memory, \code{update} only requires that one of \code{keep.nulldist} or \code{keep.rawdist} be 'TRUE'.}
+  \item{keep.rawdist}{Logical indicating whether to return the computed non-null (raw) bootstrap distribution, by default 'FALSE'.  Not available when using \code{nulldist}='perm' or 'ic'.  Note that this matrix can become quite large.  If one wishes to use subsequent calls to \code{update} or \code{EBupdate} in which one updates choice of bootstrap null distribution, \code{keep.rawdist} must be TRUE.  To save on memory, \code{update} only requires that one of \code{keep.nulldist} or \code{keep.rawdist} be 'TRUE'.}
   \item{seed}{Integer or vector of integers to be used as argument to \code{set.seed} to set the seed for the random number generator for bootstrap resampling. This argument can be used to repeat exactly a test performed with a given seed. If the seed is specified via this argument, the same seed will be returned in the seed slot of the MTP object created. Else a random seed(s) will be generated, used and returned. Vector of integers used to specify seeds for each node in a cluster used to to generate a bootstrap null distribution.}
   \item{cluster}{Integer for number of nodes to create or a cluster object created through the package snow. With \code{cluster=1}, bootstrap is implemented on single node. Supplying a cluster object results in the bootstrap being implemented in parallel on the provided nodes. This option is only available for the bootstrap procedure. With default value of 1, bootstrap is executed on single CPU.}
   \item{type}{Interface system to use for computer cluster. See \code{snow} package for details.}
@@ -91,7 +90,7 @@ conversion: num/n}
 \item{t.twosamp.equalvar:}{Wilcoxon rank sum or Mann-Whitney, \code{wilcox.test}, \cr
 conversion: n2*(num+mean(r1)) - n2*(n2+1)/2}
 \item{f:}{Kruskal-Wallis rank sum, \code{kruskal.test}, \cr
-conversion: num*12/(n*(n-1)}
+conversion: num*12/(n*(n-1))}
 \item{f.block:}{Friedman rank sum, \code{friedman.test}, \cr
 conversion: num*12/(K*(K+1))}
 \item{f.twoway:}{Friedman rank sum, \code{friedman.test}, \cr
@@ -117,6 +116,7 @@ For the nonparametric bootstrap distribution with marginal null quantile transfo
 \item{t.cor}{t-distribution with df=n-2;}
 \item{z.cor}{N(0,1).}
 }
+
 The above defaults, however, can be overridden by manually setting values of \code{marg.null} and \code{marg.par}.  In the case of \code{nulldist='ic'}, and \code{ic.quant.trans=TRUE}, the defaults are the same as above except that 'lm.XvsZ' and 'lm.YvsXZ' are replaced with t-distributions with df=n-p.
   
 Given observed test statistics, a type I error rate (with nominal level), and a test statistics null distribution, MTPs provide adjusted p-values, cutoffs for test statistics, and possibly confidence regions for estimates. Four methods are implemented, based on minima of p-values and maxima of test statistics. Only the step down methods are currently available with the permutation null distribution.
@@ -125,6 +125,7 @@ Computation times using a bootstrap null distribution are slower when weights ar
 
 To execute the bootstrap on a computer cluster, a cluster object generated with \code{makeCluster} in the package \code{snow} may be used as the argument for cluster. Alternatively, the number of nodes to use in the computer cluster can be used as the argument to cluster. In this case, \code{type} must be specified and a cluster will be created. In both cases, \code{Biobase} and \code{multtest} will be loaded onto each cluster node if these libraries are located in a directory in the standard search path. If these libraries are in a non-standard location, it is necessary to first create the cluster, load \code{Biobase} and \code{multtest} on each node and then to use the cluster object as the argument to cluster. See documentation for \code{snow} package for additional information on creating and using a cluster.
 
+Finally, note that the old argument \code{csnull} is now DEPRECATED as of \code{multtest} v. 2.0.0 given the expanded null distribution options described above.  Previously, this argument was an indicator of whether the bootstrap estimated test statistics distribution should be centered and scaled (to produce a null distribution) or not. If \code{csnull=FALSE}, the (raw) non-null bootstrap estimated test statistics distribution was returned.  If the non-null bootstrap distribution should be returned, this object is now stored in the 'rawdist' slot when \code{keep.rawdist=TRUE} in the original \code{MTP} function call.  
 }
 
 \value{
