@@ -23,7 +23,7 @@ export(MTP, EBMTP, as.list, mt.maxT, mt.minP, mt.plot, mt.rawp2adjp,
   center.only, center.scale, quant.trans, fwer2gfwer, fwer2tppfp, 
   fwer2fdr, get.index, ss.maxT, ss.minP, sd.maxT, sd.minP, wapply, 
   corr.Tn, corr.null, IC.Cor.NA, IC.CorXW.NA, insert.NA, diffs.1.N, 
-  marg.samp, t.quant.trans, G.VS, ABH.h0, dens.est, Hsets, VScount,
+  marg.samp, tQuantTrans, G.VS, ABH.h0, dens.est, Hsets, VScount,
   mtp2ebmtp, ebmtp2mtp)
   
 S3method(print, MTP)
