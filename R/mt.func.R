@@ -51,7 +51,7 @@ mt.teststat.num.denum<-function(X,classlabel,test="t",na=.mt.naNUM,nonpara="n")
     options<-c(test,side,fixed.seed.sampling);
     res<-.C("get_maxT",as.double(tmp$X),as.integer(tmp$m),
 	    as.integer(tmp$n),as.integer(tmp$classlabel),as.double(na),
-	    t=double(tmp$m),p=double(tmp$m),adjP=double(tmp$m),
+	    t=single(double(tmp$m)),p=single(double(tmp$m)),adjP=single(double(tmp$m)),
 	    as.integer(newB),index=integer(tmp$m),as.character(options),
                as.integer(extra), PACKAGE="multtest")
 
