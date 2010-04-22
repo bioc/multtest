@@ -1,6 +1,6 @@
 Package: multtest
 Title: Resampling-based multiple hypothesis testing
-Version: 2.3.4
+Version: 2.4.0
 Author: Katherine S. Pollard, Houston N. Gilbert, Yongchao Ge, Sandra Taylor, Sandrine Dudoit
 Description: Non-parametric bootstrap and permutation resampling-based
         multiple testing procedures (including empirical Bayes methods) for
