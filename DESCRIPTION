@@ -26,4 +26,3 @@ Enhances: snow, Rmpi, rpvm
 License: LGPL
 biocViews: Microarray, DifferentialExpression, MultipleComparisons
 LazyLoad:yes
-Packaged: 2009-07-14 08:23:53 UTC; biocbuild
