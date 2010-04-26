@@ -24,7 +24,8 @@ export(MTP, EBMTP, as.list, mt.maxT, mt.minP, mt.plot, mt.rawp2adjp,
   fwer2fdr, get.index, ss.maxT, ss.minP, sd.maxT, sd.minP, wapply, 
   corr.Tn, corr.null, IC.Cor.NA, IC.CorXW.NA, insert.NA, diffs.1.N, 
   marg.samp, tQuantTrans, G.VS, ABH.h0, dens.est, Hsets, VScount,
-  mtp2ebmtp, ebmtp2mtp)
+  mtp2ebmtp, ebmtp2mtp, make.cluster, clusterEvalQ, stopCluster, V, S, 
+  clusterApply, clusterApplyLB, rlm)
   
 S3method(print, MTP)
 S3method(print, EBMTP)
