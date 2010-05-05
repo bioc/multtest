@@ -337,11 +337,12 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
     ### Begin nuts and bolts of EB here.
 
     ### Set G function of type I error rates
-    error.closure <- switch(typeone, fwer=G.VS(V,S=NULL,tp=TRUE,bound=0),
-                                     gfwer=G.VS(V,S=NULL,tp=TRUE,bound=k),
-                                     tppfp=G.VS(V,S,tp=TRUE,bound=q),
-                                     fdr=G.VS(V,S,tp=FALSE,bound=NULL)
-                            )
+#MOVED BELOW SO V,S DEFINED
+#    error.closure <- switch(typeone, fwer=G.VS(V,S=NULL,tp=TRUE,bound=0),
+#                                     gfwer=G.VS(V,S=NULL,tp=TRUE,bound=k),
+#                                     tppfp=G.VS(V,S,tp=TRUE,bound=q),
+#                                     fdr=G.VS(V,S,tp=FALSE,bound=NULL)
+#                            )
 
     ### Generate guessed sets of true null hypotheses
     ### This function relates null and full densities.
@@ -381,7 +382,13 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
       Sn <- matrix(Sn, nr=clen, nc=B)
     }
 
-    G <-  error.closure(Vn,Sn)
+    ### Set G function of type I error rates
+    G <- switch(typeone, fwer=G.VS(Vn,Sn,tp=TRUE,bound=0),
+                         gfwer=G.VS(Vn,Sn,tp=TRUE,bound=k),
+                         tppfp=G.VS(Vn,Sn,tp=TRUE,bound=q),
+                         fdr=G.VS(Vn,Sn,tp=FALSE,bound=NULL)
+                )
+
     Gmeans <- rowSums(G,na.rm=TRUE)/B
 
     ### Now get adjps and rejection indicators.
