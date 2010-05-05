@@ -13,11 +13,12 @@ importFrom(survival, coxph.fit)
 importFrom(MASS, mvrnorm)
 importFrom(MASS, rlm)
 
-importFrom(snow, clusterApply)
-importFrom(snow, LBclusterApply)
-importFrom(snow, clusterEvalQ)
-importFrom(snow, makeCluster)
-importFrom(snow, stopCluster)
+#snow does not have a NAMESPACE
+#importFrom(snow, clusterApply)
+#importFrom(snow, LBclusterApply)
+#importFrom(snow, clusterEvalQ)
+#importFrom(snow, makeCluster)
+#importFrom(snow, stopCluster)
 
 exportClasses(MTP, EBMTP)
 
@@ -31,8 +32,7 @@ export(MTP, EBMTP, as.list, mt.maxT, mt.minP, mt.plot, mt.rawp2adjp,
   fwer2fdr, get.index, ss.maxT, ss.minP, sd.maxT, sd.minP, wapply, 
   corr.Tn, corr.null, IC.Cor.NA, IC.CorXW.NA, insert.NA, diffs.1.N, 
   marg.samp, tQuantTrans, G.VS, ABH.h0, dens.est, Hsets, VScount,
-  mtp2ebmtp, ebmtp2mtp, makeCluster, clusterEvalQ, stopCluster, V, S, 
-  clusterApply, clusterApplyLB, rlm)
+  mtp2ebmtp, ebmtp2mtp)
   
 S3method(print, MTP)
 S3method(print, EBMTP)
