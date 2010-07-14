@@ -468,17 +468,28 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
 ######################################################
 
 ### Function closure for different error rates.
+# CHANGE G.VS to function, not closure
+#G.VS <- function(V,S=NULL,tp=TRUE,bound){
+#  function(V,S){
+#    if(is.null(S)) g <- V     #FWER, GFWER
+#    else g <- V/(V+S)         #TPPFP, FDR
+#    if(tp==TRUE) {
+#      temp <- matrix(0,dim(g)[1],dim(g)[2])
+#      temp[g>bound] <- 1      #FWER, GFWER, TPPFP
+#      g <- temp
+#    }
+#    g
+#  }
+#}
 G.VS <- function(V,S=NULL,tp=TRUE,bound){
-  function(V,S){
-    if(is.null(S)) g <- V     #FWER, GFWER
-    else g <- V/(V+S)         #TPPFP, FDR
-    if(tp==TRUE) {
-      temp <- matrix(0,dim(g)[1],dim(g)[2])
-      temp[g>bound] <- 1      #FWER, GFWER, TPPFP
-      g <- temp
-    }
-    g
-  }
+   if(is.null(S)) g <- V     #FWER, GFWER
+   else g <- V/(V+S)         #TPPFP, FDR
+   if(tp==TRUE) {
+     temp <- matrix(0,dim(g)[1],dim(g)[2])
+     temp[g>bound] <- 1      #FWER, GFWER, TPPFP
+     g <- temp
+   }
+   g
 }
 
 ### Adaptive BH estimate of the number of true null hypotheses.
