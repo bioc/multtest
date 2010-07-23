@@ -21,7 +21,8 @@ Description: Non-parametric bootstrap and permutation resampling-based
         DNA microarray experiments.
 Maintainer: Katherine S. Pollard <kpollard@gladstone.ucsf.edu>
 Depends: R (>= 2.9.0), methods, Biobase
-Imports: survival, MASS, snow
+Imports: survival, MASS
+Suggests: snow
 Enhances: snow, Rmpi, rpvm
 License: LGPL
 biocViews: Microarray, DifferentialExpression, MultipleComparisons
