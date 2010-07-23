@@ -437,7 +437,7 @@ lmX<-function(Z=NULL,n,psi0=0,na.rm=TRUE,standardize=TRUE,alternative="two.sided
 			}
 			covar<-as.matrix(covar)
 			if(robust){
-                          	autoload("MASS")
+                          	autoload("rlm","MASS")
 				out<-rlm(covar,x)
 				out$df.residual<-length(x)-out$rank
 			}
@@ -459,7 +459,7 @@ lmX<-function(Z=NULL,n,psi0=0,na.rm=TRUE,standardize=TRUE,alternative="two.sided
 			}
 			covar<-as.matrix(covar)
 			if(robust){
-                              	autoload("MASS")
+                              	autoload("rlm","MASS")
 				out<-rlm(covar,x,w)
 				out$df.residual<-length(x)-out$rank
 			}
@@ -514,7 +514,7 @@ lmY<-function(Y,Z=NULL,n,psi0=0,na.rm=TRUE,standardize=TRUE,alternative="two.sid
 			else
 				xy<-dep
 			if(robust){
-                          	autoload("MASS")
+                          	autoload("rlm","MASS")
                                 out<-rlm(covar,xy)
 				out$df.residual<-length(xy)-out$rank
 			}
@@ -538,7 +538,7 @@ lmY<-function(Y,Z=NULL,n,psi0=0,na.rm=TRUE,standardize=TRUE,alternative="two.sid
 			else
 				xy<-dep
 			if(robust){
-                            	autoload("MASS")
+                            	autoload("rlm","MASS")
 				out<-rlm(covar,xy,w)
 				out$df.residual<-length(xy)-out$rank
 			}
