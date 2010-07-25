@@ -281,7 +281,7 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
     ## Check installation of packages
       have_snow <- qRequire("snow")
       if(!have_snow) stop("The package snow is required to use a cluster. Either snow is not installed or it is not in the standard library location.")
-      library("snow")  #use library() since several functions are needed
+      #library("snow")  #use library() since several functions are needed
       if (is.null(type))
          stop("Must specify type argument to use a cluster. Alternatively, provide a cluster object as the argument to cluster.")
       if (type=="SOCK")
@@ -291,12 +291,12 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
       else if (type=="MPI"){
          have_rmpi <- qRequire("Rmpi")
          if(!have_rmpi) stop("The package Rmpi is required for the specified type. Either Rmpi is not installed or it is not in the standard library location.")
-         library("Rmpi")
+         #library("Rmpi")
        }
       else if (type=="PVM"){
          have_rpvm <- qRequire("rpvm")
          if(!have_rpvm) stop("The package rpvm is required for the specified type. Either rpvm is not installed or it is not in the standard library location.")
-         library("rpvm")
+         #library("rpvm")
       }
       cluster <- makeCluster(cluster, type)
       clusterEvalQ(cluster, {library(Biobase); library(multtest)})
