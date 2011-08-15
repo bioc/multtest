@@ -118,6 +118,7 @@ quant.trans <- function(muboot, marg.null, marg.par, ncp, alternative, perm.mat)
 
 boot.resample <- function (X, label, p, n, stat.closure, W, B, test){
     muboot <- matrix(0, nrow = p, ncol = B)
+    samp <- sample(n, n * B, replace = TRUE)
     if (any(test == c("t.twosamp.equalvar", "t.twosamp.unequalvar",
         "f"))) {
         label <- as.vector(label)
@@ -125,6 +126,10 @@ boot.resample <- function (X, label, p, n, stat.closure, W, B, test){
         num.group <- length(uniqlabs)
         groupIndex <- lapply(1:num.group, function(k) which(label ==
             uniqlabs[k]))
+        if(sum(is.na(label))){
+          naindex<-c(1:num.group)[is.na(uniqlabs)]
+          groupIndex[[naindex]]<-which(is.na(label))
+        }
         obs <- sapply(1:num.group, function(x) length(groupIndex[[x]]))
         samp <- lapply(1:num.group, function(k) matrix(NA, nrow = B,
             ncol = obs[k]))
@@ -181,7 +186,6 @@ boot.resample <- function (X, label, p, n, stat.closure, W, B, test){
         }
         samp <- as.vector(t(matrix(unlist(samp), nrow = B, ncol = sum(obs))))
       }
-    else samp <- sample(n, n * B, replace = TRUE)
     cat("iteration = ")
     muboot <- .Call("bootloop", stat.closure, as.numeric(X),
         as.numeric(W), as.integer(p), as.integer(n), as.integer(B),
