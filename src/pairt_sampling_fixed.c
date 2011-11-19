@@ -1,5 +1,4 @@
 /*the l is for local global variable in this file*/
-#include "assert.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
@@ -18,14 +17,14 @@ void create_sampling_pairt_fixed(int n,int*L,int B)
     fprintf(stderr,"B needs to be positive\n");
     return;/*exit(0)*/;
   }
-  assert(l_L=(int*)malloc(sizeof(int)*n));
+  l_L=(int*)Calloc(n, int);
   memcpy(l_L,L,sizeof(int)*n);
 }
 
 
 void delete_sampling_pairt_fixed()
 {
-  free(l_L);
+  Free(l_L);
   l_L=NULL;
 }
 int first_sample_pairt_fixed(int *L)

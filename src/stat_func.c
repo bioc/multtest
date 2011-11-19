@@ -2,7 +2,6 @@
 #include "stdlib.h"
 #include "stdarg.h"
 #include "math.h"
-#include "assert.h"
 #include "string.h"
 #include "mt.h"
 
@@ -502,7 +501,7 @@ void label2sample(int n, int k, int* nk,int*L,int *permun)
   int *s;/*s is for starting*/
 
   /*initialize the beginning*/
-  assert(s=(int*)Calloc(k,int));
+  s=(int*)Calloc(k,int);
   s[0]=0;
   for(l=1;l<k;l++){
     s[l]=s[l-1]+nk[l-1];
@@ -518,7 +517,7 @@ void label2sample(int n, int k, int* nk,int*L,int *permun)
 int next_label(int n, int k, int* nk, int*L)
 {
   int *permun,ret;
-  assert(permun=(int*)Calloc(n,int));
+  permun=(int*)Calloc(n,int);
   label2sample(n,k,nk,L,permun);
   ret=next_mult_permu(permun,n,k,nk);
   sample2label(n,k,nk,permun,L);
@@ -539,7 +538,7 @@ int next_two_permu(int* V, int n, int k)
   int* A=V;
   int* B=V+k;
   int* tempV,*cpyV;
-  assert(tempV=(int*)Calloc(n,int));
+  tempV=(int*)Calloc(n,int);
 
   i=k-1;
   while(i>=0&& A[i]>maxb){
@@ -575,7 +574,7 @@ int next_two_permu(int* V, int n, int k)
   /*copy the ((n-k)-(j+1)) elements from array 
     B[j+1],...B[n-k-1],..,A[i+1],..A[k-1]*/
   /*construct the array B[j+1],...B[n-k-1],A[i+1],..A[k-1]*/
-  assert(cpyV=(int*)Calloc(n,int));
+  cpyV=(int*)Calloc(n,int);
   memcpy(cpyV,B+j+1,sizeof(int)*((n-k)-(j+1)));
   if(k>(i+1))
     memcpy(cpyV+(n-k)-(j+1),A+i+1,sizeof(int)*(k-(i+1)));
@@ -643,7 +642,7 @@ int next_permu(int*V,int n) /* n has to be at least 2*/
     if(V[j]>old) break;
     j--;
   }
-  assert(cpyV=(int*)Calloc(n,int));
+  cpyV=(int*)Calloc(n,int);
   memcpy(cpyV,V,sizeof(int)*n);
   V[i]=cpyV[j];
   cpyV[j]=old;
@@ -697,20 +696,22 @@ void read_infile(char *filename,GENE_DATA *pdata) {
   FILE *fh;
   int i, j;
   double ftemp;
-  assert(fh=fopen(filename,"r"));
+  fh=fopen(filename,"r");
+  if (NULL == fh)
+      Rf_error("failed to open file '%s'", filename);
   /*read the labelling first*/
-  assert(fscanf(fh, "%s", pdata->name));
-  for (j=0; j<pdata->ncol; j++) 
-    assert(fscanf(fh, "%d", pdata->L+j));
-  
+  fscanf(fh, "%s", pdata->name);
+  for (j=0; j<pdata->ncol; j++)
+    fscanf(fh, "%d", pdata->L+j);
+
 /*read the mxn matrix of the gene values data*/
   for (i=0; i<pdata->nrow; i++) {
     /*read gene id and the first gene values*/
-    assert(fscanf(fh, "%s", pdata->id[i]));
+    fscanf(fh, "%s", pdata->id[i]);
     /*read the rest of it*/
     for (j=0; j<pdata->ncol; j++) {
       /*deal with the double data*/
-      assert(fscanf(fh, "%lg",&ftemp));
+      fscanf(fh, "%lg",&ftemp);
       pdata->d[i][j]=ftemp;
     }
   }

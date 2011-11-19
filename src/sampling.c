@@ -1,5 +1,4 @@
 /*the l is for local global variable in this file*/
-#include "assert.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
@@ -79,9 +78,9 @@ void create_sampling(int n,int*L,int B)
     /*reintiailize the permu_array*/
     delete_permu_array(&l_pa);
     init_permu_array(&l_pa,L,n,B);
-    assert(permun=(int*)Calloc(l_pa.n,int));
-    assert(ordern=(int*)Calloc(l_pa.n,int));
-    assert(myL=(int*)Calloc(l_pa.n,int));
+    permun=(int*)Calloc(l_pa.n,int);
+    ordern=(int*)Calloc(l_pa.n,int);
+    myL=(int*)Calloc(l_pa.n,int);
     for(i=0;i<n;i++){
       ordern[i]=i;
     }
@@ -154,7 +153,7 @@ static int init_permu_array(PERMU_ARRAY* pa, int *L,int n, int B)
   (pa->k)++;
   
   /*compue nk*/
-  assert(pa->nk=(int*)Calloc(pa->k,int));
+  pa->nk=(int*)Calloc(pa->k,int);
   memset(pa->nk,0,sizeof(int)*pa->k);
   for(i=0;i<n;i++)
     pa->nk[L[i]]++;
@@ -164,7 +163,7 @@ static int init_permu_array(PERMU_ARRAY* pa, int *L,int n, int B)
   pa->len=floor(log(imax+1.0)/log(pa->k)); 
   pa->sz=ceil(n/(pa->len*1.0));
   /*allocate the space for v*/
-  assert(pa->v=(unsigned int*)Calloc(B*pa->sz,int));
+  pa->v=(unsigned int*)Calloc(B*pa->sz,int);
   return 1;
 }
 

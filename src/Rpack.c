@@ -8,7 +8,6 @@
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
-#include <assert.h>
 #include "mt.h"
 #define mtT 1
 #define mtF 2

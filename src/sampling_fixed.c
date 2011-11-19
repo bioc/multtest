@@ -1,5 +1,4 @@
 /*the l is for local global variable in this file*/
-#include "assert.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
@@ -24,7 +23,7 @@ void create_sampling_fixed(int n,int*L,int B)
     fprintf(stderr,"B needs to be positive\n");
     return;/*exit(0)*/;
   }
-  assert(l_L=(int*)Calloc(n,int));
+  l_L=(int*)Calloc(n,int);
   memcpy(l_L,L,sizeof(int)*n);
   
   k=0;
@@ -33,13 +32,13 @@ void create_sampling_fixed(int n,int*L,int B)
       k=L[i];
   k++;
   l_k=k;
-  assert(l_nk=(int*)Calloc(k,int));
+  l_nk=(int*)Calloc(k,int);
   memset(l_nk,0,sizeof(int)*k);
   for(i=0;i<n;i++)
     l_nk[L[i]]++;
 
-  assert(l_permun=(int*)Calloc(n,int));
-  assert(l_ordern=(int*)Calloc(n,int));
+  l_permun=(int*)Calloc(n,int);
+  l_ordern=(int*)Calloc(n,int);
   for(i=0;i<n;i++){
       l_ordern[i]=i;
     }

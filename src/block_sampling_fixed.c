@@ -1,5 +1,4 @@
 /*This file is used to do the sampling for block sampling*/
-#include "assert.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
@@ -54,9 +53,9 @@ void create_sampling_block(int n,int*L,int B)
     l_n=n;
     l_b=0;
     l_m=m;
-    assert(l_L=(int*)Calloc(n,int));
+    l_L=(int*)Calloc(n,int);
     memcpy(l_L,L,sizeof(int)*n);
-    assert(l_order_block=(int*)Calloc(n,int));
+    l_order_block=(int*)Calloc(n,int);
     init_label_block(l_order_block,n,m);
 }
       

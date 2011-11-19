@@ -2,7 +2,6 @@
 #include "stdlib.h"
 #include "stdarg.h"
 #include "math.h"
-#include "assert.h"
 #include "mt.h"
 /* This function is used for some odering of the data*/
 
@@ -52,7 +51,7 @@ void order_mult_data(int* R,int n,int k,...)
   CMP_DATA *cmp_data;
   va_list ap;
   int i;
-  assert(cmp_data=(CMP_DATA*)Calloc(k,CMP_DATA));
+  cmp_data=(CMP_DATA*)Calloc(k,CMP_DATA);
   va_start(ap,k);
   for(i=0;i<k;i++) {
     cmp_data[i].V=va_arg(ap,float*);

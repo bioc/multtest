@@ -8,7 +8,6 @@
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
-#include <assert.h>
 #include <stdarg.h>
 #include "mt.h"
 /************************************************************************************/
@@ -58,9 +57,9 @@ void malloc_gene_data(GENE_DATA* pdata)
   int nrow=pdata->nrow;
   int ncol=pdata->ncol;
 
-  assert(pdata->id=(char**)Calloc(nrow,char*));
-  assert(pdata->d=(float**)Calloc(nrow,float*));
-  assert(pdata->L=(int*)Calloc(ncol,int));
+  pdata->id=(char**)Calloc(nrow,char*);
+  pdata->d=(float**)Calloc(nrow,float*);
+  pdata->L=(int*)Calloc(ncol,int);
 
   /*initialization*/
   memset(pdata->L,0,sizeof(int)*ncol);
@@ -68,8 +67,8 @@ void malloc_gene_data(GENE_DATA* pdata)
     pdata->L[i]=0;
 
   for (i=0; i<nrow; i++) {
-    assert(pdata->id[i] = (char *) Calloc(MAX_ID,char));
-    assert(pdata->d[i]=(float *) Calloc(ncol,float));
+    pdata->id[i] = (char *) Calloc(MAX_ID,char);
+    pdata->d[i]=(float *) Calloc(ncol,float);
  }
 }
 
@@ -143,11 +142,11 @@ void  get1pvalue(GENE_DATA* pdata,int* L,float* T,float* P,
   int nrow=pdata->nrow;
   int B=(*func_first_sample)(NULL);
   /*allocate the space and initialziation*/
-  assert(bT=(float*)Calloc(nrow,float));
-  assert(bL=(int*)Calloc(ncol,int));
-  assert(count=(float*)Calloc(nrow,float));
-  memset(count,0,sizeof(float)*nrow); 
-  assert(total=(int*)Calloc(nrow,int));
+  bT=(float*)Calloc(nrow,float);
+  bL=(int*)Calloc(ncol,int);
+  count=(float*)Calloc(nrow,float);
+  memset(count,0,sizeof(float)*nrow);
+  total=(int*)Calloc(nrow,int);
   memset(total,0,sizeof(int)*nrow);
 
   /*comuter the original one first*/
@@ -198,15 +197,15 @@ void  get1pvalue(GENE_DATA* pdata,int* L,float* T,float* P,
    sort the rows of gene_data such that row R[i] of is the first row, i=0,...,m-1,
    wher R[0],...,R[m-1] is a permutation of (0,...,m-1)
 */
-										 
+
 void sort_gene_data(GENE_DATA* pdata,int*R)
 {
   int i,nrow=pdata->nrow;
   char** old_id; /*the old addresses of the gene id*/
   float** old_d;  /*th old addresses of the gene data*/
-  assert(old_d=(float**)Calloc(nrow,float*));
-  assert(old_id=(char**)Calloc(nrow,char*));
-  /*store the original pointers from pdata*/ 
+  old_d=(float**)Calloc(nrow,float*);
+  old_id=(char**)Calloc(nrow,char*);
+  /*store the original pointers from pdata*/
   for(i=0;i<nrow;i++)
     {
       old_d[i]=pdata->d[i];
@@ -232,7 +231,7 @@ void sort_vector(float* V,int*R,int n)
 {
   float* old_V;
   int i;
-  assert(old_V=(float*)Calloc(n,float));
+  old_V=(float*)Calloc(n,float);
   for(i=0;i<n;i++)
     old_V[i]=V[i];
   for(i=0;i<n;i++)
@@ -262,8 +261,8 @@ void get_all_samples_P(float* V, int n,float* P,float na,
  
   B=(*func_first_sample)(NULL);
   /*allocate the spaces*/
-  assert(L=(int*)Calloc(n,int));
-  assert(R=(int*)Calloc(B,int));
+  L=(int*)Calloc(n,int);
+  R=(int*)Calloc(B,int);
 
   /*compute all the test_stat*/
   (*func_first_sample)(L);
@@ -320,8 +319,8 @@ void get_all_samples_T(float* V, int n,float* T,float na,
  
   B=(*func_first_sample)(NULL);
   /*allocate the spaces*/
-  assert(L=(int*)Calloc(n,int));
-  assert(R=(int*)Calloc(B,int));
+  L=(int*)Calloc(n,int);
+  R=(int*)Calloc(B,int);
 
   /*compute all the test_stat*/
   (*func_first_sample)(L);
@@ -354,10 +353,10 @@ void adj_pvalue_quick(GENE_DATA* pdata,float*T, float* P,
    
   /*allocate the space*/
   B=(*func_first_sample)(NULL);
-  assert(L=(int*)Calloc(ncol,int)); 
-  assert(R=(int*)Calloc(nrow,int));
-  assert(all_P=(float*)Calloc(B,float));
-  assert(all_Q=(float*)Calloc(B,float));
+  L=(int*)Calloc(ncol,int);
+  R=(int*)Calloc(nrow,int);
+  all_P=(float*)Calloc(B,float);
+  all_Q=(float*)Calloc(B,float);
 
   /*get the original unadjusted p-values first
    we'll use the normalized t-statistics*/
@@ -479,18 +478,18 @@ void  adj_by_T(GENE_DATA* pdata,float* T,float* P,float*Adj_P,
   int nrow=pdata->nrow;
   int B=(*func_first_sample)(NULL);
   /*allocate the space and initialziation*/
-  assert(bT=(float*)Calloc(nrow,float));
-  assert(bL=(int*)Calloc(ncol,int));
-  assert(count1=(float*)Calloc(nrow,float));
-  memset(count1,0,sizeof(float)*nrow); 
-  assert(total1=(int*)Calloc(nrow,int));
+  bT=(float*)Calloc(nrow,float);
+  bL=(int*)Calloc(ncol,int);
+  count1=(float*)Calloc(nrow,float);
+  memset(count1,0,sizeof(float)*nrow);
+  total1=(int*)Calloc(nrow,int);
   memset(total1,0,sizeof(int)*nrow);
-  assert(count2=(float*)Calloc(nrow,float));
-  memset(count2,0,sizeof(float)*nrow); 
-  assert(total2=(int*)Calloc(nrow,int));
+  count2=(float*)Calloc(nrow,float);
+  memset(count2,0,sizeof(float)*nrow);
+  total2=(int*)Calloc(nrow,int);
   memset(total2,0,sizeof(int)*nrow);
 
-  assert(R=(int*)Calloc(nrow,int));
+  R=(int*)Calloc(nrow,int);
    /*comuter the original t-statfirst*/
 
   compute_test_stat(pdata,pdata->L,T,func_stat,extra);
