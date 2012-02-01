@@ -1,6 +1,6 @@
 Package: multtest
 Title: Resampling-based multiple hypothesis testing
-Version: 2.11.1
+Version: 2.11.2
 Author: Katherine S. Pollard, Houston N. Gilbert, Yongchao Ge, Sandra Taylor, Sandrine Dudoit
 Description: Non-parametric bootstrap and permutation resampling-based
         multiple testing procedures (including empirical Bayes methods) for
@@ -20,7 +20,7 @@ Description: Non-parametric bootstrap and permutation resampling-based
         are directly applicable to identifying differentially expressed genes in
         DNA microarray experiments.
 Maintainer: Katherine S. Pollard <kpollard@gladstone.ucsf.edu>
-Depends: R (>= 2.9.0), methods, Biobase
+Depends: R (>= 2.10), methods, Biobase
 Imports: survival, MASS
 Suggests: snow
 License: LGPL
