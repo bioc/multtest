@@ -13,6 +13,7 @@ importFrom(survival, coxph.fit)
 importFrom(MASS, mvrnorm)
 importFrom(MASS, rlm)
 
+importMethodsFrom(BiocGenerics, plot, summary)
 #snow does not have a NAMESPACE
 #importFrom(snow, clusterApply)
 #importFrom(snow, LBclusterApply)
