@@ -62,10 +62,10 @@ corr.null <- function(X,W=NULL,Y=NULL,Z=NULL,test="t.twosamp.unequalvar",alterna
   # Regression ICs written to automatically incorporate weights.
   # If W=NULL, then give equal weights.
   if(test=="lm.XvsZ"){
-    if(is.null(Z)) Z <- matrix(1,nr=n,nc=1)
+    if(is.null(Z)) Z <- matrix(1,nrow=n,ncol=1)
     else Z <- cbind(Z,1)
-    if(is.null(W)) W <- matrix(1/n,nr=p,nc=n)
-    IC.i <- matrix(0,nr=m,nc=n)
+    if(is.null(W)) W <- matrix(1/n,nrow=p,ncol=n)
+    IC.i <- matrix(0,nrow=m,ncol=n)
     for(i in 1:m){
       drop <- is.na(X[i,]) | is.na(rowSums(Z)) | is.na(W[i,])
       x <- as.numeric(X[i,!drop])
@@ -89,8 +89,8 @@ corr.null <- function(X,W=NULL,Y=NULL,Z=NULL,test="t.twosamp.unequalvar",alterna
     if(length(Y)!=n) stop(paste("Dimension of outcome Y=",length(Y),", not equal dimension of data=",n,sep=""))
     if(is.null(Z)) Z <- matrix(1,n,1)
     else Z <- cbind(Z,1)
-    if(is.null(W)) W <- matrix(1,nr=p,nc=n)
-    IC.i <- matrix(0,nr=m,nc=n)
+    if(is.null(W)) W <- matrix(1,nrow=p,ncol=n)
+    IC.i <- matrix(0,nrow=m,ncol=n)
     for(i in 1:m){
       drop <- is.na(X[i,]) | is.na(rowSums(Z)) | is.na(W[i,])
       x <- as.numeric(X[i,!drop])
@@ -139,13 +139,13 @@ corr.null <- function(X,W=NULL,Y=NULL,Z=NULL,test="t.twosamp.unequalvar",alterna
     EX1X2.v <- rowMeans(X.vec12,na.rm=TRUE)
 
     cons <- 1/sqrt(Var1.v*Var2.v)
-    gradient <- matrix(1,nr=M,nc=5)
+    gradient <- matrix(1,nrow=M,ncol=5)
     gradient[,1] <- EX1.v*Cov.v/Var1.v - EX2.v
     gradient[,2] <- EX2.v*Cov.v/Var2.v - EX1.v
     gradient[,3] <- -0.5*Cov.v/Var1.v
     gradient[,4] <- -0.5*Cov.v/Var2.v
 
-    IC.i <- matrix(0, nr=M, nc=N)
+    IC.i <- matrix(0, nrow=M, ncol=N)
     for(i in 1:N){
       diffs.i <- diffs.1.N(X[ind[,1],i], X[ind[,2],i], EX1.v, EX2.v, E2X1.v, E2X2.v, EX1X2.v)
       IC.M <- rep(0,M)
@@ -164,17 +164,17 @@ corr.null <- function(X,W=NULL,Y=NULL,Z=NULL,test="t.twosamp.unequalvar",alterna
   if(MVN.method=="mvrnorm") nulldist <- t(mvrnorm(n=B,mu=rep(0,dim(IC.Cor)[1]),Sigma=IC.Cor))
   if(MVN.method=="Cholesky"){
     IC.chol <- t(chol(IC.Cor+penalty*diag(dim(IC.Cor)[1])))
-    norms <- matrix(rnorm(B*dim(IC.Cor)[1]),nr=dim(IC.Cor)[1],nc=B)
+    norms <- matrix(rnorm(B*dim(IC.Cor)[1]),nrow=dim(IC.Cor)[1],ncol=B)
     nulldist <- IC.chol%*%norms
   }
   if(ic.quant.trans==TRUE){
     cat("applying quantile transform...", "\n\n")
     if(is.null(marg.null)){
 	marg.null <- "t"
-     	if(test=="t.cor" | test=="z.cor" | test=="t.twosamp.equalvar") marg.par <- matrix(rep(dim(X)[2]-2,dim(IC.Cor)[1]),nr=dim(IC.Cor)[1],nc=1)
-        if(test=="lm.XvsZ") marg.par <- matrix(rep(dim(X)[2]-dim(Z)[2],dim(IC.Cor)[1]),nr=dim(IC.Cor)[1],nc=1)
-        if(test=="lm.YvsXZ")  marg.par <- matrix(rep(dim(X)[2]-dim(Z)[2]-1,dim(IC.Cor)[1]),nr=dim(IC.Cor)[1],nc=1)
-        else marg.par <- matrix(rep(dim(X)[2]-1,dim(IC.Cor)[1]),nr=dim(IC.Cor)[1],nc=1)
+     	if(test=="t.cor" | test=="z.cor" | test=="t.twosamp.equalvar") marg.par <- matrix(rep(dim(X)[2]-2,dim(IC.Cor)[1]),nrow=dim(IC.Cor)[1],ncol=1)
+        if(test=="lm.XvsZ") marg.par <- matrix(rep(dim(X)[2]-dim(Z)[2],dim(IC.Cor)[1]),nrow=dim(IC.Cor)[1],ncol=1)
+        if(test=="lm.YvsXZ")  marg.par <- matrix(rep(dim(X)[2]-dim(Z)[2]-1,dim(IC.Cor)[1]),nrow=dim(IC.Cor)[1],ncol=1)
+        else marg.par <- matrix(rep(dim(X)[2]-1,dim(IC.Cor)[1]),nrow=dim(IC.Cor)[1],ncol=1)
     }
     if(test=="z.cor" & marg.null=="t") warning("IC nulldist for z.cor already MVN. Transforming to N-2 df t marginal distribution not advised.")
     if(marg.null!="t" & marg.null!="perm") stop("IC nulldists can only be quantile transformed to a marginal t-distribution or user-supplied marginal permutation distribution")
@@ -193,11 +193,11 @@ IC.Cor.NA <- function(IC,W,N,M,output){
   n <- dim(IC)[2]
   m <- dim(IC)[1]
   if(is.null(W)){
-    W <- matrix(1,nr=dim(IC)[1],nc=dim(IC)[2])
+    W <- matrix(1,nrow=dim(IC)[1],ncol=dim(IC)[2])
     Wnew <- W/rowSums(W,na.rm=TRUE) # Equal weight, NA handling.
   }
   else Wnew <- W/rowSums(W,na.rm=TRUE)
-  IC.VC <- matrix(0,nr=m,nc=m)
+  IC.VC <- matrix(0,nrow=m,ncol=m)
   for(i in 1:n){
     temp <- crossprod(t(sqrt(Wnew[,i])*IC[,i]))
     temp[is.na(temp)] <- 0
@@ -222,7 +222,7 @@ IC.CorXW.NA <- function(X,W,N,M,output){
   EXW <- rowSums(XW)/rowSums(W)
   ICW.i <- X-EXW
   Wnew <- W/rowSums(W,na.rm=T)
-  IC.VC <- matrix(0,nr=m,nc=m)
+  IC.VC <- matrix(0,nrow=m,ncol=m)
   for(i in 1:n){
     temp <- crossprod(t(sqrt(Wnew[,i])*X[,i]))
     temp[is.na(temp)] <- 0
@@ -246,7 +246,7 @@ insert.NA <- function(orig.NA, res.vec){
 # This is the difference between estimates for
 # a sample size of one and a sample of size n.
 diffs.1.N <- function(vec1, vec2, e1, e2, e21, e22, e12){
-  diff.mat.1.N <- matrix(0,nr=5,nc=length(vec1))
+  diff.mat.1.N <- matrix(0,nrow=5,ncol=length(vec1))
   diff.mat.1.N[1,] <- vec1 - e1
   diff.mat.1.N[2,] <- vec2 - e2
   diff.mat.1.N[3,] <- vec1*vec1 - e21

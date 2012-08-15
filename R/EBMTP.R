@@ -23,8 +23,8 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
   #W
   if(!is.null(W)){
     W[W<=0]<-NA
-    if(is.vector(W) & length(W)==n) W <- matrix(rep(W,p),nr=p,nc=n,byrow=TRUE)
-    if(is.vector(W) & length(W)==p) W <- matrix(rep(W,n),nr=p,nc=n)
+    if(is.vector(W) & length(W)==n) W <- matrix(rep(W,p),nrow=p,ncol=n,byrow=TRUE)
+    if(is.vector(W) & length(W)==p) W <- matrix(rep(W,n),nrow=p,ncol=n)
     if(test%in%c("f","f.block","f.twoway","t.cor","z.cor")){
       warning("Weights can not be used with F-tests or tests of correlation parameters, arg W is being ignored.")
       W<-NULL
@@ -95,8 +95,8 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
   nalpha<-length(alpha)
   reject<-
     if(nalpha) array(dim=c(p,nalpha),dimnames=list(rownames(X),paste("alpha=",alpha,sep="")))
-    if(test=="z.cor" | test=="t.cor") matrix(nr=0,nc=0) # deprecated for correlations, rownames now represent p choose 2 edges - too weird and clunky in current state for output.
-    else matrix(nr=0,nc=0)
+    if(test=="z.cor" | test=="t.cor") matrix(nrow=0,ncol=0) # deprecated for correlations, rownames now represent p choose 2 edges - too weird and clunky in current state for output.
+    else matrix(nrow=0,ncol=0)
 
   if(typeone=="fwer"){
     if(length(k)>1) k<-k[1]
@@ -204,7 +204,7 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
   if(nulldist=="boot.qt"){
   if(!is.null(marg.par)){
       if(is.matrix(marg.par)) marg.par <- marg.par
-      if(is.vector(marg.par)) marg.par <- matrix(rep(marg.par,p),nr=p,nc=length(marg.par),byrow=TRUE)
+      if(is.vector(marg.par)) marg.par <- matrix(rep(marg.par,p),nrow=p,ncol=length(marg.par),byrow=TRUE)
         }
       if(is.null(ncp)) ncp = 0
       if(!is.null(perm.mat)){ 
@@ -248,7 +248,7 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
                           t.cor = n-2,
                           z.cor = c(0,1)
                           )
-      marg.par <- matrix(rep(marg.par,dim(X)[1]),nr=dim(X)[1],nc=length(marg.par),byrow=TRUE)
+      marg.par <- matrix(rep(marg.par,dim(X)[1]),nrow=dim(X)[1],ncol=length(marg.par),byrow=TRUE)
               }
      else{ # Check that user-supplied values of marg.par make sense (marg.par != NULL)
        if((marg.null=="t" | marg.null=="f") & any(marg.par[,1]==0)) stop("Cannot have zero df with t or F distributions. Check marg.par settings")
@@ -259,7 +259,7 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
   
     ##or computing influence curves
     if(nulldist=="ic"){
-      rawdistn <- matrix(nr=0,nc=0)
+      rawdistn <- matrix(nrow=0,ncol=0)
       nulldistn<-switch(test,
                         t.onesamp=corr.null(X,W,Y,Z,test="t.onesamp",alternative,use="pairwise",B,MVN.method,penalty,ic.quant.trans,marg.null,marg.par,perm.mat),
                         t.pair=corr.null(X,W,Y,Z,test="t.pair",alternative,use="pairwise",B,MVN.method,penalty,ic.quant.trans,marg.null,marg.par,perm.mat),
@@ -364,7 +364,7 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
     ord.Tn <- order(Tn,decreasing=TRUE)
     sort.Tn <- Tn[ord.Tn]
     Z.nulls <- nulldistn[ord.Tn,]*H0.sets[ord.Tn,]
-    Tn.mat <- (1-H0.sets[ord.Tn,])*matrix(rep(sort.Tn,B),nr=m,nc=B)
+    Tn.mat <- (1-H0.sets[ord.Tn,])*matrix(rep(sort.Tn,B),nrow=m,ncol=B)
 
     ### Rather than using a sieve of candidate cutoffs, for adjp, test statistics
     ### are used as cutoffs themselves.
@@ -373,14 +373,14 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
     cat("counting guessed false positives...", "\n")
     Vn <- .Call(VScount,as.numeric(Z.nulls),as.numeric(cutoffs),as.integer(m),as.integer(B),as.integer(clen),NAOK=TRUE)
     cat("\n")
-    Vn <- matrix(Vn, nr=clen, nc=B)
+    Vn <- matrix(Vn, nrow=clen, ncol=B)
 
     if(typeone=="fwer" | typeone=="gfwer") Sn <- NULL
     else{
       cat("counting guessed true positives...", "\n")
       Sn <- .Call(VScount,as.numeric(Tn.mat),as.numeric(cutoffs),as.integer(m),as.integer(B),as.integer(clen),NOAK=TRUE)
       cat("\n")
-      Sn <- matrix(Sn, nr=clen, nc=B)
+      Sn <- matrix(Sn, nrow=clen, ncol=B)
     }
 
     ### Set G function of type I error rates
@@ -405,19 +405,19 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
     }
     adjp <- adjp[rev.order]
     if(keep.falsepos) Vn <- Vn[rev.order,]
-    else Vn <- matrix(0,nr=0,nc=0)
+    else Vn <- matrix(0,nrow=0,ncol=0)
     if(keep.truepos) Sn <- Sn[rev.order,]
-    else Sn <- matrix(0,nr=0,nc=0)
-    if(typeone=="fwer" | typeone=="gfwer") Sn <- matrix(0,nr=0,nc=0)
+    else Sn <- matrix(0,nrow=0,ncol=0)
+    if(typeone=="fwer" | typeone=="gfwer") Sn <- matrix(0,nrow=0,ncol=0)
     if(keep.errormat) G <- G[rev.order,]
-    else G <- matrix(0,nr=0,nc=0)
-    if(!keep.Hsets) H0.sets <- matrix(0,nr=0,nc=0)
+    else G <- matrix(0,nrow=0,ncol=0)
+    if(!keep.Hsets) H0.sets <- matrix(0,nrow=0,ncol=0)
   
     # No confidence regions, but vector of rejections logicals, and cutoff, if applicable
     ### Generate matrix of rejection logicals.
     EB.reject <- reject
     if(test!="z.cor" & test!="t.cor") for(a in 1:nalpha) EB.reject[,a]<-adjp<=alpha[a]
-    else EB.reject <- matrix(0,nr=0,nc=0)
+    else EB.reject <- matrix(0,nrow=0,ncol=0)
 
     ### Grab test statistics corresponding to cutoff, based on adjp.
     #Leave out.
@@ -432,16 +432,16 @@ EBMTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="
     #}
 
     #output results
-    if(!keep.nulldist) nulldistn<-matrix(nr=0,nc=0)
-    if(keep.rawdist==FALSE) rawdist<-matrix(nr=0,nc=0)
-    if(is.null(Y)) Y<-matrix(nr=0,nc=0)
+    if(!keep.nulldist) nulldistn<-matrix(nrow=0,ncol=0)
+    if(keep.rawdist==FALSE) rawdist<-matrix(nrow=0,ncol=0)
+    if(is.null(Y)) Y<-matrix(nrow=0,ncol=0)
     if(nulldist!="boot.qt"){  
       marg.null <- vector("character")
-      marg.par <- matrix(nr=0,nc=0)
+      marg.par <- matrix(nrow=0,ncol=0)
     }
     if(!keep.label) label <- vector("numeric",0)
-    if(!keep.index) index <- matrix(nr=0,nc=0)
-    if(test!="z.cor" & test !="t.cor") index <- matrix(nr=0,nc=0)
+    if(!keep.index) index <- matrix(nrow=0,ncol=0)
+    if(test!="z.cor" & test !="t.cor") index <- matrix(nrow=0,ncol=0)
     if(keep.index & (test!="z.cor" | test !="t.cor")){
       index <- t(combn(p,2))
       colnames(index) <- c("Var1","Var2")
@@ -543,7 +543,7 @@ Hsets <- function(Tn, nullmat, bw, kernel, prior, B, rawp){
 
   # Draw Bernoullis for Ho matrix (Guessed sets of true null and true alternative hypotheses).
   # 1 = guessed true null, 0 = guessed true alternative hypotheses
-  Hsets.mat <- matrix(rbinom(length(Tn)*B,1,pn.out),nr=length(Tn),nc=B)
+  Hsets.mat <- matrix(rbinom(length(Tn)*B,1,pn.out),nrow=length(Tn),ncol=B)
   out <- list(Hsets.mat=Hsets.mat, EB.h0M=sum(pn,na.rm=TRUE)/length(Tn), prior=priorval, pn.out=pn.out)
   out
 }

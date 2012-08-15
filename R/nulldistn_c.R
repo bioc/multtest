@@ -60,7 +60,7 @@ boot.null <- function(X,label,stat.closure,W=NULL,B=1000,test,nulldist,theta0=0,
     nas<-is.na(muboot)
   }
 
-  rawboot <- matrix(nr=0,nc=0)
+  rawboot <- matrix(nrow=0,ncol=0)
   if(keep.rawdist) rawboot <- muboot
   if(nulldist=="boot") muboot <- center.scale(muboot, theta0, tau0, alternative)
   if(nulldist=="boot.cs") muboot <- center.scale(muboot, theta0, tau0, alternative)

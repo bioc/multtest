@@ -23,8 +23,8 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
   #W
   if(!is.null(W)){
     W[W<=0]<-NA
-    if(is.vector(W) & length(W)==n) W <- matrix(rep(W,p),nr=p,nc=n,byrow=TRUE)
-    if(is.vector(W) & length(W)==p) W <- matrix(rep(W,n),nr=p,nc=n)
+    if(is.vector(W) & length(W)==n) W <- matrix(rep(W,p),nrow=p,ncol=n,byrow=TRUE)
+    if(is.vector(W) & length(W)==p) W <- matrix(rep(W,n),nrow=p,ncol=n)
     if(test%in%c("f","f.block","f.twoway","t.cor","z.cor")){
       warning("Weights can not be used with F-tests or tests of correlation parameters, arg W is being ignored.")
       W<-NULL
@@ -94,8 +94,8 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
   nalpha<-length(alpha)
   reject<-
     if(nalpha) array(dim=c(p,nalpha),dimnames=list(rownames(X),paste("alpha=",alpha,sep="")))
-    if(test=="z.cor" | test=="t.cor") matrix(nr=0,nc=0) # deprecated for correlations, rownames now represent p choose 2 edges - too weird and clunky in current state for output.
-    else matrix(nr=0,nc=0)
+    if(test=="z.cor" | test=="t.cor") matrix(nrow=0,ncol=0) # deprecated for correlations, rownames now represent p choose 2 edges - too weird and clunky in current state for output.
+    else matrix(nrow=0,ncol=0)
   if(typeone=="gfwer"){
     if(get.cr==TRUE) warning("Confidence regions not currently implemented for gFWER")
     if(get.cutoff==TRUE) warning("Cut-offs not currently implemented for gFWER")
@@ -223,7 +223,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
     orig<-order(presult$index)
     if(keep.label) label <- as.numeric(Y)
     else label <- vector("numeric",0)
-    out<-new("MTP",statistic=presult$teststat[orig],estimate=vector("numeric",0),sampsize=n,rawp=presult$rawp[orig],adjp=presult$adjp[orig],conf.reg=array(dim=c(0,0,0)),cutoff=matrix(nr=0,nc=0),reject=as.matrix(reject[orig,]),rawdist=matrix(nr=0,nc=0),nulldist=matrix(nr=0,nc=0),nulldist.type="perm",marg.null=vector("character",0),marg.par=matrix(nr=0,nc=0),label=label,index=matrix(nr=0,nc=0),call=match.call(),seed=vector("integer",0))
+    out<-new("MTP",statistic=presult$teststat[orig],estimate=vector("numeric",0),sampsize=n,rawp=presult$rawp[orig],adjp=presult$adjp[orig],conf.reg=array(dim=c(0,0,0)),cutoff=matrix(nrow=0,ncol=0),reject=as.matrix(reject[orig,]),rawdist=matrix(nrow=0,ncol=0),nulldist=matrix(nrow=0,ncol=0),nulldist.type="perm",marg.null=vector("character",0),marg.par=matrix(nrow=0,ncol=0),label=label,index=matrix(nrow=0,ncol=0),call=match.call(),seed=vector("integer",0))
   }
   
   else{ # This should apply to all other MTP calls using the bootstrap and IC nulldists.
@@ -231,7 +231,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
       # Get parameter values for the quantile transformed nulldist
       if(!is.null(marg.par)){
         if(is.matrix(marg.par)) marg.par <- marg.par
-        if(is.vector(marg.par)) marg.par <- matrix(rep(marg.par,p),nr=p,nc=length(marg.par),byrow=TRUE)
+        if(is.vector(marg.par)) marg.par <- matrix(rep(marg.par,p),nrow=p,ncol=length(marg.par),byrow=TRUE)
         }
       if(is.null(ncp)) ncp = 0
       if(!is.null(perm.mat)){ 
@@ -275,7 +275,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
                           t.cor = n-2,
                           z.cor = c(0,1)
                           )
-      marg.par <- matrix(rep(marg.par,dim(X)[1]),nr=dim(X)[1],nc=length(marg.par),byrow=TRUE)
+      marg.par <- matrix(rep(marg.par,dim(X)[1]),nrow=dim(X)[1],ncol=length(marg.par),byrow=TRUE)
               }
      else{ # Check that user-supplied values of marg.par make sense (marg.par != NULL)
        if((marg.null=="t" | marg.null=="f") & any(marg.par[,1]==0)) stop("Cannot have zero df with t or F distributions. Check marg.par settings")
@@ -320,7 +320,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
     else obs<-get.Tn(X,stat.closure,W)
     ##or computing influence curves
     if(nulldist=="ic"){
-      rawdistn <- matrix(nr=0,nc=0)
+      rawdistn <- matrix(nrow=0,ncol=0)
       nulldistn<-switch(test,
                         t.onesamp=corr.null(X,W,Y,Z,test="t.onesamp",alternative,use="pairwise",B,MVN.method,penalty,ic.quant.trans,marg.null,marg.par,perm.mat),
                         t.pair=corr.null(X,W,Y,Z,test="t.pair",alternative,use="pairwise",B,MVN.method,penalty,ic.quant.trans,marg.null,marg.par,perm.mat),
@@ -407,7 +407,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
     #augmentation procedures
     if(typeone=="gfwer"){
       out$adjp<-as.numeric(fwer2gfwer(out$adjp,k))
-      out$c<-matrix(nr=0,nc=0)
+      out$c<-matrix(nrow=0,ncol=0)
       out$cr<-array(dim=c(0,0,0))
       if(nalpha){
         for(a in 1:nalpha) reject[,a]<-(out$adjp<=alpha[a])
@@ -416,7 +416,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
     }
     if(typeone=="tppfp"){
       out$adjp<-as.numeric(fwer2tppfp(out$adjp,q))
-      out$c<-matrix(nr=0,nc=0)
+      out$c<-matrix(nrow=0,ncol=0)
       out$cr<-array(dim=c(0,0,0))
       if(nalpha){
         for(a in 1:nalpha) reject[,a]<-(out$adjp<=alpha[a])
@@ -424,7 +424,7 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
       if(!get.adjp) out$adjp<-vector("numeric",0)
     }
     if(typeone=="fdr"){
-      out$c<-matrix(nr=0,nc=0)
+      out$c<-matrix(nrow=0,ncol=0)
       out$cr<-array(dim=c(0,0,0))
       temp<-fwer2fdr(out$adjp,fdr.method,alpha)
       reject<-temp$reject
@@ -433,15 +433,15 @@ MTP<-function(X,W=NULL,Y=NULL,Z=NULL,Z.incl=NULL,Z.test=NULL,na.rm=TRUE,test="t.
       rm(temp)
     }
     #output results
-    if(!keep.nulldist) nulldistn<-matrix(nr=0,nc=0)
-    if(!keep.rawdist) rawdist<-matrix(nr=0,nc=0)
+    if(!keep.nulldist) nulldistn<-matrix(nrow=0,ncol=0)
+    if(!keep.rawdist) rawdist<-matrix(nrow=0,ncol=0)
     if(nulldist!="boot.qt"){  
       marg.null <- vector("character")
-      marg.par <- matrix(nr=0,nc=0)
+      marg.par <- matrix(nrow=0,ncol=0)
     }
     if(!keep.label) label <- vector("numeric",0)
-    if(!keep.index) index <- matrix(nr=0,nc=0)
-    if(test!="z.cor" & test !="t.cor") index <- matrix(nr=0,nc=0)
+    if(!keep.index) index <- matrix(nrow=0,ncol=0)
+    if(test!="z.cor" & test !="t.cor") index <- matrix(nrow=0,ncol=0)
     if(keep.index & (test!="z.cor" | test !="t.cor")){
       index <- t(combn(p,2))
       colnames(index) <- c("Var1","Var2")
@@ -467,7 +467,7 @@ ss.maxT<-function(null,obs,alternative,get.cutoff,get.cr,get.adjp,alpha=0.05){
   B<-dim(null)[2]
   nalpha<-length(alpha)
   mT<-apply(null,2,max)
-  getc<-matrix(nr=0,nc=0)
+  getc<-matrix(nrow=0,ncol=0)
   getcr<-array(dim=c(0,0,0))
   getp<-vector(mode="numeric")
   if(get.cutoff | get.cr){
@@ -479,7 +479,7 @@ ss.maxT<-function(null,obs,alternative,get.cutoff,get.cr,get.adjp,alpha=0.05){
     }
   }
   if(get.adjp) getp<-apply((obs[1,]/obs[2,])<=matrix(mT,nrow=p,ncol=B,byrow=TRUE),1,mean)
-  if(!get.cutoff) getc<-matrix(nr=0,nc=0)
+  if(!get.cutoff) getc<-matrix(nrow=0,ncol=0)
   list(c=getc,cr=getcr,adjp=getp)
 }
 
@@ -487,7 +487,7 @@ ss.minP<-function(null,obs,rawp,alternative,get.cutoff,get.cr,get.adjp,alpha=0.0
   p<-dim(null)[1]
   B<-dim(null)[2]
   nalpha<-length(alpha)
-  getc<-matrix(nr=0,nc=0)
+  getc<-matrix(nrow=0,ncol=0)
   getcr<-array(dim=c(0,0,0))
   getp<-vector(mode="numeric")
   R<-apply(null,1,rank)
@@ -506,7 +506,7 @@ ss.minP<-function(null,obs,rawp,alternative,get.cutoff,get.cr,get.adjp,alpha=0.0
     R<-matrix(apply((B+1-R)/B,1,min),nrow=p,ncol=B,byrow=TRUE)
     getp<-apply(rawp>=R,1,mean)
   }
-  if(!get.cutoff) getc<-matrix(nr=0,nc=0)
+  if(!get.cutoff) getc<-matrix(nrow=0,ncol=0)
   list(c=getc,cr=getcr,adjp=getp)
 }
 
@@ -516,7 +516,7 @@ sd.maxT<-function(null,obs,alternative,get.cutoff,get.cr,get.adjp,alpha=0.05){
   nalpha<-length(alpha)
   ord<-rev(order(obs[1,]/obs[2,]))
   mT<-null[ord[p],]
-  getc<-matrix(nr=0,nc=0)
+  getc<-matrix(nrow=0,ncol=0)
   getcr<-array(dim=c(0,0,0))
   getp<-vector(mode="numeric")
   if(get.cutoff | get.cr){
@@ -551,7 +551,7 @@ sd.maxT<-function(null,obs,alternative,get.cutoff,get.cr,get.adjp,alpha=0.05){
       getcr[,,a]<-cbind(ifelse(rep(alternative=="less",p),rep(-Inf,p),obs[3,]*obs[1,]-getc[,a]*obs[2,]),ifelse(rep(alternative=="greater",p),rep(Inf,p),obs[3,]*obs[1,]+getc[,a]*obs[2,]))
     }
   }
-  if(!get.cutoff) getc<-matrix(nr=0,nc=0)
+  if(!get.cutoff) getc<-matrix(nrow=0,ncol=0)
   list(c=getc,cr=getcr,adjp=getp)
 }
 
@@ -562,7 +562,7 @@ sd.minP<-function(null,obs,rawp,alternative,get.cutoff,get.cr,get.adjp,alpha=0.0
   ord<-order(rawp)
   R<-apply(null,1,rank) #B x p
   mR<-R[,ord[p]]
-  getc<-matrix(nr=0,nc=0)
+  getc<-matrix(nrow=0,ncol=0)
   getcr<-array(dim=c(0,0,0))
   getp<-vector(mode="numeric")
   if(get.cutoff | get.cr){
@@ -609,7 +609,7 @@ sd.minP<-function(null,obs,rawp,alternative,get.cutoff,get.cr,get.adjp,alpha=0.0
       getcr[,,a]<-cbind(ifelse(rep(alternative=="less",p),rep(-Inf,p),obs[3,]*obs[1,]-getc[,a]*obs[2,]),ifelse(rep(alternative=="greater",p),rep(Inf,p),obs[3,]*obs[1,]+getc[,a]*obs[2,]))
     }
   }
-  if(!get.cutoff) getc<-matrix(nr=0,nc=0)
+  if(!get.cutoff) getc<-matrix(nrow=0,ncol=0)
   list(c=getc,cr=getcr,adjp=getp)
 }
 
@@ -658,7 +658,7 @@ fwer2fdr<-function(adjp,method="both",alpha=0.05){
     }
     newp[newp>1]<-1
     a<-alpha/2
-    rejections<-matrix(nr=M,nc=nalpha)
+    rejections<-matrix(nrow=M,ncol=nalpha)
     for(i in 1:nalpha) rejections[,i]<-(fwer2tppfp(adjp,a[i])<=a[i])
     return(list(reject=rejections,adjp=newp))
   }
@@ -681,7 +681,7 @@ fwer2fdr<-function(adjp,method="both",alpha=0.05){
     }
     newp[newp>1]<-1
     a<-1-sqrt(1-alpha)
-    rejections<-matrix(nr=M,nc=nalpha)
+    rejections<-matrix(nrow=M,ncol=nalpha)
     for(i in 1:nalpha) rejections[,i]<-(fwer2tppfp(adjp,a[i])<=a[i])
     return(list(reject=rejections,adjp=newp))
   }
@@ -690,7 +690,7 @@ fwer2fdr<-function(adjp,method="both",alpha=0.05){
   M<-length(adjp)
   if(method=="both"){
     rejections<-array(dim=c(M,nalpha,2),dimnames=list(NULL,paste("alpha=",alpha,sep=""),c("conservative","restricted")))
-    newp<-matrix(nr=M,nc=2,dimnames=list(NULL,c("conservative","restricted")))
+    newp<-matrix(nrow=M,ncol=2,dimnames=list(NULL,c("conservative","restricted")))
     temp<-get.cons(adjp,alpha,ord,M,nalpha)
     rejections[,,"conservative"]<-temp$reject
     newp[,"conservative"]<-temp$adjp
@@ -700,7 +700,7 @@ fwer2fdr<-function(adjp,method="both",alpha=0.05){
     rm(temp)
   }
   else{
-    rejections<-matrix(nr=M,nc=nalpha,dimnames=list(NULL,paste("alpha=",alpha,sep="")))
+    rejections<-matrix(nrow=M,ncol=nalpha,dimnames=list(NULL,paste("alpha=",alpha,sep="")))
     newp<-NULL
     if(method=="conservative") temp<-get.cons(adjp,alpha,ord,M,nalpha)
     else temp<-get.restr(adjp,alpha,ord,M,nalpha)

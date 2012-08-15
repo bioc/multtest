@@ -21,15 +21,15 @@ setClass("MTP",representation(statistic="numeric",
          rawp=vector("numeric",0),
          adjp=vector("numeric",0),
          conf.reg=array(),
-         cutoff=matrix(nr=0,nc=0),
-         reject=matrix(nr=0,nc=0),
-         rawdist=matrix(nr=0,nc=0),
-         nulldist=matrix(nr=0,nc=0),
+         cutoff=matrix(nrow=0,ncol=0),
+         reject=matrix(nrow=0,ncol=0),
+         rawdist=matrix(nrow=0,ncol=0),
+         nulldist=matrix(nrow=0,ncol=0),
          nulldist.type=vector("character",0),
          marg.null=vector("character",0),
-         marg.par=matrix(nr=0,nc=0),
+         marg.par=matrix(nrow=0,ncol=0),
          label=vector("numeric",0),
-         index=matrix(nr=0,nc=0),
+         index=matrix(nrow=0,ncol=0),
          call=NULL,
          seed=vector("integer",0)))
 
@@ -221,10 +221,10 @@ setMethod("[","MTP",
             if(sum(d)) slot(newx,"conf.reg")<-array(x@conf.reg[i,,],dim=c(ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),d[-1]),dimnames=list(dn[[1]][i],dn[[2]],dn[[3]]))
             d<-dim(x@cutoff)
             dn<-dimnames(x@cutoff)
-            if(sum(d)) slot(newx,"cutoff")<-matrix(x@cutoff[i,],nr=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),nc=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
+            if(sum(d)) slot(newx,"cutoff")<-matrix(x@cutoff[i,],nrow=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),ncol=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
             d<-dim(x@reject)
             dn<-dimnames(x@reject)
-            if(sum(d)) slot(newx,"reject")<-matrix(x@reject[i,],nr=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),nc=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
+            if(sum(d)) slot(newx,"reject")<-matrix(x@reject[i,],nrow=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),ncol=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
             if(sum(dim(x@nulldist))) slot(newx,"nulldist")<-x@nulldist[i,]
             if(sum(dim(x@rawdist))) slot(newx,"rawdist")<-x@nulldist[i,]
             if(sum(dim(x@marg.par))) slot(newx,"marg.par")<-x@marg.par[i,]
@@ -261,7 +261,7 @@ setMethod("update","MTP",
             p<-length(object@rawp)
             reject<-
               if(nalpha) array(dim=c(p,nalpha),dimnames=list(rownames(object@reject),paste("alpha=",alpha,sep="")))
-	      else matrix(nr=0,nc=0)
+	      else matrix(nrow=0,ncol=0)
             if(typeone=="gfwer"){
               if(get.cr==TRUE) warning("Confidence regions not currently implemented for gFWER")
               if(get.cutoff==TRUE) warning("Cut-offs not currently implemented for gFWER")
@@ -359,7 +359,7 @@ setMethod("update","MTP",
 
               if(object@nulldist.type!="boot.qt"){
                 marg.null = vector("character",length=0)
-                marg.par = matrix(nr=0,nc=0)
+                marg.par = matrix(nrow=0,ncol=0)
               }
                  
          ### Move rawp down from before.
@@ -373,7 +373,7 @@ setMethod("update","MTP",
               if("marg.null" %in% changed | "marg.null" %in% added) marg.null <- call.list$marg.null
               if("marg.par" %in% changed | "marg.par" %in% added){
                   marg.par <- call.list$marg.par
-                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nrow=length(object@statistic),ncol=length(marg.par),byrow=TRUE)
                 }
               if("perm.mat" %in% changed | "perm.mat" %in% added) perm.mat <- call.list$perm.mat
               if("ncp" %in% changed | "ncp" %in% added) ncp <- call.list$ncp
@@ -392,11 +392,11 @@ setMethod("update","MTP",
     ### "Easy" ones first.  Need to get tau0 and theta0.
               if(nulldist=="ic"){
                 marg.null = vector("character",length=0)
-                marg.par = matrix(nr=0,nc=0)
+                marg.par = matrix(nrow=0,ncol=0)
               }
               if(nulldist=="boot" | nulldist=="boot.cs" | nulldist=="boot.ctr"){
                 marg.null = vector("character",length=0)
-                marg.par = matrix(nr=0,nc=0)
+                marg.par = matrix(nrow=0,ncol=0)
                 tau0<-1
                 theta0<-0
                 if(test=="f"){
@@ -417,7 +417,7 @@ setMethod("update","MTP",
                 else marg.null <- NULL
                 if("marg.par" %in% changed | "marg.par" %in% added){
                   marg.par <- call.list$marg.par
-                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nrow=length(object@statistic),ncol=length(marg.par),byrow=TRUE)
                 }
                 else marg.par <- NULL
       
@@ -466,7 +466,7 @@ setMethod("update","MTP",
                           t.cor = object@sampsize-2,
                           z.cor = c(0,1)
                           )
-                  marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                  marg.par <- matrix(rep(marg.par,length(object@statistic)),nrow=length(object@statistic),ncol=length(marg.par),byrow=TRUE)
         }
                 else{ # Check that user-supplied values of marg.par make sense (marg.par != NULL)
                   if((marg.null=="t" | marg.null=="f") & any(marg.par[,1]==0)) stop("Cannot have zero df with t or F distributions. Check marg.par settings")
@@ -508,7 +508,7 @@ setMethod("update","MTP",
                 #cat(k,"\n")
 		if(typeone=="gfwer"){
                   out$adjp<-as.numeric(fwer2gfwer(out$adjp,k))
-                  out$c<-matrix(nr=0,nc=0)
+                  out$c<-matrix(nrow=0,ncol=0)
                   out$cr<-array(dim=c(0,0,0))
                   if(nalpha){
                     for(a in 1:nalpha) reject[,a]<-(out$adjp<=alpha[a])
@@ -517,7 +517,7 @@ setMethod("update","MTP",
                 }
 		if(typeone=="tppfp"){
                   out$adjp<-as.numeric(fwer2tppfp(out$adjp,q))
-                  out$c<-matrix(nr=0,nc=0)
+                  out$c<-matrix(nrow=0,ncol=0)
                   out$cr<-array(dim=c(0,0,0))
                   if(nalpha){
                     for(a in 1:nalpha) reject[,a]<-(out$adjp<=alpha[a])
@@ -525,7 +525,7 @@ setMethod("update","MTP",
                   if(!get.adjp) out$adjp<-vector("numeric",0)
 		}
 		if(typeone=="fdr"){
-                  out$c<-matrix(nr=0,nc=0)
+                  out$c<-matrix(nrow=0,ncol=0)
                   out$cr<-array(dim=c(0,0,0))
                   temp<-fwer2fdr(out$adjp,fdr.method,alpha)
                   reject<-temp$reject
@@ -534,8 +534,8 @@ setMethod("update","MTP",
                   rm(temp)
                 }
 		#output results
-  if(!keep.nulldist) nulldistn <-matrix(nr=0,nc=0)
-  if(keep.rawdist==FALSE) object@rawdist<-matrix(nr=0,nc=0)
+  if(!keep.nulldist) nulldistn <-matrix(nrow=0,ncol=0)
+  if(keep.rawdist==FALSE) object@rawdist<-matrix(nrow=0,ncol=0)
                 out<-new("MTP",statistic=object@statistic,estimate=object@estimate,
                 sampsize=object@sampsize,rawp=rawp,adjp=out$adjp,conf.reg=out$cr,
                 cutoff=out$c,reject=reject,rawdist=object@rawdist,nulldist=nulldistn,
@@ -573,7 +573,7 @@ print.MTP<-function(x,...){
   cat("Slots: \n")
   snames<-slotNames(x)
   n<-length(snames)
-  out<-matrix(nr=n,nc=4)
+  out<-matrix(nrow=n,ncol=4)
   dimnames(out)<-list(snames,c("Class","Mode","Length","Dimension"))
   for(s in snames) out[s,]<-c(class(slot(x,s)),mode(slot(x,s)),length(slot(x,s)),paste(dim(slot(x,s)),collapse=","))
   out<-data.frame(out)

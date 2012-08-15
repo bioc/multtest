@@ -26,22 +26,22 @@ setClass("EBMTP",representation(statistic="numeric",
          sampsize=vector("numeric",0),
          rawp=vector("numeric",0),
          adjp=vector("numeric",0),
-         reject=matrix(nr=0,nc=0),
-         rawdist=matrix(nr=0,nc=0),
-         nulldist=matrix(nr=0,nc=0),
+         reject=matrix(nrow=0,ncol=0),
+         rawdist=matrix(nrow=0,ncol=0),
+         nulldist=matrix(nrow=0,ncol=0),
          nulldist.type=vector("character",0),
          marg.null=vector("character",0),
-         marg.par=matrix(nr=0,nc=0),
+         marg.par=matrix(nrow=0,ncol=0),
          label=vector("numeric",0),
-         falsepos=matrix(nr=0,nc=0),
-         truepos=matrix(nr=0,nc=0),
-         errormat=matrix(nr=0,nc=0),
+         falsepos=matrix(nrow=0,ncol=0),
+         truepos=matrix(nrow=0,ncol=0),
+         errormat=matrix(nrow=0,ncol=0),
          EB.h0M=vector("numeric",0),
          prior=vector("numeric",0),
          prior.type=vector("character",0),
          lqv=vector("numeric",0),
-         Hsets=matrix(nr=0,nc=0),
-         index=matrix(nr=0,nc=0),
+         Hsets=matrix(nrow=0,ncol=0),
+         index=matrix(nrow=0,ncol=0),
          call=NULL,
          seed=vector("integer",0)))
 
@@ -69,7 +69,7 @@ print.EBMTP<-function(x,...){
   cat("Slots: \n")
   snames<-slotNames(x)
   n<-length(snames)
-  out<-matrix(nr=n,nc=4)
+  out<-matrix(nrow=n,ncol=4)
   dimnames(out)<-list(snames,c("Class","Mode","Length","Dimension"))
   for(s in snames) out[s,]<-c(class(slot(x,s)),mode(slot(x,s)),length(slot(x,s)),paste(dim(slot(x,s)),collapse=","))
   out<-data.frame(out)
@@ -244,7 +244,7 @@ setMethod("[","EBMTP",
             if(sum(length(x@label))) slot(newx,"label")<-x@label[i]
             d<-dim(x@reject)
             dn<-dimnames(x@reject)
-            if(sum(d)) slot(newx,"reject")<-matrix(x@reject[i,],nr=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),nc=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
+            if(sum(d)) slot(newx,"reject")<-matrix(x@reject[i,],nrow=ifelse(i[1]==TRUE & !is.numeric(i),d[1],length(i)),ncol=d[-1],dimnames=list(dn[[1]][i],dn[[2]]))
             if(sum(dim(x@nulldist))) slot(newx,"nulldist")<-x@nulldist[i,]
             if(sum(dim(x@marg.par))) slot(newx,"marg.par")<-x@marg.par[i,]
             if(sum(dim(x@rawdist))) slot(newx,"rawdist")<-x@rawdist[i,]
@@ -291,7 +291,7 @@ setMethod("EBupdate","EBMTP",
             nalpha<-length(alpha)
             reject<-
               if(nalpha) array(dim=c(p,nalpha),dimnames=list(names(object@rawp),paste("alpha=",alpha,sep="")))
-              else matrix(nr=0,nc=0)
+              else matrix(nrow=0,ncol=0)
 
             if(typeone=="fwer"){
               if(length(k)>1) k<-k[1]
@@ -377,13 +377,13 @@ setMethod("EBupdate","EBMTP",
 
               if(object@nulldist.type!="boot.qt"){
                 marg.null = vector("character",length=0)
-                marg.par = matrix(nr=0,nc=0)
+                marg.par = matrix(nrow=0,ncol=0)
               }
               if("alternative" %in% changed | "alternative" %in% added) alternative <- call.list$alternative
               if("marg.null" %in% changed | "marg.null" %in% added) marg.null <- call.list$marg.null
               if("marg.par" %in% changed | "marg.par" %in% added){
                   marg.par <- call.list$marg.par
-                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nrow=length(object@statistic),ncol=length(marg.par),byrow=TRUE)
                 }
               if("perm.mat" %in% changed | "perm.mat" %in% added) perm.mat <- call.list$perm.mat
               if("ncp" %in% changed | "ncp" %in% added) ncp <- call.list$ncp
@@ -401,12 +401,12 @@ setMethod("EBupdate","EBMTP",
     ### "Easy" ones first.  Need to get tau0 and theta0.
               if(nulldist=="ic"){
                 marg.null = vector("character",length=0)
-                marg.par = matrix(nr=0,nc=0)
+                marg.par = matrix(nrow=0,ncol=0)
               }
                 
               if(nulldist=="boot" | nulldist=="boot.cs" | nulldist=="boot.ctr"){
                 marg.null = vector("character",length=0)
-                marg.par = matrix(nr=0,nc=0)
+                marg.par = matrix(nrow=0,ncol=0)
                 tau0<-1
                 theta0<-0
                 if(test=="f"){
@@ -427,7 +427,7 @@ setMethod("EBupdate","EBMTP",
                 else marg.null <- NULL
                 if("marg.par" %in% changed | "marg.par" %in% added){
                   marg.par <- call.list$marg.par
-                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                  if(is.numeric(marg.par) & !is.matrix(marg.par)) marg.par <- matrix(rep(marg.par,length(object@statistic)),nrow=length(object@statistic),ncol=length(marg.par),byrow=TRUE)
                 }
                 else marg.par <- NULL
       
@@ -476,7 +476,7 @@ setMethod("EBupdate","EBMTP",
                           t.cor = object@sampsize-2,
                           z.cor = c(0,1)
                           )
-                  marg.par <- matrix(rep(marg.par,length(object@statistic)),nr=length(object@statistic),nc=length(marg.par),byrow=TRUE)
+                  marg.par <- matrix(rep(marg.par,length(object@statistic)),nrow=length(object@statistic),ncol=length(marg.par),byrow=TRUE)
         }
                 else{ # Check that user-supplied values of marg.par make sense (marg.par != NULL)
                   if((marg.null=="t" | marg.null=="f") & any(marg.par[,1]==0)) stop("Cannot have zero df with t or F distributions. Check marg.par settings")
@@ -539,7 +539,7 @@ t
               ord.Tn <- order(Tn,decreasing=TRUE)
               sort.Tn <- Tn[ord.Tn]
               Z.nulls <- nulldistn[ord.Tn,]*H0.sets[ord.Tn,]
-              Tn.mat <- (1-H0.sets[ord.Tn,])*matrix(rep(sort.Tn,B),nr=m,nc=B)
+              Tn.mat <- (1-H0.sets[ord.Tn,])*matrix(rep(sort.Tn,B),nrow=m,ncol=B)
 
               ### Rather than using a sieve of candidate cutoffs, for adjp, test statistics
               ### are used as cutoffs themselves.
@@ -550,7 +550,7 @@ t
               Vn <- .Call(VScount,as.numeric(Z.nulls),as.numeric(cutoffs),as.integer(m),
                 as.integer(B),as.integer(clen),NAOK=TRUE)
               cat("\n")
-              Vn <- matrix(Vn, nr=clen, nc=B)
+              Vn <- matrix(Vn, nrow=clen, ncol=B)
               
               if(typeone=="fwer" | typeone=="gfwer") Sn <- NULL
               else{
@@ -558,7 +558,7 @@ t
                 Sn <- .Call(VScount,as.numeric(Tn.mat),as.numeric(cutoffs),as.integer(m),
                   as.integer(B),as.integer(clen),NOAK=TRUE)
                 cat("\n")
-                Sn <- matrix(Sn, nr=clen, nc=B)
+                Sn <- matrix(Sn, nrow=clen, ncol=B)
               }
 
               ### Set G function of type I error rates
@@ -585,19 +585,19 @@ t
               }
               adjp <- adjp[rev.order]
               if(keep.falsepos) Vn <- Vn[rev.order,]
-              else Vn <- matrix(0,nr=0,nc=0)
+              else Vn <- matrix(0,nrow=0,ncol=0)
               if(keep.truepos) Sn <- Sn[rev.order,]
-              else Sn <- matrix(0,nr=0,nc=0)
+              else Sn <- matrix(0,nrow=0,ncol=0)
               if(keep.errormat) G <- G[rev.order,]
-              else G <- matrix(0,nr=0,nc=0)
-              if(!keep.Hsets) H0.sets <- matrix(0,nr=0,nc=0)
+              else G <- matrix(0,nrow=0,ncol=0)
+              if(!keep.Hsets) H0.sets <- matrix(0,nrow=0,ncol=0)
               
               # No confidence regions, but vector of rejections logicals, and cutoff, if applicable
               ### Generate matrix of rejection logicals.
-              EB.reject <- matrix(rep(0,m),nr=m,nc=length(alpha))
+              EB.reject <- matrix(rep(0,m),nrow=m,ncol=length(alpha))
               dimnames(EB.reject) <- list(rownames(object@nulldist),paste("alpha", alpha, sep=""))
               if(nalpha) for(a in 1:nalpha) EB.reject[,a]<-adjp<=alpha[a]
-              else EB.reject <- matrix(0,nr=0,nc=0)
+              else EB.reject <- matrix(0,nrow=0,ncol=0)
 
               ### Grab test statistics corresponding to cutoff, based on adjp.
               #Leave out.
@@ -612,8 +612,8 @@ t
               #}
 
               #output results
-              if(!keep.nulldist) nulldistn <-matrix(nr=0,nc=0)
-              if(keep.rawdist==FALSE) object@rawdist<-matrix(nr=0,nc=0)
+              if(!keep.nulldist) nulldistn <-matrix(nrow=0,ncol=0)
+              if(keep.rawdist==FALSE) object@rawdist<-matrix(nrow=0,ncol=0)
                 out<-new("EBMTP",statistic=object@statistic,estimate=object@estimate,
                 sampsize=object@sampsize,rawp=rawp,adjp=adjp,
                 reject=EB.reject,rawdist=object@rawdist,nulldist=nulldistn,
