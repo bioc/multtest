@@ -15,6 +15,7 @@
 \alias{plot-methods}
 \alias{plot,MTP-method}
 \alias{plot,EBMTP-method}
+\alias{plot,ANY-method}
 \alias{plot}
 
 \alias{print-methods}
