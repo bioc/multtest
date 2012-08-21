@@ -13,9 +13,8 @@
 \alias{as.list}
 
 \alias{plot-methods}
-\alias{plot,MTP-method}
-\alias{plot,EBMTP-method}
-\alias{plot,ANY-method}
+\alias{plot,MTP,ANY-method}
+\alias{plot,EBMTP,ANY-method}
 \alias{plot}
 
 \alias{print-methods}
