@@ -24,7 +24,7 @@ Numeric vector of indices so that the hypotheses can be ordered accroding to sig
 
 \author{Katherine S. Pollard}
 
-\seealso{\code{\link{MTP}}, \code{\link{plot,MTP-method}}, \code{\link{summary,MTP-method}}}
+\seealso{\code{\link{MTP}}, \code{\link{plot,MTP,ANY-method}}, \code{\link{summary,MTP-method}}}
 
 \examples{
 data<-matrix(rnorm(200),nr=20)
