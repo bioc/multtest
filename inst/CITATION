@@ -2,7 +2,7 @@ citHeader("To cite package multtest in publications use:")
 
 citEntry(
  entry="Book",
- title="Multiple Testing Procedures: R multtest Package and Applications to Genomics, in Bioinformatics and Computational Biology Solutions Using R and Bioconductor"
+ title="Multiple Testing Procedures: R multtest Package and Applications to Genomics, in Bioinformatics and Computational Biology Solutions Using R and Bioconductor",
  year="2005",
  author=personList(as.person("Katherine S. Pollard"),
 	as.person("Sandrine Dudoit"),
