@@ -1,7 +1,7 @@
 useDynLib(multtest)
 useDynLib(multtest, VScount=VScount)
 
-import(methods, Biobase)
+import(methods, BiocGenerics, Biobase)
 
 importFrom(graphics, plot)
 importFrom(stats, update)
