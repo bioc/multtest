@@ -71,7 +71,11 @@ print.EBMTP<-function(x,...){
   n<-length(snames)
   out<-matrix(nrow=n,ncol=4)
   dimnames(out)<-list(snames,c("Class","Mode","Length","Dimension"))
-  for(s in snames) out[s,]<-c(class(slot(x,s)),mode(slot(x,s)),length(slot(x,s)),paste(dim(slot(x,s)),collapse=","))
+  for(s in snames) {
+      out[s,]<-c(class(slot(x,s))[1],mode(slot(x,s)),length(slot(x,s)),paste(dim(slot(x,s)),collapse=","))
+      #Added [1] to fix the bug
+  }
+  
   out<-data.frame(out)
   print(out)
   invisible(x)
