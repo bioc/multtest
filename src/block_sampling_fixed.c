@@ -53,18 +53,18 @@ void create_sampling_block(int n,int*L,int B)
     l_n=n;
     l_b=0;
     l_m=m;
-    l_L=(int*)Calloc(n,int);
+    l_L=(int*)R_Calloc(n,int);
     memcpy(l_L,L,sizeof(int)*n);
-    l_order_block=(int*)Calloc(n,int);
+    l_order_block=(int*)R_Calloc(n,int);
     init_label_block(l_order_block,n,m);
 }
       
   
 void delete_sampling_block()
 {
-  Free(l_L);
+  R_Free(l_L);
   l_L=NULL;
-  Free(l_order_block);
+  R_Free(l_order_block);
 }
 int next_sample_block(int* L)
 {
