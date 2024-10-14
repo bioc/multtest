@@ -78,9 +78,9 @@ void create_sampling(int n,int*L,int B)
     /*reintiailize the permu_array*/
     delete_permu_array(&l_pa);
     init_permu_array(&l_pa,L,n,B);
-    permun=(int*)Calloc(l_pa.n,int);
-    ordern=(int*)Calloc(l_pa.n,int);
-    myL=(int*)Calloc(l_pa.n,int);
+    permun=(int*)R_Calloc(l_pa.n,int);
+    ordern=(int*)R_Calloc(l_pa.n,int);
+    myL=(int*)R_Calloc(l_pa.n,int);
     for(i=0;i<n;i++){
       ordern[i]=i;
     }
@@ -94,9 +94,9 @@ void create_sampling(int n,int*L,int B)
       sample2label(n,l_pa.k,l_pa.nk,permun,myL);
       set_permu(&l_pa,i,myL);
     }
-    Free(myL);
-    Free(ordern);
-    Free(permun);
+    R_Free(myL);
+    R_Free(ordern);
+    R_Free(permun);
   }
 }
 void delete_sampling()
@@ -153,7 +153,7 @@ static int init_permu_array(PERMU_ARRAY* pa, int *L,int n, int B)
   (pa->k)++;
   
   /*compue nk*/
-  pa->nk=(int*)Calloc(pa->k,int);
+  pa->nk=(int*)R_Calloc(pa->k,int);
   memset(pa->nk,0,sizeof(int)*pa->k);
   for(i=0;i<n;i++)
     pa->nk[L[i]]++;
@@ -163,7 +163,7 @@ static int init_permu_array(PERMU_ARRAY* pa, int *L,int n, int B)
   pa->len=floor(log(imax+1.0)/log(pa->k)); 
   pa->sz=ceil(n/(pa->len*1.0));
   /*allocate the space for v*/
-  pa->v=(unsigned int*)Calloc(B*pa->sz,int);
+  pa->v=(unsigned int*)R_Calloc(B*pa->sz,int);
   return 1;
 }
 
@@ -212,10 +212,10 @@ static int set_permu(PERMU_ARRAY* pa, int h,int *L)
 }
 static void delete_permu_array(PERMU_ARRAY* pa)
 {
-  Free(pa->nk);
+  R_Free(pa->nk);
   pa->nk=NULL;
   if(pa->B!=0){
-    Free(pa->v);
+    R_Free(pa->v);
     pa->v=NULL;
   }
 }

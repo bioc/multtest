@@ -17,14 +17,14 @@ void create_sampling_pairt_fixed(int n,int*L,int B)
     fprintf(stderr,"B needs to be positive\n");
     return;/*exit(0)*/;
   }
-  l_L=(int*)Calloc(n, int);
+  l_L=(int*)R_Calloc(n, int);
   memcpy(l_L,L,sizeof(int)*n);
 }
 
 
 void delete_sampling_pairt_fixed()
 {
-  Free(l_L);
+  R_Free(l_L);
   l_L=NULL;
 }
 int first_sample_pairt_fixed(int *L)

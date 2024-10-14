@@ -23,7 +23,7 @@ void create_sampling_fixed(int n,int*L,int B)
     fprintf(stderr,"B needs to be positive\n");
     return;/*exit(0)*/;
   }
-  l_L=(int*)Calloc(n,int);
+  l_L=(int*)R_Calloc(n,int);
   memcpy(l_L,L,sizeof(int)*n);
   
   k=0;
@@ -32,26 +32,26 @@ void create_sampling_fixed(int n,int*L,int B)
       k=L[i];
   k++;
   l_k=k;
-  l_nk=(int*)Calloc(k,int);
+  l_nk=(int*)R_Calloc(k,int);
   memset(l_nk,0,sizeof(int)*k);
   for(i=0;i<n;i++)
     l_nk[L[i]]++;
 
-  l_permun=(int*)Calloc(n,int);
-  l_ordern=(int*)Calloc(n,int);
+  l_permun=(int*)R_Calloc(n,int);
+  l_ordern=(int*)R_Calloc(n,int);
   for(i=0;i<n;i++){
       l_ordern[i]=i;
     }
 }
 void delete_sampling_fixed()
 {
-  Free(l_L);
+  R_Free(l_L);
   l_L=NULL;
-  Free(l_nk);
+  R_Free(l_nk);
   l_nk=NULL;
-  Free(l_permun);
+  R_Free(l_permun);
   l_permun=NULL;
-  Free(l_ordern);
+  R_Free(l_ordern);
   l_ordern=NULL;
 }
 
