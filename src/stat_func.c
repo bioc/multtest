@@ -700,18 +700,22 @@ void read_infile(char *filename,GENE_DATA *pdata) {
   if (NULL == fh)
       Rf_error("failed to open file '%s'", filename);
   /*read the labelling first*/
-  fscanf(fh, "%s", pdata->name);
-  for (j=0; j<pdata->ncol; j++)
-    fscanf(fh, "%d", pdata->L+j);
-
+  int res=fscanf(fh, "%s", pdata->name);
+  if(res != 1) Rf_error("error reading file '%s'", filename);
+  for (j=0; j<pdata->ncol; j++){
+    res=fscanf(fh, "%d", pdata->L+j);
+    if(res != 1) Rf_error("error reading file '%s'", filename);
+  }
 /*read the mxn matrix of the gene values data*/
   for (i=0; i<pdata->nrow; i++) {
     /*read gene id and the first gene values*/
-    fscanf(fh, "%s", pdata->id[i]);
+    res=fscanf(fh, "%s", pdata->id[i]);
+    if(res != 1) Rf_error("error reading file '%s'", filename);
     /*read the rest of it*/
     for (j=0; j<pdata->ncol; j++) {
       /*deal with the double data*/
-      fscanf(fh, "%lg",&ftemp);
+      res=fscanf(fh, "%lg",&ftemp);
+      if(res != 1) Rf_error("error reading file '%s'", filename);
       pdata->d[i][j]=ftemp;
     }
   }
